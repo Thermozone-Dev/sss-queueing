@@ -1,0 +1,15 @@
+/vendor
+/node_modules
+/storage/*.key
+/storage/oauth-private.key
+/storage/oauth-public.key
+/storage/framework/cache/data
+/storage/framework/sessions
+/storage/framework/testing
+/storage/framework/views
+/storage/logs
+/public/hot
+composer.lock
+package-lock.json
+.env
+.phpunit.result.cache
