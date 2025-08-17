@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\EmailVerification;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Auth\RequestPasswordReset;
+use App\Filament\Widgets\DashboardStats;
 use App\Livewire\MyProfileExtended;
 use App\Settings\GeneralSettings;
 use Filament\Http\Middleware\Authenticate;
@@ -37,7 +38,7 @@ class AdminPanelProvider extends PanelProvider
             ->emailVerification(EmailVerification::class)
             ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
             ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
-            ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
+            ->brandLogo(asset('images/logo.png'))
             ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
             ->darkMode(true)
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
@@ -55,8 +56,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
-                //Widgets\AccountWidget::class,
-                // Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
