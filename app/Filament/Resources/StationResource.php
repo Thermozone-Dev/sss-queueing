@@ -67,7 +67,6 @@ class StationResource extends Resource
                                             'lg' => 3,
                                             '2xl' => 5,
                                         ])
-                                        ->sets(['heroicons'])
                                         ->preload(),
                                 ]),
 
