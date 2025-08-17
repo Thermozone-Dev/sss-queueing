@@ -19,6 +19,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TransactionResource extends Resource
@@ -52,8 +53,18 @@ class TransactionResource extends Resource
                             ->schema([
                                 Select::make('station_id')
                                     ->searchable()
+                                    ->preload()
                                     ->label('Assigned Station')
                                     ->relationship('station', 'name'),
+                                Select::make('users')
+                                    ->label('Assigned Staff')
+                                    ->preload()
+                                    ->getOptionLabelFromRecordUsing(fn (Model $record) => $record->fullname)
+                                    ->relationship(
+                                        name: 'users',
+                                        modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) =>
+                                        $query->role('staff')
+                                    ),
                                 Forms\Components\RichEditor::make('required_documents')
                                     ->toolbarButtons([
                                         'bulletList',
@@ -116,5 +127,12 @@ class TransactionResource extends Resource
             'create' => Pages\CreateTransaction::route('/create'),
             'edit' => Pages\EditTransaction::route('/{record}/edit'),
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        $user = auth()->user();
+
+        return $user?->can('view_any_transaction') || $user?->can('assigned_transaction');
     }
 }
