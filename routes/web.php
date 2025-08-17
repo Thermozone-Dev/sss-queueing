@@ -1,7 +1,9 @@
 <?php
 
+use App\Livewire\CreateQueue;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Queues;
+use App\Livewire\ShowQueues;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,10 @@ use App\Livewire\Queues;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/queue-board', ShowQueues::class);
+
+Route::get('/queue-kiosk', CreateQueue::class);
 
 
 Route::get('/search-results', function () {
