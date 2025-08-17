@@ -1,0 +1,281 @@
+{{-- <section class="h-screen p-14 grid grid-cols-4 gap-12 bg-no-repeat bg-cover" style ="background-image: url('{{ asset('images/default_front_end/kiosk_bg.png') }}');"> --}}
+<section class="h-screen min-h-screen max-h-screen grid grid-cols-4 gap-0 bg-gray-200 bg-cover" style ="background-image: url('{{ asset('images/default_front_end/kiosk_bg.png') }}'">
+    <div class="min-h-full max-h-full col-span-3 grid gap-0 grid-rows-[24%_1fr_5%] md:grid-rows-[19%_1fr_3%]">
+        <div class="bg-transparent flex items-center justify-between text-white px-5">
+            <div class="p-0 flex items-center justify-center">
+                <img src="{{ asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-48 h-full">
+            </div>
+            <div class="text-black text-right">
+                <p id="clock" class="font-extrabold" style="font-size: 1.5rem"></p>
+                <p id="date" class="font-bold"></p>
+            </div>
+            <button wire:click="call_number" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
+
+        </div>
+        <div class="bg-gray flex items-center justify-center">
+            <div id="videoContainer" class="relative w-full h-full ">
+                <video id="video1" class="w-full h-full rounded-t-md p-0 m-0 object-cover" src="{{asset('images/default_front_end/sample_video.mp4')}}"></video>
+            </div>
+        </div>
+        <div class="bg-lime-700 flex items-center justify-center text-white text-xs">
+            This office follows the Anti-Red Tape Authority (ARTA) law. All services are free of fixers. Standard processing times and requirements are posted for your reference.
+        </div>
+    </div>
+
+    {{-- <div class="w-full h-full col-span-1 bg-white rounded-lg" wire:poll.3s='refresh_tickets'> --}}
+    <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[1fr_31%] md:grid-rows-[1fr_40%]" >
+        <div class="grid gap-0 grid-rows-[10%_1fr_1fr_1fr] md:grid-rows-[12%_1fr_1fr_1fr] min-h-full text-white text-sm">
+            <div class="bg-white min-h-full flex items-center px-2">
+                <p class="font-black text-black" style="font-size: 2.2rem">Now Serving</p>
+            </div>
+
+            <div class="min-h-full bg-sky-800 text-white px-3 py-4 flex items-center justify-between">
+                    <!-- Left Section -->
+                <div>
+                    <p class="text-md font-semibold uppercase tracking-wide">Assistance - Ray</p>
+                    <div class="flex items-baseline gap-3">
+                    <span class="font-bold text-[3.5rem] leading-none">A</span>
+                    <span class="font-extrabold text-[3.5rem] leading-none ">0012</span>
+                    </div>
+                </div>
+                <!-- Right Section -->
+                <div class="text-right">
+                    <p class="text-md font-semibold uppercase tracking-wide">Window</p>
+                    <span class="font-extrabold text-[3.5rem] leading-none">3</span>
+                </div>
+            </div>
+
+            <div class="bg-teal-500 min-h-full flex items-center justify-between px-3 py-4">
+                <div>
+                    <p class="text-md font-semibold uppercase tracking-wide">Certificate and permits - mike</p>
+                    <div class="flex items-baseline gap-3">
+                    <span class="font-bold text-[3.5rem] leading-none">C</span>
+                    <span class="font-extrabold text-[3.5rem] leading-none ">0020</span>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="text-right">
+                    <p class="text-md font-semibold uppercase tracking-wide">Window</p>
+                    <span class="font-extrabold text-[3.5rem] leading-none">1</span>
+                </div>
+            </div>
+            <div class="bg-green-400 min-h-full flex items-center justify-between px-3 py-4">
+                <div>
+                    <p class="text-md font-semibold uppercase tracking-wide">meetings - jane</p>
+                    <div class="flex items-baseline gap-3">
+                    <span class="font-bold text-[3.5rem] leading-none">M</span>
+                    <span class="font-extrabold text-[3.5rem] leading-none ">0012</span>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="text-right">
+                    <p class="text-md font-semibold uppercase tracking-wide">Window</p>
+                    <span class="font-extrabold text-[3.5rem] leading-none">2</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white min-h-full text-black col-span-1 grid place-content-center ">
+            <div class="min-h-full text-white text-sm">
+                <div class="min-h-full px-2">
+                    <p class="font-black text-black uppercase" style="font-size: 1.2rem">Next in line</p>
+                    <p class="font-none text-black text-sm">Please prepare your document before your number is called.</p>
+                </div>
+            </div>
+            <div class="overflow-x-auto shadow-md sm:rounded-sm min-h-full max-h-full min-w-full text-white text-sm">
+                <table class="w-full text-sm text-left rtl:text-right text-black">
+                    <thead>
+                        <tr class="bg-white text-gray-700" style="font-size: 1rem">
+                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 1</th>
+                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 2</th>
+                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 3</th>
+                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 4</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="odd:bg-gray-200 even:bg-white">
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold md:text-sm" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black " style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold md:text-sm" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-gray-200 even:bg-white">
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-gray-200 even:bg-white">
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-gray-200 even:bg-white">
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                        </tr>
+                        <tr class="odd:bg-gray-200 even:bg-white">
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                            <td class="px-2 py-0.5">
+                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
+                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    @if($showModal)
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "  wire:poll.3.5s="closeModal">
+            <div class="bg-white rounded-lg w-96 p-6 relative">
+                <audio id="modalSound" src="{{asset('images/default_front_end/call_number_sound.wav')}}" autoplay loop></audio>
+                <h2 class="text-xl font-bold mb-4">Your Form</h2>
+            </div>
+        </div>
+    @endif
+
+</section>
+
+<script>
+    ["DOMContentLoaded", "click"].forEach(evt =>
+        document.addEventListener(evt, () => {
+
+            const videos = document.querySelectorAll('#videoContainer video');
+            const playButton = document.getElementById('playButton');
+            let currentVideo = 0;
+
+            // Check if videos exist
+            if (videos.length === 0) return;
+
+            // Hide all videos initially except the first one
+            videos.forEach((video, index) => {
+                video.style.display = index === 0 ? 'block' : 'none';
+            });
+
+            function playNextVideo() {
+                videos[currentVideo].style.display = 'none';
+                videos[currentVideo].pause();
+                currentVideo = (currentVideo + 1) % videos.length;
+                videos[currentVideo].style.display = 'block';
+                videos[currentVideo].play();
+            }
+
+            videos.forEach(video => {
+                video.addEventListener('ended', playNextVideo);
+            });
+
+            // Hide play button and play the first video on load
+            if (playButton) {
+                playButton.style.display = 'none';
+            }
+            videos[0].play();
+        })
+    );
+
+    function updateDateTime() {
+        const now = new Date();
+
+        // Format Time (12-hour with meridiem)
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        const meridiem = hours >= 12 ? "PM" : "AM";
+
+        hours = hours % 12 || 12; // convert to 12-hour format
+        const formattedHours = String(hours).padStart(2, "0");
+        const timeString = `${formattedHours}:${minutes}:${seconds} ${meridiem}`;
+
+        // Format Date (12 August 2025)
+        const options = { day: "numeric", month: "long", year: "numeric" };
+        const dateString = now.toLocaleDateString("us-EN", options);
+
+        // Update DOM
+        document.getElementById("clock").textContent = timeString;
+        document.getElementById("date").textContent = dateString;
+    }
+
+    // Update every second
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    document.addEventListener('open-modal', () => {
+        let audio = document.getElementById('modalSound');
+
+        // Restart and play sound
+        audio.currentTime = 0;
+        audio.play();
+
+        // Auto close modal after 3 seconds
+        setTimeout(() => {
+            $this.closeModal();
+            audio.pause(); // stop sound when modal closes
+        }, 3000);
+    });
+
+</script>

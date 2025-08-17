@@ -3,6 +3,7 @@
 use App\Livewire\CreateQueue;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Queues;
+use App\Livewire\ShowQueues;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/queue-board', function () {
-    return view('public_pages.queue-board');
-});
+Route::get('/queue-board', ShowQueues::class);
 
 Route::get('/queue-kiosk', CreateQueue::class);
 
