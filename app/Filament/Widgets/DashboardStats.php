@@ -34,4 +34,9 @@ class DashboardStats extends BaseWidget
                 ->url('admin/transactions')
         ];
     }
+
+    public static function canView(): bool
+    {
+        return !auth()->user()?->hasRole('staff');
+    }
 }
