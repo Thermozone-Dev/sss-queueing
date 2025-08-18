@@ -28,6 +28,9 @@ class AdminDashboard extends Widget implements HasForms
     public $service_name;
     public $required_documents;
 
+
+    public $widgetData;
+    
     public $nextQueues;
 
 
@@ -35,6 +38,7 @@ class AdminDashboard extends Widget implements HasForms
         $this->stations = Station::all();
 
     }
+
     protected function getForms(): array
     {
         return [
@@ -47,6 +51,9 @@ class AdminDashboard extends Widget implements HasForms
             $this->station->status = $this->{$property_name};
             $this->station->save();
         }
+    }
+    public function getWidgetData() {
+
     }
     public function form1(Form $form): Form
     {

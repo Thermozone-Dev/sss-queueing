@@ -17,23 +17,30 @@ class DashboardStats extends BaseWidget
     public $activeCount;
     public $pendingCount;
     public $processingCount;
+    public $completedCount;
+
     public $total;
 
     public function mount(){
         if (auth()->user()->hasRole('staff')) {
             $station = auth()->user()->stations()->first();
+            $this->activeCount = $station->activeQueues->count();
+            $this->pendingCount = $station->pendingQueues->count();
+            $this->processingCount = $station->processingQueues->count();
+            $this->completedCount = $station->doneQueues->count(); // Count completed queues
+            $this->activeCount =$this->activeCount + $this->completedCount;
 
-            $this->activeCount = $station->activeQueues->count(); // Count active queues
-            $this->pendingCount = $station->pendingQueues->count(); // Count pending queues
-            $this->processingCount = $station->processingQueues->count(); // Count processing queues
         } else{
             $stations = Station::all();
 
-            $this->activeCount = $stations->sum(fn ($station) => $station->queues()->active()->count());
-            $this->pendingCount = $stations->sum(fn ($station) => $station->queues()->active()->where('status_id', 1)->count());
-            $this->processingCount = $stations->sum(fn ($station) => $station->queues()->active()->where('status_id', 2)->count());
+            $this->activeCount = $stations->sum(fn ($station) => $station->activeQueues->count());
+            $this->pendingCount = $stations->sum(fn ($station) => $station->pendingQueues->count());
+            $this->processingCount = $stations->sum(fn ($station) => $station->processingQueues->count());
+            $this->completedCount = $stations->sum(fn ($station) => $station->doneQueues->count());
+            $this->activeCount = $this->activeCount + $this->completedCount;
         }
-        $this->total = $this->activeCount + $this->pendingCount + $this->processingCount;
+        // dd($this->activeCount, $this->pendingCount, $this->processingCount);
+        $this->total = $this->activeCount;
     }
     protected function getStats(): array
     {
@@ -42,10 +49,10 @@ class DashboardStats extends BaseWidget
                 ->color('warning')
                 ->icon('heroicon-o-users')
                 ->description('Total Clients Today'),
-            Stat::make('', $this->activeCount)
+            Stat::make('', $this->completedCount)
                 ->color('success')
                 ->icon('heroicon-o-play')
-                ->description('Active Queues'),
+                ->description('Completed'),
             Stat::make('', $this->processingCount)
                 ->color('info')
                 ->icon('heroicon-o-clock')

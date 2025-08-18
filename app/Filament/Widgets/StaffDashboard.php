@@ -18,7 +18,6 @@ class StaffDashboard extends Widget implements HasForms
 
     protected static ?int $sort = 2;
 
-    protected static ?string $pollingInterval = null;
     protected static string $view = 'filament.widgets.staff-dashboard';
     protected int | string | array $columnSpan = 'full';
     public $station;
@@ -35,7 +34,7 @@ class StaffDashboard extends Widget implements HasForms
         $this->transaction = auth()->user()->transactions()->first();
 
         //Station::where('assigned_to', auth()->user()->id)->first();
-        $this->station = Station::find(1);
+        $this->station = auth()->user()->stations()->first();
         $this->status =  $this->station->status;
         $this->currentQueue = $this->getCurrentQueue();
     }
