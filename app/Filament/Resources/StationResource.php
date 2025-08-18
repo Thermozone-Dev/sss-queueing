@@ -8,6 +8,7 @@ use App\Models\Station;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -19,7 +20,9 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Guava\FilamentIconPicker\Forms\IconPicker;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class StationResource extends Resource
 {
@@ -84,6 +87,12 @@ class StationResource extends Resource
                                             '2xl' => 5,
                                         ])
                                         ->preload(),
+                                    Select::make('staff')
+                                        ->label('Assigned Staff')
+                                        ->relationship('users', 'name')
+                                        ->preload()
+                                        ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::headline($record->fullname))
+                                        ->searchable(),
                                 ]),
 
                     ]),
