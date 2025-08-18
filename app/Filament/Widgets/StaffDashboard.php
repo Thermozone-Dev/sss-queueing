@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Station;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
@@ -94,8 +95,9 @@ class StaffDashboard extends Widget implements HasForms
         ];
 
         $this->transaction = auth()->user()->transactions()->first();
-        $this->station = $this->transaction?->station;
-        $this->status =  $this->station?->status;
+        //Station::where('assigned_to', auth()->user()->id)->first();
+        $this->station = Station::find(1);
+        $this->status =  $this->station->status;
 
         $this->queue_number = '4737';
         $this->queue_status = 'In Progress';

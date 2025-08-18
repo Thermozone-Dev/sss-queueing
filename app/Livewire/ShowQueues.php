@@ -59,8 +59,6 @@ class ShowQueues extends Component
         return $this->now_serving;
     }
 
-
-
     public function render()
     {
         return view('public_pages.queue-board');
