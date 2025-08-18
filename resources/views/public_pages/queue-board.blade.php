@@ -1,13 +1,13 @@
 {{-- <section class="h-screen p-14 grid grid-cols-4 gap-12 bg-no-repeat bg-cover" style ="background-image: url('{{ asset('images/default_front_end/kiosk_bg.png') }}');"> --}}
-<section class="h-screen min-h-screen max-h-screen grid grid-cols-4 gap-0 bg-gray-200 bg-cover" style ="background-image: url('{{ asset('images/default_front_end/kiosk_bg.png') }}'">
+<section class="h-screen min-h-screen max-h-screen grid grid-cols-4 gap-0 bg-gray-200 bg-white">
     <div class="min-h-full max-h-full col-span-3 grid gap-0 grid-rows-[24%_1fr_5%] md:grid-rows-[19%_1fr_3%]">
         <div class="bg-transparent flex items-center justify-between text-white px-5">
             <div class="p-0 flex items-center justify-center">
                 <img src="{{ asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-48 h-full">
             </div>
             <div class="text-black text-right">
-                <p id="clock" class="font-extrabold" style="font-size: 1.5rem"></p>
-                <p id="date" class="font-bold"></p>
+                <p id="clock" class="font-extrabold" style="font-size: 2rem"></p>
+                <p id="date" class="font-bold" style="font-size: 1rem"></p>
             </div>
             <button wire:click="call_number" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
 
@@ -23,168 +23,69 @@
     </div>
 
     {{-- <div class="w-full h-full col-span-1 bg-white rounded-lg" wire:poll.3s='refresh_tickets'> --}}
-    <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[1fr_31%] md:grid-rows-[1fr_40%]" >
+    <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[1fr_8%_25%] md:grid-rows-[1fr_9%_40%]" >
         <div class="grid gap-0 grid-rows-[10%_1fr_1fr_1fr] md:grid-rows-[12%_1fr_1fr_1fr] min-h-full text-white text-sm">
             <div class="bg-white min-h-full flex items-center px-2">
                 <p class="font-black text-black" style="font-size: 2.2rem">Now Serving</p>
             </div>
-
-            <div class="min-h-full bg-sky-800 text-white px-3 py-4 flex items-center justify-between">
-                    <!-- Left Section -->
-                <div>
-                    <p class="text-md font-semibold uppercase tracking-wide">Assistance - Ray</p>
-                    <div class="flex items-baseline gap-3">
-                    <span class="font-bold text-[3.5rem] leading-none">A</span>
-                    <span class="font-extrabold text-[3.5rem] leading-none ">0012</span>
+            @foreach ($now_serving as $serving)
+                <div class="min-h-full {{$serving['bg_color']}} text-white px-3 py-4 flex items-center justify-between">
+                        <!-- Left Section -->
+                    <div>
+                        <p class="text-md font-semibold uppercase tracking-wide">{{$serving['stations_name']}} - {{$serving['name']}}</p>
+                        <div class="flex items-baseline gap-3">
+                        <span class="font-extrabold text-[3.5rem] leading-none ">{{$serving['queue_number']}} </span>
+                        </div>
+                    </div>
+                    <!-- Right Section -->
+                    <div class="text-right">
+                        <p class="text-md font-semibold uppercase tracking-wide">Window</p>
+                        <span class="font-extrabold text-[3.5rem] leading-none">{{$serving['station_code']}}</span>
                     </div>
                 </div>
-                <!-- Right Section -->
-                <div class="text-right">
-                    <p class="text-md font-semibold uppercase tracking-wide">Window</p>
-                    <span class="font-extrabold text-[3.5rem] leading-none">3</span>
-                </div>
-            </div>
+            @endforeach
+        </div>
 
-            <div class="bg-teal-500 min-h-full flex items-center justify-between px-3 py-4">
-                <div>
-                    <p class="text-md font-semibold uppercase tracking-wide">Certificate and permits - mike</p>
-                    <div class="flex items-baseline gap-3">
-                    <span class="font-bold text-[3.5rem] leading-none">C</span>
-                    <span class="font-extrabold text-[3.5rem] leading-none ">0020</span>
-                    </div>
-                </div>
-
-                <!-- Right Section -->
-                <div class="text-right">
-                    <p class="text-md font-semibold uppercase tracking-wide">Window</p>
-                    <span class="font-extrabold text-[3.5rem] leading-none">1</span>
-                </div>
-            </div>
-            <div class="bg-green-400 min-h-full flex items-center justify-between px-3 py-4">
-                <div>
-                    <p class="text-md font-semibold uppercase tracking-wide">meetings - jane</p>
-                    <div class="flex items-baseline gap-3">
-                    <span class="font-bold text-[3.5rem] leading-none">M</span>
-                    <span class="font-extrabold text-[3.5rem] leading-none ">0012</span>
-                    </div>
-                </div>
-
-                <!-- Right Section -->
-                <div class="text-right">
-                    <p class="text-md font-semibold uppercase tracking-wide">Window</p>
-                    <span class="font-extrabold text-[3.5rem] leading-none">2</span>
-                </div>
+        <div class="min-h-full text-white text-sm bg-white px-2 py-3">
+            <div class="min-h-full py-3">
+                <p class="font-black text-black uppercase" style="font-size: 1.2rem">Next in line</p>
+                <p class="font-none text-black text-sm">Please prepare your document before your number is called.</p>
             </div>
         </div>
 
-        <div class="bg-white min-h-full text-black col-span-1 grid place-content-center ">
-            <div class="min-h-full text-white text-sm">
-                <div class="min-h-full px-2">
-                    <p class="font-black text-black uppercase" style="font-size: 1.2rem">Next in line</p>
-                    <p class="font-none text-black text-sm">Please prepare your document before your number is called.</p>
-                </div>
-            </div>
+        <div class="bg-white min-h-full text-black col-span-1 grid place-content-stretch px-1">
+
             <div class="overflow-x-auto shadow-md sm:rounded-sm min-h-full max-h-full min-w-full text-white text-sm">
                 <table class="w-full text-sm text-left rtl:text-right text-black">
                     <thead>
-                        <tr class="bg-white text-gray-700" style="font-size: 1rem">
-                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 1</th>
-                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 2</th>
-                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 3</th>
-                            <th scope="col" class="px-1 py-3 text-left font-bold uppercase tracking-wider">Window 4</th>
+                        <tr class="bg-white text-gray-700" style="font-size: 0.8rem">
+                            @foreach ($queues as $queue)
+                                <th scope="col" class="px-1 py-3 text-left font-semibold uppercase tracking-wider">{{ $queue['station']->name ?? $queue['station']->code }}</th>
+                            @endforeach
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="odd:bg-gray-200 even:bg-white">
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold md:text-sm" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black " style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold md:text-sm" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                        </tr>
-                        <tr class="odd:bg-gray-200 even:bg-white">
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                        </tr>
-                        <tr class="odd:bg-gray-200 even:bg-white">
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                        </tr>
-                        <tr class="odd:bg-gray-200 even:bg-white">
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                        </tr>
-                        <tr class="odd:bg-gray-200 even:bg-white">
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                            <td class="px-2 py-0.5">
-                                <p class="uppercase font-semibold" style="font-size: 0.5rem">meeting - john</p>
-                                <p class="uppercase font-black" style="font-size: 1.3rem">M - 0001</p>
-                            </td>
-                        </tr>
+                        @php
+                            $maxQueues = collect($queues)->map(fn($q) => $q['queues']->count())->max();
+                        @endphp
+                        @for ($i = 0; $i < $maxQueues; $i++)
+                            <tr class="odd:bg-gray-200 even:bg-white">
+                                @foreach ($queues as $q)
+                                    @php
+                                        $queue = $q['queues']->get($i);
+                                        $station = $q['station'];
+                                    @endphp
+                                    <td class="px-2 py-0.5">
+                                        @if ($queue)
+                                            <p class="uppercase text-black font-medium text-[0.5rem]">{{ $queue->transaction->name}} - {{$queue->name}}</p>
+                                            <p class="uppercase font-black text-[1.3rem]" >{{$queue->getQueueNumber()}}</p>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endfor
                     </tbody>
                 </table>
             </div>

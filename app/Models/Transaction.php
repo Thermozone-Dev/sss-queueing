@@ -56,4 +56,16 @@ class Transaction extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    public function queues()
+    {
+        return $this->hasMany(Queue::class,'transaction_id');
+    }
+
+    public function active_queues($query)
+    {
+        return $query->whereHas('queues', function ($q) {
+            $q->where('status_id', 1);
+        });
+    }
 }

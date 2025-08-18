@@ -52,4 +52,30 @@ class Station extends Model
 	{
 		return $this->hasMany(Transaction::class);
 	}
+
+    public function queues()
+    {
+        return $this->hasManyThrough(
+            Queue::class,
+            Transaction::class,
+                'station_id',    // Foreign key on transactions table
+                'transaction_id',// Foreign key on queues table
+                'id',            // Local key on stations table
+                'id'             // Local key on transactions table
+        );
+    }
+
+    public function activeQueues()
+    {
+        return $this->queues()->active();
+    }
+
+    public function pendingQueues(){
+        return $this->activeQueues()->where('status_id', 1);
+    }
+
+    public function processingQueues(){
+        return $this->activeQueues()->where('status_id', 2);
+    }
+
 }
