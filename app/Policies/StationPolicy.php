@@ -105,4 +105,9 @@ class StationPolicy
     {
         return $user->can('reorder_station');
     }
+
+    public function assigned(User $user,Station $station): bool
+    {
+        return $user->can('assigned_transaction');
+    }
 }
