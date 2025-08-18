@@ -38,4 +38,33 @@ class Queue extends Model
     {
         return $this->transaction->station->code. '-' . str_pad($this->queue_number, 4, '0', STR_PAD_LEFT);
     }
+
+     public function scopeActive($query)
+     {
+         return $query
+                ->applySorting()
+                ->whereDate('queues.created_at', Carbon::today())
+                ->whereNotIn('status_id', [4, 5]);
+     }
+
+    // Sorting: priority first, then created_at
+    public function scopeApplySorting($query)
+    {
+        return $query->orderByRaw('CASE WHEN priority_type IS NOT NULL THEN 0 ELSE 1 END')
+                ->orderBy('queues.created_at', 'asc');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status_id', 1);
+    }
+
+    public function scopeProcessing($query)
+    {
+        return $query->where('status_id', 2);
+    }
+
+
+
+
 }
