@@ -89,7 +89,7 @@ class StationResource extends Resource
                                         ->preload(),
                                     Select::make('staff')
                                         ->label('Assigned Staff')
-                                        ->relationship('users', 'name')
+                                        ->relationship('users', 'firstname')
                                         ->preload()
                                         ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::headline($record->fullname))
                                         ->searchable(),
