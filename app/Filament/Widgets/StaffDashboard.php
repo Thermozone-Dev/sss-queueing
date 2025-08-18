@@ -12,6 +12,8 @@ class StaffDashboard extends Widget implements HasForms
 {
     use \Filament\Forms\Concerns\InteractsWithForms;
 
+    protected static ?int $sort = 2;
+
     protected static ?string $pollingInterval = null;
     protected static string $view = 'filament.widgets.staff-dashboard';
     protected int | string | array $columnSpan = 'full';
