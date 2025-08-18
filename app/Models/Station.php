@@ -53,6 +53,10 @@ class Station extends Model
 		return $this->hasMany(Transaction::class);
 	}
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
     public function queues()
     {
         return $this->hasManyThrough(
@@ -81,9 +85,4 @@ class Station extends Model
     public function doneQueues(){
         return $this->queues()->applySorting()->whereIn('status_id', [4, 5]);
     }
-
-
-
-
-
 }

@@ -4,17 +4,16 @@ namespace App\Filament\Resources\StationResource\Pages;
 
 use App\Filament\Resources\StationResource;
 use Filament\Actions;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditStation extends EditRecord
+class ViewStation extends ViewRecord
 {
     protected static string $resource = StationResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
-            Actions\DeleteAction::make(),
+            Actions\EditAction::make(),
         ];
     }
 }
