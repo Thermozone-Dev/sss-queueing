@@ -94,7 +94,7 @@ class StaffDashboard extends Widget implements HasForms
         ];
 
         $this->transaction = auth()->user()->transactions()->first();
-        $this->station = $this->transaction?->station;
+        $this->station = auth()->user()->stations()->first();
         $this->status =  $this->station?->status;
 
         $this->queue_number = '4737';
