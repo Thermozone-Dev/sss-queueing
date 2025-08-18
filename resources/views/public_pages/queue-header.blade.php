@@ -6,7 +6,7 @@
     }
 </style>
 @if ($page_show_prev_button)
-    <button class="flex pill-btn items-center px-4 py-1 rounded-lg mb-5">
+    <button wire:click="back_button" class="flex pill-btn items-center px-4 py-1 rounded-lg mb-5">
         <x-fas-arrow-left class="w-4 h-4 mr-2"></x-fas-arrow-left>Back
     </button>
 @endif

@@ -49,6 +49,11 @@ class StationResource extends Resource
 
 //                                    TextInput::make('type')
 //                                        ->nullable(),
+                                    Forms\Components\Textarea::make('description')
+                                        ->placeholder('Optional description for the station')
+                                        ->maxLength(200)
+                                        ->rows(3),
+
                                 ]),
                             Group::make()
                                 ->schema([

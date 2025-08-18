@@ -43,6 +43,7 @@ class Station extends Model
 		'type',
 		'status',
         'icon',
+        'description',
 		'priority_handling',
 		'max_concurrent_clients'
 	];

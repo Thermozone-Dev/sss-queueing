@@ -1,26 +1,11 @@
 
-<div class="grid grid-cols-1 gap-6 mt-6 text-white items-center" >
-    <div class="flex justify-between items-center justify-center px-8 py-5 rounded-xl" style="background-color: #007236">
-        <h1 class="capitalize font-bold text-3xl">Medical Assistance</h1>
-        <x-fas-chevron-right class="h-4 w-4"></x-fas-chevron-right>
-    </div>
-    <div class="flex justify-between items-center justify-center px-8 py-5 rounded-xl" style="background-color: #007236">
-        <h1 class="capitalize font-bold text-3xl">Burial Assistance</h1>
-        <x-fas-chevron-right class="h-4 w-4"></x-fas-chevron-right>
-    </div>
-    <div class="flex justify-between items-center justify-center px-8 py-5 rounded-xl" style="background-color: #007236">
-        <h1 class="capitalize font-bold text-3xl">Educational Assistance</h1>
-        <x-fas-chevron-right class="h-4 w-4"></x-fas-chevron-right>
-    </div>
-    <div class="flex justify-between items-center justify-center px-8 py-5 rounded-xl" style="background-color: #007236">
-        <h1 class="capitalize font-bold text-3xl">transportation Assistance</h1>
-        <x-fas-chevron-right class="h-4 w-4"></x-fas-chevron-right>
-    </div>
-    <div class="flex justify-between items-center justify-center px-8 py-5 rounded-xl" style="background-color: #007236">
-        <h1 class="capitalize font-bold text-3xl">emergency/financial Assistance</h1>
-        <x-fas-chevron-right class="h-4 w-4"></x-fas-chevron-right>
-    </div>
-
+<div class="grid grid-cols-1 gap-6 mt-6 text-white items-center">
+    @foreach ($transactions as $transactionItem)
+        <div wire:click="gotoViewTransaction({{$transactionItem->id}})" class="cursor-pointer flex justify-between items-center justify-center px-8 py-5 rounded-xl" style="background-color: #007236">
+            <h1 class="capitalize font-bold text-3xl">{{$transactionItem->name}}</h1>
+            <x-fas-chevron-right class="h-4 w-4"></x-fas-chevron-right>
+        </div>
+    @endforeach
 </div>
 <div class="text-center justify-center mt-5">
     <p class="text-xl text-black mb-1 font-bold">Please bring all required documents</p>
