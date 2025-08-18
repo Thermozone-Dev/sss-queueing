@@ -78,4 +78,12 @@ class Station extends Model
         return $this->activeQueues()->where('status_id', 2);
     }
 
+    public function doneQueues(){
+        return $this->queues()->applySorting()->whereIn('status_id', [4, 5]);
+    }
+
+
+
+
+
 }

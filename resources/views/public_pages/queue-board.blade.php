@@ -5,14 +5,14 @@
             <div class="p-0 flex items-center justify-center">
                 <img src="{{ asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-48 h-full">
             </div>
-            <div class="text-black text-right">
-                <p id="clock" class="font-extrabold" style="font-size: 2rem"></p>
-                <p id="date" class="font-bold" style="font-size: 1rem"></p>
+            <div class="text-black text-right" wire:poll.60s='getTime'>
+                <p class="font-extrabold" style="font-size: 2rem">{{$time_now['time']}}</p>
+                <p class="font-bold" style="font-size: 1rem">{{$time_now['date']}}</p>
             </div>
-            <button wire:click="call_number" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button>
-
         </div>
         <div class="bg-gray flex items-center justify-center">
+            <div wire:poll.2s="gather_queue_calls" class="hidden">
+            </div>
             <div id="videoContainer" class="relative w-full h-full ">
                 <video id="video1" class="w-full h-full rounded-t-md p-0 m-0 object-cover" src="{{asset('images/default_front_end/sample_video.mp4')}}"></video>
             </div>
@@ -34,13 +34,13 @@
                     <div>
                         <p class="text-md font-semibold uppercase tracking-wide">{{$serving['stations_name']}} - {{$serving['name']}}</p>
                         <div class="flex items-baseline gap-3">
-                        <span class="font-extrabold text-[3.5rem] leading-none ">{{$serving['queue_number']}} </span>
+                        <span class="font-extrabold text-[2.8rem] leading-none ">{{$serving['queue_number']}} </span>
                         </div>
                     </div>
                     <!-- Right Section -->
                     <div class="text-right">
                         <p class="text-md font-semibold uppercase tracking-wide">Window</p>
-                        <span class="font-extrabold text-[3.5rem] leading-none">{{$serving['station_code']}}</span>
+                        <span class="font-extrabold text-[2.8rem] leading-none">{{$serving['station_code']}}</span>
                     </div>
                 </div>
             @endforeach
@@ -92,11 +92,12 @@
         </div>
     </div>
 
-    @if($showModal)
+    @if($showModal && $modalDetails)
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "  wire:poll.3.5s="closeModal">
-            <div class="bg-white rounded-lg w-96 p-6 relative">
+            <div class="text-center shadow rounded-2xl p-8 relative" style="background-color: #84CC16">
                 <audio id="modalSound" src="{{asset('images/default_front_end/call_number_sound.wav')}}" autoplay loop></audio>
-                <h2 class="text-xl font-bold mb-4">Your Form</h2>
+                <span class="text-white font-black" style="font-size: 6rem">{{$modalDetails['queue_number']}}</span>
+                <p class="font-bold text-2xl captitalize">{{$modalDetails['transaction']}}</p>
             </div>
         </div>
     @endif
@@ -139,31 +140,6 @@
         })
     );
 
-    function updateDateTime() {
-        const now = new Date();
-
-        // Format Time (12-hour with meridiem)
-        let hours = now.getHours();
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
-        const meridiem = hours >= 12 ? "PM" : "AM";
-
-        hours = hours % 12 || 12; // convert to 12-hour format
-        const formattedHours = String(hours).padStart(2, "0");
-        const timeString = `${formattedHours}:${minutes}:${seconds} ${meridiem}`;
-
-        // Format Date (12 August 2025)
-        const options = { day: "numeric", month: "long", year: "numeric" };
-        const dateString = now.toLocaleDateString("us-EN", options);
-
-        // Update DOM
-        document.getElementById("clock").textContent = timeString;
-        document.getElementById("date").textContent = dateString;
-    }
-
-    // Update every second
-    setInterval(updateDateTime, 1000);
-    updateDateTime();
 
     document.addEventListener('open-modal', () => {
         let audio = document.getElementById('modalSound');
