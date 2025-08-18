@@ -64,6 +64,16 @@ class TransactionResource extends Resource
                                 Select::make('station_id')
                                     ->searchable()
                                     ->preload()
+                                    ->default(function (){
+                                        if(auth()->user()->hasRole('staff')){
+                                            return auth()->user()->stations()->first()?->id;
+                                        }
+                                    })
+                                    ->disabled(function (){
+                                        if(auth()->user()->hasRole('staff')){
+                                            return true;
+                                        }
+                                    })
                                     ->label('Assigned Station')
                                     ->relationship('station', 'name'),
                                 Select::make('users')
@@ -139,10 +149,5 @@ class TransactionResource extends Resource
         ];
     }
 
-    public static function canViewAny(): bool
-    {
-        $user = auth()->user();
 
-        return $user?->can('view_any_transaction') || $user?->can('assigned_transaction');
-    }
 }
