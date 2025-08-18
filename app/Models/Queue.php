@@ -43,14 +43,14 @@ class Queue extends Model
      {
          return $query
                 ->applySorting()
-                ->whereDate('queues.created_at', Carbon::today())
+                // ->whereDate('queues.created_at', Carbon::yesterday()) //test
                 ->whereNotIn('status_id', [4, 5]);
      }
 
-    // Sorting: priority first, then created_at
     public function scopeApplySorting($query)
     {
         return $query->orderByRaw('CASE WHEN priority_type IS NOT NULL THEN 0 ELSE 1 END')
+                ->whereDate('queues.created_at', Carbon::today())
                 ->orderBy('queues.created_at', 'asc');
     }
 

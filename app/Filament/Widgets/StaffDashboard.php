@@ -2,11 +2,15 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Queue;
+use App\Models\QueueCall;
+use App\Models\Station;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Widgets\Widget;
-
+use App\Models\QueueStepsTimestamp;
+use Filament\Notifications\Notification;
 
 class StaffDashboard extends Widget implements HasForms
 {
@@ -21,88 +25,121 @@ class StaffDashboard extends Widget implements HasForms
     public $transaction;
     public $status;
 
-    public $queue_number;
-    public $queue_status;
-    public $clent_name;
-    public $service_name;
-    public $required_documents;
 
+    public $currentQueue;
     public $nextQueues;
 
 
     public function mount(){
 
-        $this->nextQueues = [
-            [
-                'queue_number' => 'A1024',
-                'client_name' => 'Jane Doe',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Completed',
-            ],
-            [
-                'queue_number' => 'B2048',
-                'client_name' => 'John Smith',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Skipped',
-
-            ],
-            [
-                'queue_number' => 'C3096',
-                'client_name' => 'Alice Johnson',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Completed',
-
-            ],
-            [
-                'queue_number' => 'A1024',
-                'client_name' => 'Jane Doe',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Completed',
-            ],
-            [
-                'queue_number' => 'B2048',
-                'client_name' => 'John Smith',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Skipped',
-
-            ],
-            [
-                'queue_number' => 'C3096',
-                'client_name' => 'Alice Johnson',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Completed',
-
-            ],
-            [
-                'queue_number' => 'A1024',
-                'client_name' => 'Jane Doe',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Completed',
-            ],
-            [
-                'queue_number' => 'B2048',
-                'client_name' => 'John Smith',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Skipped',
-
-            ],
-            [
-                'queue_number' => 'C3096',
-                'client_name' => 'Alice Johnson',
-                'queue_status' => 'Waiting',
-                'queue_status2' => 'Completed',
-
-            ],
-        ];
-
         $this->transaction = auth()->user()->transactions()->first();
-        $this->station = auth()->user()->stations()->first();
-        $this->status =  $this->station?->status;
 
-        $this->queue_number = '4737';
-        $this->queue_status = 'In Progress';
-        $this->required_documents = $this->transaction?->required_documents;
+        //Station::where('assigned_to', auth()->user()->id)->first();
+        $this->station = Station::find(1);
+        $this->status =  $this->station->status;
+        $this->currentQueue = $this->getCurrentQueue();
+    }
+    public function getCurrentQueue()
+    {
+        $currentQueue = $this->station->activeQueues()->first();
+        $this->currentQueue = [
+            'id' => $currentQueue->id ?? null,
+            'queue_number' => ($currentQueue) ? $currentQueue->getQueueNumber() : null,
+            'client_name' => $currentQueue->name ?? null,
+            'queue_status' => $currentQueue->status->name ?? null,
+            'status_id' => $currentQueue->status_id ?? null,
+            'priority_type_id' => $currentQueue->priority->id ?? null ?? null,
+            'priority' => $currentQueue->priority->name ?? null,
+            'required_documents' => $currentQueue->transaction->required_documents ?? null,
+        ];
+        return $this->currentQueue;
+    }
 
+    public function call_queue($queue_id){
+        if(!QueueStepsTimestamp::where('queue_id', $queue_id)->first()){
+            QueueStepsTimestamp::create(
+                [
+                    'queue_id' => $queue_id,
+                    'first_called_at' => now(),
+                ]);
+        };
+        QueueCall::updateOrCreate(
+            ['queue_id' => $queue_id],
+            ['is_shown' => false, 'should_remove' => false]
+        );
+        return;
+    }
+
+    public function recall_queue($queue_id){
+
+        $this->updateTimeStamps($queue_id, 'recalled_last_at');
+        QueueCall::updateOrCreate(
+            ['queue_id' => $queue_id],
+            ['is_shown' => false, 'should_remove' => false]
+        );
+        return;
+    }
+
+    public function update_queue($queue_id, $status){
+        $column = null;
+        $shouldRemove = false;
+        $queue = Queue::find($queue_id);
+        if($status == 2){
+            $column = 'processed_at';
+            $body = 'Queue status set to processing.';
+            $color = 'success';
+            $shouldRemove = true;
+        }
+
+        if($status == 5){
+            $column = 'removed_at';
+            $body = 'Queue status set to removed.';
+            $color = 'danger';
+            $shouldRemove = true;
+        }
+
+        if($status == 4){
+            $column = 'completed_at';
+            $body = 'Queue status set to completed.';
+            $color = 'success';
+            $shouldRemove = true;
+        }
+
+        $queue_call = QueueCall::where('queue_id', $queue_id)->first();
+        if($queue_call){
+            $queue_call->should_remove = $shouldRemove;
+            $queue_call->update();
+        }
+        $this->updateTimeStamps($queue_id, $column);
+        $queue->status_id = $status;
+        $queue->save();
+
+        if(!$this->station->pendingQueues()->first()){
+            $body = 'There are no more queues to process.';
+            $title = 'Queue Empty';
+        }
+
+        Notification::make()
+            ->title($title ?? 'Queue Updated')
+            ->body($body)
+            ->success()
+            ->color($color)
+            ->send();
+
+        return $this->getCurrentQueue();
+    }
+
+    public function updateTimeStamps($queue_id, $column){
+        $timestamps = QueueStepsTimestamp::where('queue_id', $queue_id)->first();
+        if($timestamps){
+            if($column == 'recalled_last_at'){
+                $timestamps->recall_count += 1;
+            }
+            $timestamps->{$column} = now();
+            $timestamps->save();
+        }
+        $this->getCurrentQueue();
+        return;
     }
     protected function getForms(): array
     {
@@ -124,6 +161,7 @@ class StaffDashboard extends Widget implements HasForms
                 Toggle::make('status')
                     ->label('')
                     ->reactive()
+                    ->hint('Toggle the station status to go online or offline it.')
                     ->default($this->status)
                     ->onColor('success')
                     ->offColor('danger')

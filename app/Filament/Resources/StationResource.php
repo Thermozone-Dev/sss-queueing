@@ -42,7 +42,7 @@ class StationResource extends Resource
 
                                     TextInput::make('name')
                                         ->required()
-                                        ->reactive()
+                                        ->live(debounce: 500)
                                         ->afterStateUpdated(function (callable $set, $state) {
                                             $initials = collect(explode(' ', $state))
                                                 ->filter()

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Queue;
+use App\Models\QueueCall;
 use App\Models\Station;
 use Livewire\Component;
 use Livewire\Attributes\Lazy;
@@ -12,13 +13,25 @@ class ShowQueues extends Component
 {
     public $showModal = false;
 
+    public $modalDetails;
+
     public $queues;
     public $now_serving;
+    public $time_now;
 
     public function mount(): void
     {
         $this->getQueues();
         $this->getNowServing();
+        $this->getTime();
+        $this->modalDetails = null;
+    }
+
+    public function getTime(){
+        $this->time_now = [
+            'time' => now()->format('H:i A'),
+            'date' => now()->format('l, d F Y'),
+        ];
     }
 
     public function getQueues(){
@@ -59,6 +72,29 @@ class ShowQueues extends Component
         return $this->now_serving;
     }
 
+    public function gather_queue_calls(){
+        $call = QueueCall::orderBy('id','asc')->where('is_shown',false)->first();
+        $removed_queue = QueueCall::where('is_shown',false)->get();
+        if($removed_queue->count() > 0){
+            foreach ($removed_queue as $queue){
+                if($queue->should_remove){
+                    $queue->delete();
+                }
+            }
+        }
+
+        if(!$call){
+            return;
+        }
+        $this->modalDetails = [
+            'queue_number' => $call->queue->getQueueNumber(),
+            'transaction' => $call->queue->transaction->name,
+        ];
+        $this->call_number();
+        $call->is_shown = true;
+        $call->update();
+        return $this->modalDetails;
+    }
 
 
     public function render()
@@ -70,9 +106,9 @@ class ShowQueues extends Component
         $this->showModal = true;
         $this->dispatch('open-modal');
     }
+
     public function closeModal(){
         $this->showModal = false;
-        // $this->dispatch('open-modal', id: 'edit-user');
     }
 
 
