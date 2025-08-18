@@ -41,9 +41,20 @@ class StationResource extends Resource
                                         ->label('Active'),
 
                                     TextInput::make('name')
-                                        ->required(),
+                                        ->required()
+                                        ->reactive()
+                                        ->afterStateUpdated(function (callable $set, $state) {
+                                            $initials = collect(explode(' ', $state))
+                                                ->filter()
+                                                ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
+                                                ->take(3)
+                                                ->implode('');
+
+                                            $set('code', $initials);
+                                        }),
 
                                     TextInput::make('code')
+                                        ->maxLength(3)
                                         ->required()
                                         ->unique(ignoreRecord: true),
 
