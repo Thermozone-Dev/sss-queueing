@@ -6,18 +6,20 @@
     </div>
     <div class="items-center justify-center bg-white bg-white shadow rounded-xl p-5 mb-3">
         <div class="text-center">
-            <h2 class="uppercase font-extrabold" style="font-size: 2rem; color:#00411F">business permit</h2>
-            <h4 class="uppercase font-bold text-xl">clearance & permits</h4>
+            <h2 class="uppercase font-extrabold" style="font-size: 2rem; color:#00411F">{{$selected_transaction->name}}</h2>
+            <h4 class="uppercase font-bold text-xl">{{$selected_station->name}}</h4>
         </div>
 
         <span class="flex mt-5">
-            <span class="mx-auto bg-gray-300 items-center rounded-lg px-5 py-1">
-                <p class="flex"><span class="font-extrabold mr-2">Name: </span>Stephen Curry</p>
-                <p class="flex"><span class="font-extrabold mr-2">Number: </span>+63 912 121 1122</p>
+            <span class="mx-auto bg-gray-300 items-center rounded-lg px-5 py-3">
+                <p class="flex"><span class="font-extrabold mr-2">Name: </span>{{$this->form->getState()['name']}}</p>
+                @if ($this->form->getState()['mobile'])
+                    <p class="flex"><span class="font-extrabold mr-2">Number: </span>{{$this->form->getState()['mobile']}}</p>
+                @endif
             </span>
         </span>
         <div class="flex justify-center mt-4">
-            <button type="submit" class="px-6 py-4 text-white font-bold rounded-lg text-md" style="background-color: #00411F">
+            <button wire:click="generate_queue" class="px-6 py-4 text-white font-bold rounded-lg text-md" style="background-color: #00411F">
                 Get Queue Number
             </button>
         </div>

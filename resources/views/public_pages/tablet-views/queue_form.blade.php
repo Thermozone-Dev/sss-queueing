@@ -6,8 +6,8 @@
     }
 
     .queue-form-input:focus{
-        font-weight:bold; !important;
-        color: #84CC16; !important;
+        font-size:1.3rem; !important;
+        border-color: #84CC16; !important;
     }
 
     .queue-placeholder{
@@ -27,7 +27,7 @@
     <p class="text-gray-600 capitalize">ilagay ang iyong impormasyon</p>
 </div>
 <div class="items-center justify-center bg-white bg-white shadow rounded-xl p-5 mb-3">
-    <form wire:submit="create">
+    <form wire:submit.prevent="proceedConfirmation">
         {{ $this->form }}
 
         <div class="flex justify-center mt-4">
