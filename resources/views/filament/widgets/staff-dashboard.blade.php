@@ -30,36 +30,33 @@
                             <div class="required-documents p-2 text-gray-900 dark:text-white">{!! $required_documents !!}</div>
                         </div>
                     </dl>
-
-
-                     <!-- Transaction Details -->
-                    <x-filament::section>
-                        <x-slot name="heading">
-                            <span class="text-base font-semibold text-gray-900 dark:text-white">
-                                Actions
-                            </span>
-                        </x-slot>
-
-                        <dl class="divide-y divide-gray-200 dark:divide-gray-700">
-                            <div class="py-3 flex justify-between text-sm">
-                                <x-filament::button type="submit" class="pr-12 pl-12 !bg-warning-500">
-                                    Call Next
-                                </x-filament::button>
-                                <x-filament::button type="submit" class="pr-12 pl-12 !bg-info-500">
-                                    Skip
-                                </x-filament::button>
-                                <x-filament::button type="submit" class="pr-12 pl-12 !bg-primary-500">
-                                    Prioritize
-                                </x-filament::button>
-                                <x-filament::button type="submit" class="pr-12 pl-12 !bg-danger-500">
-                                    Deprioritize
-                                </x-filament::button>
-                            </div>
-                        </dl>
-                    </x-filament::section>
                 </x-filament::section>
 
+                <!-- Transaction Details -->
+                <x-filament::section>
+                    <x-slot name="heading">
+                        <span class="text-base font-semibold text-gray-900 dark:text-white">
+                            Actions
+                        </span>
+                    </x-slot>
 
+                    <dl class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <div class="py-3 flex justify-between text-sm">
+                            <x-filament::button type="submit" class="pr-12 pl-12 !bg-warning-500">
+                                Call Next
+                            </x-filament::button>
+                            <x-filament::button type="submit" class="pr-12 pl-12 !bg-info-500">
+                                Skip
+                            </x-filament::button>
+                            <x-filament::button type="submit" class="pr-12 pl-12 !bg-primary-500">
+                                Prioritize
+                            </x-filament::button>
+                            <x-filament::button type="submit" class="pr-12 pl-12 !bg-danger-500">
+                                Deprioritize
+                            </x-filament::button>
+                        </div>
+                    </dl>
+                </x-filament::section>
             </div>
 
             <!-- Column 2 (Next + Done) -->
