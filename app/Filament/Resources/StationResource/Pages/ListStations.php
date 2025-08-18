@@ -5,6 +5,8 @@ namespace App\Filament\Resources\StationResource\Pages;
 use App\Filament\Resources\StationResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class ListStations extends ListRecords
 {
@@ -15,5 +17,18 @@ class ListStations extends ListRecords
         return [
             Actions\CreateAction::make()->label('Add Station')->icon('heroicon-s-plus'),
         ];
+    }
+
+    protected function getTableQuery(): ?Builder
+    {
+        $query = parent::getTableQuery();
+
+        if (auth()->user()->hasRole('staff')) {
+            return $query->whereHas('users', function ($q) {
+                $q->where('users.id', auth()->id());
+            });
+        }
+
+        return $query;
     }
 }

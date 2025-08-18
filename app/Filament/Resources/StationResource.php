@@ -106,6 +106,7 @@ class StationResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -127,6 +128,7 @@ class StationResource extends Resource
         return [
             'index' => Pages\ListStations::route('/'),
             'create' => Pages\CreateStation::route('/create'),
+            'view' => Pages\ViewStation::route('/{record}'),
             'edit' => Pages\EditStation::route('/{record}/edit'),
         ];
     }
