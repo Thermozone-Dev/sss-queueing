@@ -21,8 +21,7 @@ class CreateUser extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['email_verified_at'] = now();
-
+        $data['email_verified_at'];
         return $data;
     }
 

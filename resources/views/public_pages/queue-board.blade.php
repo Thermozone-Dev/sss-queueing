@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="bg-gray flex items-center justify-center">
-            <div wire:poll.2s="gather_queue_calls" class="hidden">
+            <div wire:poll.10s="gather_queue_calls" class="hidden">
             </div>
             <div id="videoContainer" class="relative w-full h-full ">
                 <video id="video1" class="w-full h-full rounded-t-md p-0 m-0 object-cover" src="{{asset('images/default_front_end/sample_video.mp4')}}"></video>
@@ -93,7 +93,7 @@
     </div>
 
     @if($showModal && $modalDetails)
-        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "  wire:poll.3.5s="closeModal">
+        <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "  wire:poll.10s="closeModal">
             <div class="text-center shadow rounded-2xl p-8 relative" style="background-color: #84CC16">
                 <audio id="modalSound" src="{{asset('images/default_front_end/call_number_sound.wav')}}" autoplay loop></audio>
                 <span class="text-white font-black" style="font-size: 6rem">{{$modalDetails['queue_number']}}</span>
