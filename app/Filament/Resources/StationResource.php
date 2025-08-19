@@ -66,6 +66,7 @@ class StationResource extends Resource
                                     Forms\Components\Textarea::make('description')
                                         ->placeholder('Optional description for the station')
                                         ->maxLength(200)
+                                        ->disableGrammarly()
                                         ->rows(3),
 
                                 ]),
