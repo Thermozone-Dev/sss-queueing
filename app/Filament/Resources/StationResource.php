@@ -87,13 +87,13 @@ class StationResource extends Resource
                                             'lg' => 3,
                                             '2xl' => 5,
                                         ])
+                                        ->sets(['heroicons'])
                                         ->preload(),
                                     Select::make('staff')
                                         ->label('Assigned Staff')
                                         ->relationship('users', 'firstname')
                                         ->preload()
-                                        ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::headline($record->fullname))
-                                        ->searchable(),
+                                        ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::headline($record->fullname)),
                                 ]),
 
                     ]),
