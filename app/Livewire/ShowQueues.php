@@ -53,7 +53,7 @@ class ShowQueues extends Component
                         ->processing()
                         ->get()->take(3);
         $this->now_serving = [];
-        $colors = ['bg-sky-800','bg-teal-500','bg-green-400'];
+        $colors = ['#075985','#14B8A6','#4ADE80'];
         $counter = 0;
         foreach ($onProcess_queues as $process){
             $this->now_serving[]= [
@@ -73,6 +73,8 @@ class ShowQueues extends Component
     }
 
     public function gather_queue_calls(){
+        $this->getQueues();
+        $this->getNowServing();
         $call = QueueCall::orderBy('id','asc')->where('is_shown',false)->first();
         $removed_queue = QueueCall::where('is_shown',false)->get();
         if($removed_queue->count() > 0){

@@ -51,8 +51,8 @@ class CreateQueue extends Component implements HasForms
             ->schema([
                 TextInput::make('name')
                     ->label('Name')
-                    ->placeholder('Enter Full Name')
-                    ->default('Dennis')
+                    ->placeholder('Input Name')
+                    ->maxLength(8)
                     ->extraInputAttributes(['class' => 'queue-form-input'])
                     ->extraAttributes(['class' => 'queue-form-label'])
                     ->required(),
