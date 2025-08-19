@@ -89,6 +89,7 @@ class TransactionResource extends Resource
                                     ->toolbarButtons([
                                         'bulletList',
                                     ])
+                                    ->disableGrammarly()
                                     ->default('<ul><li>Requirements</li></ul>')
                             ]),
                     ]),
