@@ -23,10 +23,6 @@ class TransactionPolicy
      */
     public function view(User $user, Transaction $transaction): bool
     {
-        if ($user->hasRole('staff')) {
-            return $transaction->users->contains($user->id);
-        }
-
         return $user->can('view_transaction');
     }
 
@@ -43,10 +39,6 @@ class TransactionPolicy
      */
     public function update(User $user, Transaction $transaction): bool
     {
-        if ($user->hasRole('staff')) {
-            return $transaction->users->contains($user->id);
-        }
-
         return $user->can('update_transaction');
     }
 
@@ -112,10 +104,5 @@ class TransactionPolicy
     public function reorder(User $user): bool
     {
         return $user->can('reorder_transaction');
-    }
-
-    public function assigned(User $user,Transaction $transaction): bool
-    {
-        return $user->can('assigned_transaction');
     }
 }
