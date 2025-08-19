@@ -29,7 +29,7 @@
                 <p class="font-black text-black" style="font-size: 2.2rem">Now Serving</p>
             </div>
             @foreach ($now_serving as $serving)
-                <div class="min-h-full {{$serving['bg_color']}} text-white px-3 py-4 flex items-center justify-between">
+                <div class="min-h-full  text-white px-3 py-4 flex items-center justify-between" style="background-color: {{$serving['bg_color']}}">
                         <!-- Left Section -->
                     <div>
                         <p class="text-md font-semibold uppercase tracking-wide">{{$serving['stations_name']}} - {{$serving['name']}}</p>
