@@ -1,9 +1,10 @@
 <?php
 
-use App\Livewire\CreateQueue;
+// use App\Livewire\CreateQueue;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Queues;
 use App\Livewire\ShowQueues;
+use App\Http\Controllers\CreateQueue;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +23,11 @@ Route::get('/', function () {
 
 Route::get('/queue-board', ShowQueues::class);
 
-Route::get('/queue-kiosk', CreateQueue::class);
+Route::get('/queue-kiosk', [CreateQueue::class,'index']);
+Route::get('/queue-kiosk/get-station', [CreateQueue::class,'getStations'])->name('get-stations');
+Route::get('/queue-kiosk/get-station/{id}', [CreateQueue::class,'getStationTransaction'])->name('get-stations-transaction');
+Route::get('/queue-kiosk/get-transaction/{id}', [CreateQueue::class,'getTransaction'])->name('get-transaction');
+Route::get('/queue-kiosk/get-priority-type', [CreateQueue::class,'getPriorityType'])->name('get-priority');
 
 
 Route::get('/search-results', function () {

@@ -82,8 +82,10 @@ class StationResource extends Resource
                                         ->minValue(5)
                                         ->required(),
                                     IconPicker::make('icon')
+                                        ->sets(['heroicons'])
+                                        ->optionsLimit(150)
                                         ->columns([
-                                            'default' => 1,
+                                            'default' => 2,
                                             'lg' => 3,
                                             '2xl' => 5,
                                         ])
