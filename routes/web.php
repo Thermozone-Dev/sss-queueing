@@ -3,8 +3,8 @@
 // use App\Livewire\CreateQueue;
 use Illuminate\Support\Facades\Route;
 use App\Livewire\Queues;
-use App\Livewire\ShowQueues;
 use App\Http\Controllers\CreateQueue;
+use App\Http\Controllers\ShowQueues;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +21,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/queue-board', ShowQueues::class);
+Route::get('/queue-board', [ShowQueues::class,'index']);
+Route::get('/queue-board/get-queues', [ShowQueues::class,'getQueues'])->name('queues-get');
+Route::get('/queue-board/next-inline', [ShowQueues::class,'nextInline'])->name('queues-next');
+
 
 Route::get('/queue-kiosk', [CreateQueue::class,'index']);
 Route::get('/queue-kiosk/get-station', [CreateQueue::class,'getStations'])->name('get-stations');

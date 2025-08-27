@@ -14,21 +14,35 @@ import ViewTransaction from './components/view-transaction.vue';
 import GetInput from './components/get-input.vue';
 import ConfirmService from './components/confirm-service.vue';
 import QueueInfo from './components/queue-complete.vue';
-
-const app = createApp({});
+import NowServing from './components/now-serving.vue';
+import NextInLine from './components/next-in-line.vue';
 
 library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft);
 
-app.component('font-awesome-icon', FontAwesomeIcon);
-app.component('welcome-component', Welcome)
-app.component('kiosk-header', Header)
-app.component('view-station', ViewStation)
-app.component('view-transaction', ViewTransaction)
-app.component('go-back', GoBack)
-app.component('get-input', GetInput)
-app.component('confirm-service', ConfirmService)
-app.component('queue-complete', QueueInfo)
 
 
-app.use(router).mount('#app');
+if (document.querySelector('#app')) {
+    const app = createApp({});
+
+    app.component('font-awesome-icon', FontAwesomeIcon);
+    app.component('welcome-component', Welcome)
+    app.component('kiosk-header', Header)
+    app.component('view-station', ViewStation)
+    app.component('view-transaction', ViewTransaction)
+    app.component('go-back', GoBack)
+    app.component('get-input', GetInput)
+    app.component('confirm-service', ConfirmService)
+    app.component('queue-complete', QueueInfo)
+    app.use(router);
+    app.mount('#app');
+}
+
+// SPA 2: Kiosk
+if (document.querySelector('#app2')) {
+    const app2 = createApp({});
+    app2.component('now-serving', NowServing);
+    app2.component('next-in-line', NextInLine);
+    app2.mount('#app2');
+}
+
 
