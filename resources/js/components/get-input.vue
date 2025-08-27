@@ -1,4 +1,5 @@
 <template>
+    <go-back/>
     <div>
         <h1 class="text-3xl font-black text-black capitalize">enter your details</h1>
         <p class="text-gray-600 capitalize">ilagay ang iyong impormasyon</p>
@@ -46,7 +47,7 @@
                             type="radio"
                             class="queue-form-input"
                             v-model="form.priority_type"
-                            value={{priority.id}}
+                            :value=priority.id
                         />
                         <span class="ml-2">{{priority.name}}</span>
                     </label>
@@ -107,7 +108,11 @@
             },
             nextStep() {
                 if (this.validate()) {
-                    // this.$router.push({ name: 'step2', params: { formData: this.form } });
+                    this.$router.push({
+                        name: 'confirm-service',
+                        params: { id: this.id },
+                        query: { form: JSON.stringify(this.form) }
+                    });
                 }
             }
         },
@@ -120,6 +125,22 @@
                 .catch(error => {
                     console.error("There was an error fetching the priority:", error.message);
                 });
+
+            if (this.$route.query.form) {
+                try {
+                    this.form = JSON.parse(this.$route.query.form);
+                } catch (e) {
+                    console.error("Invalid form data", e);
+                }
+            }
+
+            if (this.$route.query.errors) {
+                try {
+                    this.errors = JSON.parse(this.$route.query.errors);
+                } catch (e) {
+                    console.error("Invalid errors data", e);
+                }
+            }
         },
     };
 </script>

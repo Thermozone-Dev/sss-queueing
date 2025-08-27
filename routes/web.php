@@ -28,6 +28,7 @@ Route::get('/queue-kiosk/get-station', [CreateQueue::class,'getStations'])->name
 Route::get('/queue-kiosk/get-station/{id}', [CreateQueue::class,'getStationTransaction'])->name('get-stations-transaction');
 Route::get('/queue-kiosk/get-transaction/{id}', [CreateQueue::class,'getTransaction'])->name('get-transaction');
 Route::get('/queue-kiosk/get-priority-type', [CreateQueue::class,'getPriorityType'])->name('get-priority');
+Route::post('/queue-kiosk/post-queue', [CreateQueue::class,'store'])->name('queue.post');
 
 
 Route::get('/search-results', function () {

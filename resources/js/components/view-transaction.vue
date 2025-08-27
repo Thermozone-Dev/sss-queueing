@@ -1,5 +1,5 @@
 <template>
-
+<go-back/>
 <div class="items-center justify-center bg-white bg-white shadow rounded-xl p-5 mb-3">
     <div class="pt-5">
         <h1 class="text-3xl font-extrabold text-black capitalize">{{selected_transaction.name}}</h1>
@@ -42,7 +42,7 @@
         props: {
             id: {
                 type: [String, Number],
-                id: 'id' || null
+                default: 'id' || null
             }
         },
         data() {
@@ -63,9 +63,7 @@
         mounted() {
             axios.get(route('get-transaction', { id: this.id }))
                 .then(response => {
-                    console.log(response.data.data);
                     this.selected_transaction = response.data.data;
-                    console.log(this.selected_transaction);
                 })
                 .catch(error => {
                     console.error("There was an error fetching the stations:", error.message);

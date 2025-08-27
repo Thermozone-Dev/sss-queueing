@@ -12,6 +12,8 @@ import Header from './components/header.vue';
 import ViewStation from './components/view-station.vue';
 import ViewTransaction from './components/view-transaction.vue';
 import GetInput from './components/get-input.vue';
+import ConfirmService from './components/confirm-service.vue';
+import QueueInfo from './components/queue-complete.vue';
 
 const app = createApp({});
 
@@ -24,6 +26,8 @@ app.component('view-station', ViewStation)
 app.component('view-transaction', ViewTransaction)
 app.component('go-back', GoBack)
 app.component('get-input', GetInput)
+app.component('confirm-service', ConfirmService)
+app.component('queue-complete', QueueInfo)
 
 
 app.use(router).mount('#app');
