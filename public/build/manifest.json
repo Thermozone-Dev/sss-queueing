@@ -1,17 +1,41 @@
 {
+  "_confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang-!~{005}~.js": {
+    "file": "assets/confirm-service-CvgRdhNe.css",
+    "src": "_confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang-!~{005}~.js"
+  },
+  "_confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang-C29vuqpf.js": {
+    "file": "assets/confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang-C29vuqpf.js",
+    "name": "confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang",
+    "css": [
+      "assets/confirm-service-CvgRdhNe.css"
+    ]
+  },
   "resources/css/app.css": {
-    "file": "assets/app-y2jmfi4u.css",
+    "file": "assets/app-DdjjGv6H.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/css/filament/admin/theme.css": {
-    "file": "assets/theme-C9C3YUdn.css",
+    "file": "assets/theme-Cnc6cqnD.css",
     "src": "resources/css/filament/admin/theme.css",
     "isEntry": true
   },
+  "resources/js/app-alt.js": {
+    "file": "assets/app-alt-BNBPolv1.js",
+    "name": "app-alt",
+    "src": "resources/js/app-alt.js",
+    "isEntry": true,
+    "imports": [
+      "_confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang-C29vuqpf.js"
+    ]
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CifqVuM1.js",
+    "file": "assets/app-BjUS_12o.js",
+    "name": "app",
     "src": "resources/js/app.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_confirm-service.vue_vue_type_style_index_0_scoped_fb04fe22_lang-C29vuqpf.js"
+    ]
   }
 }

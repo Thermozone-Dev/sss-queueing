@@ -50,7 +50,7 @@ class Queue extends Model
     public function scopeApplySorting($query)
     {
         return $query->orderByRaw('CASE WHEN priority_type IS NOT NULL THEN 0 ELSE 1 END')
-                ->whereDate('queues.created_at', Carbon::today())
+                ->whereDate('queues.created_at', Carbon::yesterday())
                 ->orderBy('queues.created_at', 'asc');
     }
 
