@@ -1,9 +1,9 @@
 <template>
-    <div class="grid gap-0 grid-rows-[10%_1fr] md:grid-rows-[%_1fr] place-content-between min-h-full text-white text-sm">
-        <div class="bg-white min-h-full flex items-center px-2">
+    <div class="h-full text-white text-sm">
+        <div class="bg-white flex items-center px-2 " style="height:15%">
             <p class="font-black text-black" style="font-size: 2.2rem">Now Serving</p>
         </div>
-        <div  class="grid place-content-stretch">
+        <div  class="grid grid-rows-[1fr_1fr_1fr] place-content-stretch" style="height:85%">
             <div v-for="(nowserving) in now_serving"
                 :key="nowserving.id" class="min-h-full text-white px-3 py-4 flex items-center justify-between"
                 :style="{ backgroundColor: nowserving.bg_color }"

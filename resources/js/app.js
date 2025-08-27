@@ -16,6 +16,7 @@ import ConfirmService from './components/confirm-service.vue';
 import QueueInfo from './components/queue-complete.vue';
 import NowServing from './components/now-serving.vue';
 import NextInLine from './components/next-in-line.vue';
+import QueueCall from './components/queue-call.vue';
 
 library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft);
 
@@ -42,6 +43,7 @@ if (document.querySelector('#app2')) {
     const app2 = createApp({});
     app2.component('now-serving', NowServing);
     app2.component('next-in-line', NextInLine);
+    app2.component('queue-call', QueueCall);
     app2.mount('#app2');
 }
 

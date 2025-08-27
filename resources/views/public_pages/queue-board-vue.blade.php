@@ -19,7 +19,7 @@
         </div>
 
 
-        <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[1fr_8%_25%] md:grid-rows-[1fr_9%_40%]" >
+        <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[1fr_8%_35%] md:grid-rows-[1fr_9%_35%]" >
             <now-serving></now-serving>
             <div class="min-h-full text-white text-sm bg-white px-2 py-3">
                 <div class="min-h-full py-3">
@@ -29,15 +29,7 @@
             </div>
             <next-in-line></next-in-line>
         </div>
-        {{-- @if($showModal && $modalDetails)
-            <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "  wire:poll.10s="closeModal">
-                <div class="text-center shadow rounded-2xl p-8 relative" style="background-color: #84CC16">
-                    <audio id="modalSound" src="{{asset('images/default_front_end/call_number_sound.wav')}}" autoplay loop></audio>
-                    <span class="text-white font-black" style="font-size: 6rem">{{$modalDetails['queue_number']}}</span>
-                    <p class="font-bold text-2xl captitalize">{{$modalDetails['transaction']}}</p>
-                </div>
-            </div>
-        @endif --}}
+        <queue-call />
     </section>
 
     @routes
@@ -97,21 +89,6 @@
                 videos[0].play();
             })
         );
-
-
-        document.addEventListener('open-modal', () => {
-            let audio = document.getElementById('modalSound');
-
-            // Restart and play sound
-            audio.currentTime = 0;
-            audio.play();
-
-            // Auto close modal after 3 seconds
-            setTimeout(() => {
-                $this.closeModal();
-                audio.pause(); // stop sound when modal closes
-            }, 3000);
-        });
 
     </script>
 

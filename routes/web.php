@@ -24,6 +24,7 @@ Route::get('/', function () {
 Route::get('/queue-board', [ShowQueues::class,'index']);
 Route::get('/queue-board/get-queues', [ShowQueues::class,'getQueues'])->name('queues-get');
 Route::get('/queue-board/next-inline', [ShowQueues::class,'nextInline'])->name('queues-next');
+Route::get('/queue-board/queue-call', [ShowQueues::class,'callNext'])->name('queues-call-next');
 
 
 Route::get('/queue-kiosk', [CreateQueue::class,'index']);
