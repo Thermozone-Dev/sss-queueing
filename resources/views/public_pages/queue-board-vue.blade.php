@@ -1,19 +1,46 @@
 <x-layouts.app>
-    <section id="app2" class="min-h-screen max-h-screen grid grid-cols-4 gap-0 bg-gray-200">
+    <?php
+        $settings = app(App\Settings\GeneralSettings::class);
+        $url = $settings->site_youtube;
+        $videoId = null;
+        // Match YouTube watch links
+        if (preg_match('/watch\?v=([^\&\?]+)/', $url, $matches)) {
+            // YouTube watch URL
+            $videoId = $matches[1];
+            $url = "https://www.youtube.com/embed/" . $videoId;
+        } elseif (preg_match('/youtu\.be\/([^\&\?]+)/', $url, $matches)) {
+            // Short YouTube URL
+            $videoId = $matches[1];
+            $url = "https://www.youtube.com/embed/" . $videoId;
+        } elseif (str_contains($url, 'youtube.com/embed/')) {
+            // Already an embed link
+            $videoId = basename($url); // get last segment as ID
+        } else {
+            // Not a YouTube link
+            $url = null;
+        }
+    ?>
+    <section id="app2" class="min-h-screen max-h-screen grid grid-cols-4 gap-0" style="background: {{$settings->site_theme['primary']}}">
         <div class="col-span-3 grid gap-0 grid-rows-[20%_1fr_2%]">
             <div class="bg-transparent flex items-center justify-between text-white px-5">
-                <div class="p-0 flex items-center justify-center">
-                    <img src="{{ asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-64 h-full">
+                <div class="p-3 w-auto h-48">
+                    <img src="{{ $settings->brand_logo ?? asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
                 </div>
-                <div class="text-black text-right">
+                <div class="text-right" style="color: {{$settings->site_theme['secondary']}}">
                     <p class="font-extrabold" id="clock" style="font-size: 2rem"></p>
                     <p class="font-bold" id="date" style="font-size: 1rem"></p>
                 </div>
             </div>
-            <div id="videoContainer" class="bg-gray flex items-center justify-center overflow-hidden relative " style="background-color:green;">
-                <video id="video1" class="absolute  w-full h-full rounded-t-md p-0 m-0 object-cover" src="{{asset('images/default_front_end/sample_video.mp4')}}"></video>
+            <div class="flex items-center justify-center overflow-hidden relative " style="background-color:green;">
+                <iframe
+                    class="absolute  w-full h-full rounded-t-md p-0 m-0 object-cover"
+                    src="{{ $url }}?autoplay=1&loop=1&playlist={{ $videoId }}"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen>
+                </iframe>
             </div>
-            <div class="bg-lime-700 flex items-center justify-center text-white text-xs">
+            <div class="flex items-center justify-center text-white text-xs" style="background-color: {{$settings->site_theme['primary']}}">
                 This office follows the Anti-Red Tape Authority (ARTA) law. All services are free of fixers. Standard processing times and requirements are posted for your reference.
             </div>
         </div>
@@ -54,42 +81,6 @@
         // Update every second
         setInterval(updateDateTime, 1000);
         updateDateTime();
-
-        ["click"].forEach(evt =>
-            document.addEventListener(evt, () => {
-
-                const videos = document.querySelectorAll('#videoContainer video');
-                const playButton = document.getElementById('playButton');
-                let currentVideo = 0;
-
-                // Check if videos exist
-                if (videos.length === 0) return;
-
-                // Hide all videos initially except the first one
-                videos.forEach((video, index) => {
-                    video.style.display = index === 0 ? 'block' : 'none';
-                });
-
-                function playNextVideo() {
-                    videos[currentVideo].style.display = 'none';
-                    videos[currentVideo].pause();
-                    currentVideo = (currentVideo + 1) % videos.length;
-                    videos[currentVideo].style.display = 'block';
-                    videos[currentVideo].play();
-                }
-
-                videos.forEach(video => {
-                    video.addEventListener('ended', playNextVideo);
-                });
-
-                // Hide play button and play the first video on load
-                if (playButton) {
-                    playButton.style.display = 'none';
-                }
-                videos[0].play();
-            })
-        );
-
     </script>
 
 </x-layouts.app>

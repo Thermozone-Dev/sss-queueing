@@ -2,16 +2,21 @@
 
 namespace App\Filament\Pages\Setting;
 
+use App\Rules\YoutubeUrl;
 use App\Services\FileService;
 use App\Settings\GeneralSettings;
 use BezhanSalleh\FilamentShield\Traits\HasPageShield;
 use Filament\Forms;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\SettingsPage;
 use Filament\Support\Facades\FilamentView;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 use Riodwanto\FilamentAceEditor\AceEditor;
 
 use function Filament\Support\is_app_url;
@@ -79,30 +84,61 @@ class ManageGeneral extends SettingsPage
                                 ->required(),
                         ]),
                         Forms\Components\Grid::make()->schema([
-                            Forms\Components\Grid::make()->schema([
+                            Forms\Components\Grid::make(2)->schema([
                                 Forms\Components\TextInput::make('brand_logoHeight')
                                     ->label(fn () => __('page.general_settings.fields.brand_logoHeight'))
-                                    ->required()
-                                    ->columnSpan(2),
+                                    ->required(),
+
+                                TextInput::make('site_youtube')
+                                    ->label('YouTube Video Link')
+                                    ->rules([new YoutubeUrl()])
+                                    ->label('YouTube Video Link')
+                                    ->placeholder('Paste YouTube link here...')
+                                    ->required(),
+
+                            ])
+                            ->columnSpanFull(),
+                            Forms\Components\Grid::make(3)->schema([
                                 Forms\Components\FileUpload::make('brand_logo')
                                     ->label(fn () => __('page.general_settings.fields.brand_logo'))
                                     ->image()
                                     ->directory('sites')
                                     ->visibility('public')
                                     ->moveFiles()
-                                    ->required()
-                                    ->columnSpan(2),
+                                    ->columnSpan(2)
+                                    ->required(),
+
+                                Forms\Components\Grid::make()->schema([
+                                    Forms\Components\FileUpload::make('site_favicon')
+                                        ->label(fn () => __('page.general_settings.fields.site_favicon'))
+                                        ->image()
+                                        ->directory('sites')
+                                        ->visibility('public')
+                                        ->hint('test')
+                                        ->moveFiles()
+                                        ->columnSpanFull()
+                                        ->acceptedFileTypes(['image/x-icon', 'image/vnd.microsoft.icon'])
+                                        ->required(),
+                                        Section::make('How to create site favicon?')
+                                            ->schema([
+                                                Placeholder::make('')
+                                                    ->columnSpanFull()
+                                                    ->content(new HtmlString(view('public_pages.instruction')->render()))
+                                                // ...
+                                            ])
+                                            ->collapsed(true)
+                                            ->columnSpanFull()
+                                            ->collapsible()
+
+                                ])->columnSpan(1)
                             ])
-                                ->columnSpan(2),
-                            Forms\Components\FileUpload::make('site_favicon')
-                                ->label(fn () => __('page.general_settings.fields.site_favicon'))
-                                ->image()
-                                ->directory('sites')
-                                ->visibility('public')
-                                ->moveFiles()
-                                ->acceptedFileTypes(['image/x-icon', 'image/vnd.microsoft.icon'])
-                                ->required(),
+                            ->columnSpanFull(),
+
+
+
                         ])->columns(4),
+
+
                     ]),
                 Forms\Components\Tabs::make('Tabs')
                     ->tabs([

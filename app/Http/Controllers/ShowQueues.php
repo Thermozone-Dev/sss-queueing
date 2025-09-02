@@ -18,7 +18,7 @@ class ShowQueues extends Controller
 
         try {
             $onProcess_queues = Queue::active()
-                    // ->processing()
+                    ->processing()
                     ->get()->take(3);
 
             $now_serving = [];

@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div class="flex justify-center mt-4">
-                <button type="submit" class="px-4 py-1 text-white font-bold rounded-lg" style="background-color: #00411F">
+                <button type="submit" class="px-4 py-1 text-white font-bold rounded-lg" :style="{backgroundColor: theme.primary}">
                     Submit
                 </button>
             </div>
@@ -80,6 +80,7 @@
         },
         data() {
             return {
+                theme: window.appTheme || {},
                 form: {
                     name: "",
                     mobile: "",
@@ -118,6 +119,9 @@
         },
 
         mounted() {
+            if (this.theme?.primary) {
+                document.documentElement.style.setProperty("--theme-primary", this.theme.primary);
+            }
             axios.get(route('get-priority'))
                 .then(response => {
                     this.priorityType = response.data.data;
@@ -158,7 +162,7 @@
 
     .queue-form-input:focus{
         font-size:1.3rem;
-        border-color: #84CC16;
+        border-color:  var(--theme-primary);
     }
 
     .queue-placeholder{
@@ -166,7 +170,7 @@
     }
 
     .queue-form-label{
-        color: #007236;
+        color: var(--theme-primary);
         font-weight: bold;
         font-size: 1.3rem;
     }

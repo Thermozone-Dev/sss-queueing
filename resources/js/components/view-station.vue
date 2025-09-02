@@ -2,7 +2,7 @@
     <kiosk-header :header="header" :description="description" />
     <go-back/>
     <div class="grid grid-cols-1 gap-6 mt-6 text-white items-center">
-        <div v-for="transaction in transactions" :key="transaction.id"  class="cursor-pointer px-8 py-5 rounded-xl" style="background-color: #007236">
+        <div v-for="transaction in transactions" :key="transaction.id"  class="cursor-pointer px-8 py-5 rounded-xl" :style="{backgroundColor: theme.primary}">
             <router-link :to="{ name: 'view-transaction', params: { id: transaction.id }}" >
                 <h1 class="capitalize font-bold text-3xl flex items-center justify-between">{{transaction.name}} <font-awesome-icon :icon="['fas', 'chevron-right']" class="h-4 w-4" /></h1>
            </router-link>
@@ -35,6 +35,7 @@
         },
         data() {
             return {
+                theme: window.appTheme || {},
                 header: 'Welcome',
                 description: 'Pumili ng serbisyo para makuha ang iyong numero',
                 transactions: [],

@@ -27,7 +27,7 @@
         </div>
     </div>
     <div class="w-full flex justify-end my-2">
-        <button @click="proceedNextStep()" class="rounded-lg px-4 py-1 text-white self-end text-lg mr-2" style="background-color: green;">Proceed</button>
+        <button @click="proceedNextStep()" class="rounded-lg px-4 py-1 text-white self-end text-lg mr-2" :style="{backgroundColor: theme.primary}">Proceed</button>
     </div>
 </div>
 
@@ -47,6 +47,7 @@
         },
         data() {
             return {
+                theme: window.appTheme || {},
                 selected_transaction: {
                     name: '',
                     description: '',
