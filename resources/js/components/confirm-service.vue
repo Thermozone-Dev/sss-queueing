@@ -18,7 +18,7 @@
             </span>
         </span>
         <div class="flex justify-center mt-4">
-            <button @click="submit()" class="px-6 py-4 text-white font-bold rounded-lg text-md" style="background-color: #00411F">
+            <button @click="submit()" class="px-6 py-4 text-white font-bold rounded-lg text-md" :style="{backgroundColor: theme.primary}">
                 Get Queue Number
             </button>
         </div>
@@ -41,6 +41,7 @@
         },
         data() {
             return {
+                theme: window.appTheme || {},
                 form: {
                     name: '',
                     mobile: null,

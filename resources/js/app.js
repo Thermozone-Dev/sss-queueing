@@ -5,6 +5,9 @@ import { faClock, faCircleCheck, faChevronRight, faChevronLeft } from '@fortawes
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from './router';
+import "nprogress/nprogress.css";
+import axios from "axios";
+
 
 import Welcome from './components/example.vue';
 import GoBack from './components/backButton.vue';
@@ -17,13 +20,40 @@ import QueueInfo from './components/queue-complete.vue';
 import NowServing from './components/now-serving.vue';
 import NextInLine from './components/next-in-line.vue';
 import QueueCall from './components/queue-call.vue';
+import ProgressOverlay from './components/ProgressOverlay.vue';
 
 library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft);
 
 
 
 if (document.querySelector('#app')) {
-    const app = createApp({});
+    const app = createApp({
+        mounted() {
+            const progress = this.$refs.progressOverlay;
+
+            axios.interceptors.request.use(
+                (config) => {
+                    progress.start();
+                    return config;
+                },
+                (error) => {
+                    progress.fail();
+                    return Promise.reject(error);
+                }
+            );
+
+            axios.interceptors.response.use(
+                (response) => {
+                    progress.finish();
+                    return response;
+                },
+                (error) => {
+                    progress.fail();
+                    return Promise.reject(error);
+                }
+            );
+        }
+    });
 
     app.component('font-awesome-icon', FontAwesomeIcon);
     app.component('welcome-component', Welcome)
@@ -34,6 +64,8 @@ if (document.querySelector('#app')) {
     app.component('get-input', GetInput)
     app.component('confirm-service', ConfirmService)
     app.component('queue-complete', QueueInfo)
+    app.component('progress-overlay', ProgressOverlay);
+
     app.use(router);
     app.mount('#app');
 }
@@ -46,5 +78,4 @@ if (document.querySelector('#app2')) {
     app2.component('queue-call', QueueCall);
     app2.mount('#app2');
 }
-
 

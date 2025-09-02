@@ -2,12 +2,15 @@
     <kiosk-header :header="header" :description="description">
     </kiosk-header>
     <div  class="grid grid-cols-2 sm:grid-cols-2 xs:grid-cols-1 gap-6 mt-6 text-white items-center" >
-        <div  v-for="station in stations" :key="station.id" class="cursor-pointer sm:px-4 xs:px-2 px-4 rounded-lg text-center justify-center py-5" style="background-color: #84CC16">
+        <div  v-for="station in stations" :key="station.id" class="cursor-pointer sm:px-4 xs:px-2 px-4 rounded-lg text-center justify-center py-5"
+            :style="{ backgroundColor: theme.primary}"
+            >
             <router-link :to="{ name: 'view-station', params: { id: station.id } }">
                 <component
                     :is="getIconComponent(station.icon)"
-                    class="h-24 w-full text-green-900 mb-4"
-                />
+                    class="h-24 w-full mb-4"
+                    :style="{ color: theme.secondary}"
+                    />
                 <h1 class="uppercase font-bold text-xl">{{station.name}}</h1>
                 <h4 class="uppercase text-sm">{{station.description}}</h4>
             </router-link>
@@ -39,6 +42,7 @@ export default {
     },
     data() {
         return {
+            theme: window.appTheme || {},
             stations: [],
         };
     },
