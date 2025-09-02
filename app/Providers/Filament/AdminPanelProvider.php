@@ -40,6 +40,19 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
             ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
             ->darkMode(true)
+            ->navigationItems([
+                \Filament\Navigation\NavigationItem::make('kiosk')
+                    ->label('Kiosk')
+                    ->url('/queue-board', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-device-tablet')
+                    ->group('Queues'),
+
+                \Filament\Navigation\NavigationItem::make('queue_board')
+                    ->label('Board')
+                    ->url('/queue-kiosk', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-numbered-list')
+                    ->group('Queues'),
+            ])
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
             ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
