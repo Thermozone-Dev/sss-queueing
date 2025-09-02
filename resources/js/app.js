@@ -5,7 +5,6 @@ import { faClock, faCircleCheck, faChevronRight, faChevronLeft } from '@fortawes
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from './router';
-import "nprogress/nprogress.css";
 import axios from "axios";
 
 
