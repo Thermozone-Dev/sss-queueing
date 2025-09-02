@@ -19,12 +19,13 @@
             // Not a YouTube link
             $url = null;
         }
+        $logo = Storage::url($settings->brand_logo);
     ?>
     <section id="app2" class="min-h-screen max-h-screen grid grid-cols-4 gap-0" style="background: {{$settings->site_theme['primary']}}">
         <div class="col-span-3 grid gap-0 grid-rows-[20%_1fr_2%]">
             <div class="bg-transparent flex items-center justify-between text-white px-5">
                 <div class="p-3 w-auto h-48">
-                    <img src="{{ $settings->brand_logo ?? asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
+                    <img src="{{ $logo ?? asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
                 </div>
                 <div class="text-right" style="color: {{$settings->site_theme['secondary']}}">
                     <p class="font-extrabold" id="clock" style="font-size: 2rem"></p>
