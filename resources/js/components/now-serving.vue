@@ -45,7 +45,7 @@
 
             startPolling() {
                 this.fetchTransactions(); // fetch immediately
-                this.pollInterval = setInterval(this.fetchTransactions, 5000); // every 5 sec
+                this.pollInterval = setInterval(this.fetchTransactions, 15000); // every 5 sec
             },
             stopPolling() {
                 if (this.pollInterval) clearInterval(this.pollInterval);
