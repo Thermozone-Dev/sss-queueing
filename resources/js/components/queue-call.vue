@@ -35,7 +35,7 @@
             },
             startPolling() {
                 this.showModal = false;
-                this.pollInterval = setInterval(this.fetchTransactions, 15000); // every 8 sec
+                this.pollInterval = setInterval(this.fetchTransactions, 8000); // every 8 sec
             },
             stopPolling() {
                 if (this.pollInterval) clearInterval(this.pollInterval);
@@ -46,7 +46,7 @@
                 setTimeout(() => {
                     this.showModal = false;
                     this.startPolling()
-                }, 15000);
+                }, 5000);
             }
         },
 
