@@ -43,14 +43,14 @@ class AdminPanelProvider extends PanelProvider
             ->navigationItems([
                 \Filament\Navigation\NavigationItem::make('kiosk')
                     ->label('Kiosk')
-                    ->url('/queue-board', shouldOpenInNewTab: true)
-                    ->icon('heroicon-o-device-tablet')
+                    ->url('/queue-kiosk', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-numbered-list')
                     ->group('Queues'),
 
                 \Filament\Navigation\NavigationItem::make('queue_board')
                     ->label('Board')
-                    ->url('/queue-kiosk', shouldOpenInNewTab: true)
-                    ->icon('heroicon-o-numbered-list')
+                    ->url('/queue-board', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-device-tablet')
                     ->group('Queues'),
             ])
             ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
