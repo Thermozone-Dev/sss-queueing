@@ -34,7 +34,7 @@
             <div class="flex items-center justify-center overflow-hidden relative " style="background-color:green;">
                 <iframe
                     class="absolute  w-full h-full rounded-t-md p-0 m-0 object-cover"
-                    src="{{ $url }}?autoplay=1&mute=1&loop=1&playlist={{ $videoId }}"
+                    src="{{ $url }}?autoplay=1&loop=1&playlist={{ $videoId }}"
                     frameborder="0"
                     allow="autoplay; encrypted-media"
                     allowfullscreen>
