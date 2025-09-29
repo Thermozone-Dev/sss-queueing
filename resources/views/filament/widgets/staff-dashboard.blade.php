@@ -45,12 +45,8 @@
                             <dl class="divide-y divide-gray-200 dark:divide-gray-700">
                                 <div class="py-2 flex justify-evenly text-sm">
                                     @if ($currentQueue['status_id'] == 1)
-                                        <x-filament::button wire:click="call_queue({{$currentQueue['id']}})" class="px-6 py-2 !bg-warning-500">
-                                            Call Next
-                                        </x-filament::button>
-
                                         <x-filament::button wire:click="recall_queue({{$currentQueue['id']}})" class="px-6 py-2 !bg-secondary-500">
-                                            Recall
+                                            Call
                                         </x-filament::button>
 
                                         <x-filament::button wire:click="update_queue({{$currentQueue['id']}},2)" class="px-6 py-2 !bg-primary-500">
