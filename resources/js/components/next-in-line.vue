@@ -1,7 +1,37 @@
 <template>
     <div class="bg-white min-h-full text-black col-span-1 grid place-content-stretch px-1">
         <div class="overflow-x-auto shadow-md sm:rounded-sm min-h-full max-h-full min-w-full text-white text-sm">
-            <table class="w-full text-sm text-left rtl:text-right text-black">
+            <div v-for="station in queues" :key="station.id" class="border rounded-xl text-white station grid grid-rows-[10%_1fr] mb-1">
+                <div class="text-center text-2xl font-bold  ">
+                    <span>
+                        {{station.station}} :
+                    </span>
+                    <span v-if="station.processing" class="text-xl" :style="{ color: theme.primary}">
+                        {{ station.processing.queue_number }} - {{ station.processing.name}}
+                    </span>
+                    <span v-else class="text-gray-500 text-xl">
+                        (Idle)
+                    </span>
+                </div>
+
+                <div class=" rounded py-2 px-4 ">
+                    <!-- Currently serving -->
+                    <div v-if="station.queues.length > 0" class="flex justify-evenly gap-2 mt-2 text-lg">
+                        <div v-for="(next, outerIndex) in station.queues" :key="outerIndex" class="flex flex-col gap-3 pr-2">
+                            <div v-for="(queue, innerIndex) in next" :key="innerIndex" class="rounded text-center font-bold">
+                                <span>
+                                    {{ queue.queue_number }} - {{ queue.name }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="rounded text-center text-md font-bold text-center text-gray-400">
+                        <em>Nothing follows</em>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <table class="w-full text-sm text-left rtl:text-right text-black">
                 <thead>
                     <tr class="bg-white text-gray-700" style="font-size: 0.8rem">
                     <th v-for="station in queues" :key="station.id"
@@ -32,7 +62,7 @@
                     </td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
 
         </div>
     </div>
@@ -43,22 +73,16 @@
     export default {
         data() {
             return {
+                theme: window.appTheme || {},
                 queues: [],
                 pollInterval: null,
             };
-        },
-        computed: {
-            maxQueues() {
-                if (!this.queues || this.queues.length === 0) return 0;
-                return Math.max(...this.queues.map(q => (q.queues ? q.queues.length : 0)));
-            },
         },
         methods: {
             fetchTransactions() {
                 axios.get(route('queues-next'))
                     .then(response => {
                         this.queues = response.data.data;
-
                     })
                     .catch(error => {
                         console.error("There was an error fetching the stations:", error.message);
@@ -83,3 +107,11 @@
 
     };
 </script>
+<style>
+    .station:nth-child(odd) {
+    background-color: #14B8A6; /* teal */
+    }
+    .station:nth-child(even) {
+    background-color: #4ADE80; /* green */
+    }
+</style>

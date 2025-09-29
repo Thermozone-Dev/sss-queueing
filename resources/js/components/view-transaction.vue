@@ -22,8 +22,10 @@
 
     <div id="requirements-section" class="mt-3 mb-4">
         <h4 class="text-black font-bold text-lg my-4">Requirements</h4>
-        <div class="bg-gray-200 h-48 max-h-48 overflow-auto rounded-xl p-4">
-            {{selected_transaction.description}}
+        <div
+            class="bg-gray-200 h-48 max-h-48 overflow-auto rounded-xl p-4"
+            v-html="selected_transaction.required_documents"
+        >
         </div>
     </div>
     <div class="w-full flex justify-end my-2">

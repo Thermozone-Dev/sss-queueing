@@ -151,6 +151,12 @@ class StaffDashboard extends Widget implements HasForms
         if($property_name == 'status'){
             $this->station->status = $this->{$property_name};
             $this->station->save();
+
+            Notification::make()
+                ->title('Station Status Updated')
+                ->body('Station status set to ' . ($this->{$property_name} ? 'Online' : 'Offline'))
+                ->success()
+                ->send();
         }
     }
     public function form1(Form $form): Form

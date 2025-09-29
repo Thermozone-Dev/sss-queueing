@@ -32,7 +32,7 @@
                     class="queue-form-input"
                     placeholder="09XX XXX XXXX"
                     minlength="11"
-                    maxlength="12"
+                    maxlength="13"
                 />
                 <small class="text-gray-500">Mobile number must start with (09)</small>
                 <span v-if="errors.mobile" class="text-red-500 text-xs">{{ errors.mobile }}</span>
@@ -51,12 +51,24 @@
                         />
                         <span class="ml-2">{{priority.name}}</span>
                     </label>
+                    <button
+                        v-if="form.priority_type != null"
+                        class="justify-self-center text-sm underline"
+                        type="button"
+                        :style="{ color: theme.secondary}"
+                        @click="form.priority_type = null"
+                    >
+                        Clear Selection
+
+                    </button>
+
                     <p class="text-xs" style="color: #FF0000;">
                         <em>
                             Select this option only if you qualify for the priority lane. Ineligible selections will
                             result in returning to the regular queue and being placed last.
                         </em>
                     </p>
+
                 </div>
             </div>
             <div class="flex justify-center mt-4">
@@ -101,7 +113,7 @@
                 }
 
                 if (this.form.mobile) {
-                    if (!/^09\d{9}$/.test(this.form.mobile)) {
+                    if (/^09\d{0,10}$/.test(this.form.mobile)) {
                     this.errors.mobile = "Mobile number must start with 09 and be 11 digits";
                     }
                 }
