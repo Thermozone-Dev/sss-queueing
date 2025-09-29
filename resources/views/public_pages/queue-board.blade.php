@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="bg-gray flex items-center justify-center">
-            <div wire:poll.10s="gather_queue_calls" class="hidden">
+            <div wire:poll.2s="gather_queue_calls" class="hidden">
             </div>
             <div id="videoContainer" class="relative w-full h-full ">
                 <video id="video1" class="w-full h-full rounded-t-md p-0 m-0 object-cover" src="{{asset('images/default_front_end/sample_video.mp4')}}"></video>
