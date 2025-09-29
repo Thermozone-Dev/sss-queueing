@@ -6,8 +6,8 @@
                 <img src="{{ asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-48 h-full">
             </div>
             <div class="text-black text-right" wire:poll.60s='getTime'>
-                <p class="font-extrabold" style="font-size: 2rem">{{$time_now['time']}}</p>
-                <p class="font-bold" style="font-size: 1rem">{{$time_now['date']}}</p>
+                <p class="font-extrabold" style="font-size: 2.5rem">{{$time_now['time']}}</p>
+                <p class="font-bold" style="font-size: 1.5rem">{{$time_now['date']}}</p>
             </div>
         </div>
         <div class="bg-gray flex items-center justify-center">
@@ -94,7 +94,7 @@
 
     @if($showModal && $modalDetails)
         <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 "  wire:poll.10s="closeModal">
-            <div class="text-center shadow rounded-2xl p-8 relative" style="background-color: #84CC16">
+            <div class="text-center shadow rounded-2xl p-8 relative" style="background-color: {{$serving['bg_color']}}">
                 <audio id="modalSound" src="{{asset('images/default_front_end/call_number_sound.wav')}}" autoplay loop></audio>
                 <span class="text-white font-black" style="font-size: 6rem">{{$modalDetails['queue_number']}}</span>
                 <p class="font-bold text-2xl captitalize">{{$modalDetails['transaction']}}</p>

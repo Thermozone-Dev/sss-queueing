@@ -62,6 +62,7 @@ class CreateQueue extends Controller
                 'id' => $transaction->id,
                 'name' => $transaction->name,
                 'station' => $transaction->station->name,
+                'required_documents' => nl2br($transaction->required_documents),
                 'description' => nl2br($transaction->description),
                 'steps' => $transaction->transaction_steps->sortBy('sort_order')
             ];
