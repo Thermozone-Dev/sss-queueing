@@ -56,10 +56,11 @@ class ShowQueues extends Controller
     public function nextInline(){
         try {
 
-            $stations = Station::all();
+            $stations = Station::orderBy('status','desc')->get();
             $queues = [];
 
             foreach ($stations as $station){
+                $processing = $station->processingQueues->first();
                 $activeQueues = $station->pendingQueues->take(5);
                 $q = [];
                 $q = $activeQueues->map(function ($map){
@@ -71,8 +72,15 @@ class ShowQueues extends Controller
                 });
                 $queues[] = [
                     'id' => $station->id,
+                    'status' => $station->status,
+
+                    'processing' => $processing ? [
+                        'name' => $processing->name,
+                        'transaction_name' => $processing->transaction->name,
+                        'queue_number' => $processing->getQueueNumber(),
+                    ] : null,
                     'station' => $station->name ?? $station->code,
-                    'queues' => $q->toArray(),
+                    'queues' => array_chunk($q->toArray(),3),
                 ];
             }
             // dd($queues);

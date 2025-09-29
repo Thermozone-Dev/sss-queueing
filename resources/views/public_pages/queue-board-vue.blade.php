@@ -20,6 +20,9 @@
             $url = null;
         }
         $logo = Storage::url($settings->brand_logo);
+
+        $theme  = $settings->site_theme;
+
     ?>
     <section id="app2" class="min-h-screen max-h-screen grid grid-cols-4 gap-0" style="background: {{$settings->site_theme['primary']}}">
         <div class="col-span-3 grid gap-0 grid-rows-[20%_1fr_2%]">
@@ -47,11 +50,11 @@
         </div>
 
 
-        <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[1fr_8%_35%] md:grid-rows-[1fr_9%_35%]" >
-            <now-serving></now-serving>
+        <div class="min-h-full min-w-full col-span-1 max-h-full bg-gray-200 rounded-lg grid gap-0 grid-rows-[8%_1fr] md:grid-rows-[8%_1fr]" >
+            {{-- <now-serving></now-serving> --}}
             <div class="min-h-full text-white text-sm bg-white px-2 py-3">
                 <div class="min-h-full py-3">
-                    <p class="font-black text-black uppercase" style="font-size: 1.2rem">Next in line</p>
+                    <p class="font-black text-black uppercase" style="font-size: 1.3rem">Next in line</p>
                     <p class="font-none text-black text-sm">Please prepare your document before your number is called.</p>
                 </div>
             </div>
@@ -81,6 +84,8 @@
         }
         // Update every second
         setInterval(updateDateTime, 1000);
+        window.appTheme = @json($theme);
+
         updateDateTime();
     </script>
 
