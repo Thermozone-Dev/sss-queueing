@@ -2,18 +2,48 @@
     <kiosk-header :header="header" :description="description">
     </kiosk-header>
     <div  class="grid grid-cols-2 sm:grid-cols-2 xs:grid-cols-1 gap-6 mt-6 text-white items-center" >
-        <div  v-for="station in stations" :key="station.id" class="cursor-pointer sm:px-4 xs:px-2 px-4 rounded-lg text-center justify-center py-5"
-            :style="{ backgroundColor: theme.primary}"
+        <div  v-for="station in stations" :key="station.id" class="sm:px-4 xs:px-2 px-4 rounded-lg text-center justify-center py-5"
+                :style="{ backgroundColor: theme.primary, color: theme.secondary}"
             >
-            <router-link :to="{ name: 'view-station', params: { id: station.id } }">
+            <!-- <div
+                :class="station.status === 0
+                    ? 'disable opacity-50'
+                    : 'enable hover:scale-105 transform transition duration-300 ease-in-out'"
+            > -->
+
+            <div
+                v-if="station.status == 1"
+                class="enable hover:scale-105 transform transition duration-300 ease-in-out"
+            >
+                <router-link :to="{ name: 'view-station', params: { id: station.id } }">
+                    <component
+                        :is="getIconComponent(station.icon)"
+                        class="h-32 w-full mb-4"
+                        :style="{ color: theme.secondary}"
+                        />
+                    <h1 class="uppercase font-bold text-xl">{{station.name}}</h1>
+                    <h4 class="uppercase text-sm">{{station.description}}</h4>
+                </router-link>
+            </div>
+
+            <div
+                v-else
+                class="disable"
+            >
                 <component
                     :is="getIconComponent(station.icon)"
-                    class="h-24 w-full mb-4"
+                    class="h-32 w-full mb-4 opacity-50"
                     :style="{ color: theme.secondary}"
                     />
-                <h1 class="uppercase font-bold text-xl">{{station.name}}</h1>
-                <h4 class="uppercase text-sm">{{station.description}}</h4>
-            </router-link>
+                <span class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-full"
+                    :style="{ backgroundColor: theme.warning, color: theme.secondary}"
+                >
+                    Offline
+                </span>
+
+                <h1 class="uppercase font-bold text-xl opacity-50">{{station.name}}</h1>
+                <h4 class="uppercase text-sm opacity-50">{{station.description}}</h4>
+            </div>
         </div>
 
     </div>

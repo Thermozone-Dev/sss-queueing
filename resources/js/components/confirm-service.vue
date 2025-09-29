@@ -9,7 +9,7 @@
     <div class="items-center justify-center bg-white bg-white shadow rounded-xl p-5 mb-3">
         <div class="text-center">
             <h2 class="uppercase font-extrabold" style="font-size: 2rem; color:#00411F">{{selected_transaction}}</h2>
-            <h4 class="uppercase font-bold text-xl">{{selected_transaction}}</h4>
+            <h4 class="uppercase font-bold text-xl">{{selected_station}}</h4>
         </div>
         <span class="flex mt-5">
             <span class="mx-auto bg-gray-300 items-center rounded-lg px-5 py-3">
@@ -86,8 +86,10 @@
         mounted() {
             axios.get(route('get-transaction', this.id))
                 .then(response => {
-                    this.selected_transaction = response.data.name;
-                    this.selected_station = response.data.station;
+                    this.selected_transaction = response.data.data.name;
+                    this.selected_station = response.data.data.station;
+
+                    console.log(response.data.name,response.data.station)
                 })
                 .catch(error => {
                     console.error("There was an error fetching the priority:", error.message);
