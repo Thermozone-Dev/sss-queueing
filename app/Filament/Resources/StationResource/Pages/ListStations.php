@@ -21,7 +21,7 @@ class ListStations extends ListRecords
 
     protected function getTableQuery(): ?Builder
     {
-        $query = parent::getTableQuery();
+        $query = parent::getTableQuery()->where('deleted_at','!=',null);
 
         if (auth()->user()->hasRole('staff')) {
             return $query->whereHas('users', function ($q) {

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\StationResource\Pages;
 use App\Filament\Resources\StationResource\RelationManagers;
 use App\Models\Station;
+use Filament\Actions\DeleteAction;
 use Filament\Forms;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
@@ -14,6 +15,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\RestoreAction;
 use Guava\FilamentIconPicker\Tables\IconColumn as GuavaIconColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -113,6 +115,8 @@ class StationResource extends Resource
                     ->boolean()
                     ->label('Active'),
                 TextColumn::make('created_at')->dateTime('M d, Y g:i A')->sortable(),
+                TextColumn::make('deleted_at')->dateTime('M d, Y g:i A')->sortable(),
+
             ])
             ->filters([
                 //
@@ -120,6 +124,7 @@ class StationResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -144,4 +149,13 @@ class StationResource extends Resource
             'edit' => Pages\EditStation::route('/{record}/edit'),
         ];
     }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
 }
