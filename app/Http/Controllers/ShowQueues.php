@@ -121,6 +121,8 @@ class ShowQueues extends Controller
             $call_details = [
                 'queue_number' => $call->queue->getQueueNumber(),
                 'transaction' => $call->queue->transaction->name,
+                'name' => $call->queue->name,
+
             ];
             return response()->json([
                 'status' => 'success',

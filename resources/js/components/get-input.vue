@@ -113,7 +113,7 @@
                 }
 
                 if (this.form.mobile) {
-                    if (/^09\d{0,10}$/.test(this.form.mobile)) {
+                    if (/^09\d{0,8}$/.test(this.form.mobile)) {
                     this.errors.mobile = "Mobile number must start with 09 and be 11 digits";
                     }
                 }
