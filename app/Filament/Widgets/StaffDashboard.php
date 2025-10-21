@@ -166,7 +166,7 @@ class StaffDashboard extends Widget implements HasForms
                 Toggle::make('status')
                     ->label('')
                     ->reactive()
-                    ->hint('Toggle the station status to go online or offline it.')
+                    ->hint('Toggle the station status to go online or offline.')
                     ->default($this->status)
                     ->onColor('success')
                     ->offColor('danger')
