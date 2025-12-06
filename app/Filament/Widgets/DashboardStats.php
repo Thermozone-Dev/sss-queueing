@@ -24,6 +24,10 @@ class DashboardStats extends BaseWidget
     public function mount(){
         if (auth()->user()->hasRole('staff')) {
             $station = auth()->user()->stations()->first();
+            if(!$station){
+                return;
+            }
+
             $this->activeCount = $station->activeQueues->count();
             $this->pendingCount = $station->pendingQueues->count();
             $this->processingCount = $station->processingQueues->count();
