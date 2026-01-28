@@ -62,6 +62,7 @@ class UsersRelationManager extends RelationManager
 
                         $branch = $this->getOwnerRecord();
                         $data['branch_id'] = $branch->id;
+                        $data['email_verified_at'] = now();
 
                         return $model::create($data);
                     })

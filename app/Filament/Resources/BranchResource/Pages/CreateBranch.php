@@ -29,6 +29,8 @@ class CreateBranch extends CreateRecord
             'firstname' => $data['firstname'],
             'lastname' => $data['lastname'],
             'password' => $data['password'],
+            'email_verified_at' => now(),
+
         ]);
 
         $user->assignRole('branch_admin');
