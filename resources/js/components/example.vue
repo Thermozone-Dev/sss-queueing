@@ -2,6 +2,22 @@
     <kiosk-header :header="header" :description="description">
     </kiosk-header>
     <div  class="grid grid-cols-2 sm:grid-cols-2 xs:grid-cols-1 gap-6 mt-6 text-white items-center" >
+
+        <div  class="sm:px-4 xs:px-2 px-4 rounded-lg text-center justify-center py-5"
+                :style="{ backgroundColor: theme.primary, color: theme.secondary}"
+            >
+            <div
+                class="enable hover:scale-105 transform transition duration-300 ease-in-out"
+            >
+                <router-link
+                    :to="{ name: 'get-appointment'}"
+                >
+                    <font-awesome-icon :icon="['fas', 'user-clock']" class="h-32 w-full mb-4" :style="{ color: theme.secondary}" />
+                    <h1 class="uppercase font-bold text-xl">I Have an Appointment</h1>
+                    <h4 class="uppercase text-sm">Already booked? Select here to check in for your appointment</h4>
+                </router-link>
+            </div>
+        </div>
         <div  v-for="station in stations" :key="station.id" class="sm:px-4 xs:px-2 px-4 rounded-lg text-center justify-center py-5"
                 :style="{ backgroundColor: theme.primary, color: theme.secondary}"
             >
@@ -10,6 +26,8 @@
                     ? 'disable opacity-50'
                     : 'enable hover:scale-105 transform transition duration-300 ease-in-out'"
             > -->
+
+
 
             <div
                 v-if="station.status == 1"
@@ -86,7 +104,9 @@ export default {
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
                 .join('') + 'Icon';
 
-            return Icons[pascalCase] || Icons['QuestionMarkCircleIcon'];
+            const abc =  Icons[pascalCase] || Icons['QuestionMarkCircleIcon'];
+            console.log(abc)
+            return abc
         }
     },
     mounted() {

@@ -7,6 +7,7 @@ import GetInput from '../components/get-input.vue';
 import ConfirmService from '../components/confirm-service.vue';
 import QueueInfo from '../components/queue-complete.vue';
 import NowServing  from '../components/now-serving.vue';
+import GetAppointment  from '../components/get-appointment.vue';
 
 
 const router = createRouter({
@@ -19,8 +20,7 @@ const router = createRouter({
         { path: '/confirm-service/:id', component: ConfirmService, name: 'confirm-service', props: true },
         { path: '/queue-complete/:transaction_name/:queue_number', component: QueueInfo, name: 'complete-queue', props:true},
         { path: '/queue-board', component: NowServing, name: 'now-serving', props:true},
-
-
+        { path: '/get-appointment', component: GetAppointment, name: 'get-appointment', props:true},
         // Define your routes here
     ],
 });

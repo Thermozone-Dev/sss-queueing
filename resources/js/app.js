@@ -1,7 +1,7 @@
 import './bootstrap';
 import { createApp } from 'vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faClock, faCircleCheck, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { faClock, faCircleCheck, faChevronRight, faChevronLeft, faUserClock } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import router from './router';
@@ -20,10 +20,9 @@ import NowServing from './components/now-serving.vue';
 import NextInLine from './components/next-in-line.vue';
 import QueueCall from './components/queue-call.vue';
 import ProgressOverlay from './components/ProgressOverlay.vue';
+import GetAppointment from './components/get-appointment.vue';
 
-library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft);
-
-
+library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft, faUserClock);
 
 if (document.querySelector('#app')) {
     const app = createApp({
@@ -64,6 +63,7 @@ if (document.querySelector('#app')) {
     app.component('confirm-service', ConfirmService)
     app.component('queue-complete', QueueInfo)
     app.component('progress-overlay', ProgressOverlay);
+    app.component('get-appointment', GetAppointment);
 
     app.use(router);
     app.mount('#app');

@@ -10,5 +10,7 @@ export default {
         './resources/views/public_pages/*.blade.php',
         './resources/views/public_pages/**/*.blade.php',
         './vendor/filament/**/*.blade.php',
+        './resources/js/**/*.vue',
+        './resources/js/**/*.js',
     ],
 }

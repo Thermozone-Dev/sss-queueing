@@ -8,9 +8,15 @@ use App\Models\Priority;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use App\Models\Queue;
+use Illuminate\Support\Facades\Http;
 
 class CreateQueue extends Controller
 {
+
+
+    private string $apiUrl = 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss-appointment-sample.json'; //soon to be added on .env
+
+
     public function index()
     {
         return view('public_pages.tablet-view');
@@ -38,7 +44,10 @@ class CreateQueue extends Controller
 
           try {
             $station = Station::findOrFail($id);
-            $transactions = $station->transactions()->get();
+            $transactions = $station->transactions()
+                    ->with(['transaction_steps' => function ($query) {
+                        $query->orderBy('sort_order', 'asc');
+                    }])->get();
 
             return response()->json([
                 'status' => 'success',
@@ -149,6 +158,61 @@ class CreateQueue extends Controller
             return $e;
         }
     }
+
+    public function fetch_appointments()
+    {
+        $response = Http::timeout(10)->get($this->apiUrl);
+
+        if (!$response->successful()) {
+            return collect();
+        }
+
+        return collect($response->json())->map(function ($item) {
+            return [
+                'appointment_id' => $item['appointment_id'],
+                'code'           => $item['code'],
+                'name'           => $item['name'],
+                'date'           => $item['date'],
+                'time'           => $item['time'],
+                'status'         => $item['status'],
+                'branch_id'      => $item['branch_id'],
+            ];
+        });
+    }
+
+
+    public function search_appointment($appointmentID)
+    {
+        return $this->fetch_appointments()
+            ->firstWhere('code', $appointmentID);
+    }
+
+
+    public function verify_appointment($appointment_id)
+    {
+        $appointment = $this->search_appointment($appointment_id);
+
+        if (!$appointment) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Appointment not found'
+            ], 404);
+        }
+
+        if ($appointment['status'] === 'cancelled') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Appointment is cancelled'
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $appointment
+        ]);
+    }
+
+
 
     //
 }
