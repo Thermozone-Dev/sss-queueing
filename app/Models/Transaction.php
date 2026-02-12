@@ -6,6 +6,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BranchScoped;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -29,12 +30,14 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
 	protected $table = 'transactions';
+    use BranchScoped;
 
 	protected $casts = [
 		'station_id' => 'int'
 	];
 
 	protected $fillable = [
+		'branch_id',
 		'station_id',
 		'name',
 		'code',

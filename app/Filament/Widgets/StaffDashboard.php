@@ -34,6 +34,9 @@ class StaffDashboard extends Widget implements HasForms
         // dd(auth()->user()->stations);
         // $this->transaction = auth()->user()->transactions()->first();
 
+        if(!$this->station){
+            return;
+        }
         //Station::where('assigned_to', auth()->user()->id)->first();
         $assigned_station = auth()->user()->stations;
         // dd($assigned_station);

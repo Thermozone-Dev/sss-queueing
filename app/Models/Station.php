@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Traits\BranchScoped;
 
 /**
  * Class Station
@@ -32,6 +33,7 @@ class Station extends Model
 {
 	protected $table = 'stations';
     use SoftDeletes;
+    use BranchScoped;
 
 	protected $casts = [
 		'status' => 'bool',
@@ -40,6 +42,7 @@ class Station extends Model
 	];
 
 	protected $fillable = [
+		'branch_id',
 		'name',
 		'code',
 		'type',
