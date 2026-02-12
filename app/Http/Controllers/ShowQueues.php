@@ -83,7 +83,54 @@ class ShowQueues extends Controller
                     'queues' => array_chunk($q->toArray(),3),
                 ];
             }
-            // dd($queues);
+            dd($queues);
+            return response()->json([
+                'status' => 'success',
+                'data' => $queues
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch stations',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+    }
+
+    public function getNextinlinePerStation(){ //gettting queues for each station
+
+        try {
+
+            $stations = Station::orderBy('status','desc')->get();
+            $queues = [];
+
+            foreach ($stations as $station){
+                $processing = $station->processingQueues->first();
+                $activeQueues = $station->pendingQueues->take(5);
+                $q = [];
+                $q = $activeQueues->map(function ($map){
+                    return [
+                        'name' => $map->name,
+                        'transaction_name' => $map->transaction->name,
+                        'queue_number' => $map->getQueueNumber(),
+                    ];
+                });
+                $queues[] = [
+                    'id' => $station->id,
+                    'status' => $station->status,
+
+                    'processing' => $processing ? [
+                        'name' => $processing->name,
+                        'transaction_name' => $processing->transaction->name,
+                        'queue_number' => $processing->getQueueNumber(),
+                    ] : null,
+                    'station' => $station->name ?? $station->code,
+                    'queues' => array_chunk($q->toArray(),3),
+                ];
+            }
+            dd($queues);
             return response()->json([
                 'status' => 'success',
                 'data' => $queues

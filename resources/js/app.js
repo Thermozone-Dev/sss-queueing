@@ -21,6 +21,7 @@ import NextInLine from './components/next-in-line.vue';
 import QueueCall from './components/queue-call.vue';
 import ProgressOverlay from './components/ProgressOverlay.vue';
 import GetAppointment from './components/get-appointment.vue';
+import QueueSection from './components/QueueSection.vue'
 
 library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft, faUserClock);
 
@@ -64,6 +65,7 @@ if (document.querySelector('#app')) {
     app.component('queue-complete', QueueInfo)
     app.component('progress-overlay', ProgressOverlay);
     app.component('get-appointment', GetAppointment);
+    app.component('queue-section', QueueSection)
 
     app.use(router);
     app.mount('#app');
