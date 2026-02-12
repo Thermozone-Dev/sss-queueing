@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules\Unique;
 
 class StationResource extends Resource
 {
@@ -47,6 +48,14 @@ class StationResource extends Resource
 
                                     TextInput::make('name')
                                         ->required()
+                                        ->unique(
+                                            table: 'stations',
+                                            column: 'name',
+                                            ignoreRecord: true,
+                                            modifyRuleUsing: function (Unique $rule) {
+                                                return $rule->where('branch_id', auth()->user()->branch_id);
+                                            }
+                                        )
                                         ->live(debounce: 500)
                                         ->afterStateUpdated(function (callable $set, $state) {
                                             $initials = collect(explode(' ', $state))
@@ -92,6 +101,7 @@ class StationResource extends Resource
                                             '2xl' => 5,
                                         ])
                                         ->sets(['heroicons'])
+                                        ->required()
                                         ->preload(),
                                     Select::make('staff')
                                         ->label('Assigned Staff')

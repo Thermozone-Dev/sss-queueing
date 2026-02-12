@@ -23,6 +23,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\HtmlString;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 
@@ -125,6 +126,14 @@ class AdminPanelProvider extends PanelProvider
                     ->myProfileComponents([
                         'personal_info' => MyProfileExtended::class,
                     ]),
-            ]);
+            ])
+            ->renderHook(
+                'panels::sidebar.nav.start',
+                fn () => new HtmlString('
+                    <h1 class="fi-header-heading text-3xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
+                        '.auth()->user()->branch?->name.'
+                    </h1>
+                '),
+            );
     }
 }

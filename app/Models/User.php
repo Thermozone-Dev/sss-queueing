@@ -17,12 +17,14 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\Traits\BranchScoped;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasAvatar, HasName, HasMedia
 {
     use InteractsWithMedia;
     use HasUuids, HasRoles;
     use HasApiTokens, HasFactory, Notifiable;
+    use BranchScoped;
 
     /**
      * The attributes that are mass assignable.
@@ -30,6 +32,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
      * @var array<int, string>
      */
     protected $fillable = [
+        'branch_id',
         'username',
         'email',
         'firstname',
