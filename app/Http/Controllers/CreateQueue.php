@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use App\Models\Queue;
 use Illuminate\Support\Facades\Http;
+use App\Models\QueueStep;
 
 class CreateQueue extends Controller
 {
@@ -109,10 +110,11 @@ class CreateQueue extends Controller
 
     public function store(Request $request){
         try {
-
+            // dd($request);
             $validated = $request->validate([
                 'name' => ['required', 'string', 'max:8'],
                 'mobile' => ['nullable', 'regex:/^09\d{9}$/'],
+                // 'transaction_id ' => ['required', 'exists:transactions,id'],
                 'priority_type' => ['nullable', 'in:1,2,3'],
             ]);
 
@@ -120,6 +122,8 @@ class CreateQueue extends Controller
 
             // Get the transaction (must have a 'code' column like 'BP', 'C', etc.)
             $transaction = Transaction::findOrFail($request->transaction_id);
+            // dd($transaction);
+
             $stationCode = $transaction->station->code;
 
             // Get last queue for this station today
@@ -140,10 +144,23 @@ class CreateQueue extends Controller
             $queue_details = Queue::create([
                 'queue_number' => $queueNumber,
                 'transaction_id' => $transaction->id,
+                // 'transaction_step_id' => optional($transaction->firstStep())->id,
                 'name' => $request->name,
                 'mobile_num' => $request->mobile,
                 'priority_type' => $request->priority_type ?? null
             ]);
+
+            foreach($transaction->transaction_steps as $step)
+            {
+                QueueStep::insert([
+                    'queue_id' => $queue_details->id,
+                    'eligible_start_time' => null,
+                    'transaction_step_id' => $step->id,
+                    'queue_step_status_id' => $step->is_required ? 1 : 4, // based_on_step if should be lined up the status default was 1 (Waiting), else 4 (Completed)
+                    'station_id' => $step->linked_station_id ?? $step->transaction->station_id,
+                ]);
+            }
+
             $data = [
                 'transaction_name' => $transaction->name,
                 'queue_number' => $queue_details->getQueueNumber(),

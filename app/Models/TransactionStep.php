@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TransactionStep
- * 
+ *
  * @property int $id
  * @property int $transaction_id
  * @property string $title
@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $sort_order
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Transaction $transaction
  *
  * @package App\Models
@@ -39,6 +39,7 @@ class TransactionStep extends Model
 		'transaction_id',
 		'title',
 		'description',
+		'linked_station_id',
 		'is_required',
 		'sort_order'
 	];
@@ -47,4 +48,11 @@ class TransactionStep extends Model
 	{
 		return $this->belongsTo(Transaction::class);
 	}
+
+
+    public function linked_station()
+	{
+		return $this->belongsTo(Station::class,'linked_station_id');
+	}
+
 }

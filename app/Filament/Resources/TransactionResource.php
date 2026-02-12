@@ -6,6 +6,7 @@ use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
 use App\Models\Transaction;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -94,14 +95,30 @@ class TransactionResource extends Resource
                             ]),
                     ]),
                 Section::make('Steps')
+                    ->hiddenOn('create')
                     ->schema([
                         Repeater::make('transaction_steps')
                             ->label('Transaction Steps')
                             ->relationship('transaction_steps')
                             ->schema([
                                 TextInput::make('title')->required(),
+                                Grid::make(3)
+                                    ->schema([
+                                        Select::make('linked_station_id')
+                                            ->label('Linked Station')
+                                            ->hint('Select the station associated with this step.')
+                                            ->hintColor('primary')
+                                            ->columnSpan(2)
+                                            ->relationship(name: 'linked_station', titleAttribute: 'name'),
+                                        Toggle::make('is_required')
+                                            ->label('Station Lined up?')
+                                            ->inline(false)
+                                            ->hintIcon('heroicon-o-information-circle', tooltip: 'Use this if the customer should be lined up on assign station.')
+                                            ->default(true),
+                                    ]),
+
                                 Textarea::make('description')->rows(3),
-                                Toggle::make('is_required')->label('Required?')->default(false),
+
                             ])
                             ->orderable('sort_order')
                             ->defaultItems(0)

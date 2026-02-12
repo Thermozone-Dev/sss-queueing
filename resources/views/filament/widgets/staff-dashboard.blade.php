@@ -1,12 +1,29 @@
 <x-filament::widget>
+    <x-filament::tabs label="Stations">
 
-    <div class="flex items-center justify-between my-2">
-        <h1 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
-            {{$station?->name}}
-        </h1>
-        {{$this->form1}}
-    </div>
-    <x-filament::section class="shadow-xl">
+        @foreach ($assigned_station as $ass_station )
+            <x-filament::tabs.item
+                :active="$station->id === $ass_station->id"
+                wire:click="updateStation({{ $ass_station }})"
+                >
+                {{$ass_station->name}}
+                <x-slot name="badge">
+                    {{$ass_station->activeQueues()->count()}}
+                </x-slot>
+            </x-filament::tabs.item>
+
+        @endforeach
+    </x-filament::tabs>
+
+
+
+    <x-filament::section class="shadow-xl mt-1">
+        <div class="flex items-center justify-between my-2">
+            <h1 class="fi-header-heading text-2xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
+                {{$station?->name}}
+            </h1>
+            {{$this->form1}}
+        </div>
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div class="order-1 lg:order-1 lg:col-span-3 space-y-6">
                 <div class="rounded-lg shadow overflow-hidden">
@@ -29,7 +46,18 @@
                             <div class="py-2 font-medium text-gray-600 dark:text-gray-300">Required Documents</div>
                             <div class="required-documents p-2 text-gray-900 dark:text-white">{!! $currentQueue['required_documents'] !!}</div>
                         </div>
+                        @if ($currentQueue['id'])
+                            <div class="flex justify-center m-2">
+                                <x-filament::button wire:click="view_queue({{$currentQueue['id']}})" color="primary">
+                                    <div class="flex items-center">
+                                        <x-fas-eye class="mr-2 w-4 h-4"></x-fas-eye> View
+                                    </div>
+                                </x-filament::button>
+                            </div>
+                        @endif
 
+
+{{--
                         <!-- Transaction Details -->
                         @if ($currentQueue['id'])
                             <x-filament::section class="mb-2">
@@ -41,6 +69,7 @@
 
                                 <dl class="divide-y divide-gray-200 dark:divide-gray-700">
                                     <div class="py-2 flex justify-evenly text-sm">
+
                                         @if ($currentQueue['status_id'] == 1)
                                             <x-filament::button wire:click="recall_queue({{$currentQueue['id']}})" class="px-6 py-2 !bg-secondary-500">
                                                 Call
@@ -68,11 +97,10 @@
                                         <x-filament::button wire:click="update_queue({{$currentQueue['id']}},5)" class="px-6 py-2 !bg-danger-500">
                                             Remove
                                         </x-filament::button>
-
                                     </div>
                                 </dl>
                             </x-filament::section>
-                        @endif
+                        @endif --}}
 
                     </div>
                 </div>
@@ -87,7 +115,7 @@
                         </h1>
                     </div>
                     <div class="px-2 py-3">
-                         <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
                             {{-- @dd($station->activeQueues) --}}
                             @if ($station->activeQueues->isEmpty())
                                 <li class="text-gray-500">No active queues</li>
@@ -123,7 +151,6 @@
                     </div>
                 </div>
 
-
                 <div class="rounded-lg shadow overflow-hidden">
                     <div style="!important; color:white !important" class="py-2 px-2 bg-gray-300">
                         <h1 class="text-base font-semibold text-white dark:text-white">
@@ -138,4 +165,6 @@
             </div>
         </div>
     </x-filament::section>
+
+    @livewire('queue-modal')
 </x-filament::widget>

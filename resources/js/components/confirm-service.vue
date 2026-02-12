@@ -61,6 +61,7 @@
                 axios.post(route('queue.post'), payload)
                 .then(
                     response => {
+                        console.log(response.data.data);
                         this.$router.push({ name: 'complete-queue', params: { transaction_name: response.data.data.transaction_name, queue_number: response.data.data.queue_number } });
                     }
                 )
@@ -88,8 +89,6 @@
                 .then(response => {
                     this.selected_transaction = response.data.data.name;
                     this.selected_station = response.data.data.station;
-
-                    console.log(response.data.name,response.data.station)
                 })
                 .catch(error => {
                     console.error("There was an error fetching the priority:", error.message);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Queue extends Model
 {
@@ -17,11 +18,24 @@ class Queue extends Model
         'transaction_id',
         'priority_type',
         'status_id',
+        'transaction_step_id'
 	];
 
     public function transaction()
     {
         return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
+
+    public function step()
+    {
+        return $this->belongsTo(TransactionStep::class, 'transaction_step_id');
+    }
+
+    public function currentStation()
+    {
+        return $this->step
+            ? $this->step->linked_station
+            : $this->transaction->station;
     }
 
     public function priority()
@@ -39,13 +53,13 @@ class Queue extends Model
         return $this->transaction->station->code. '-' . str_pad($this->queue_number, 4, '0', STR_PAD_LEFT);
     }
 
-     public function scopeActive($query)
-     {
-         return $query
-                ->applySorting()
-                // ->whereDate('queues.created_at', Carbon::yesterday()) //test
-                ->whereNotIn('status_id', [4, 5]);
-     }
+    public function scopeActive($query)
+    {
+        return $query
+            ->applySorting()
+            // ->whereDate('queues.created_at', Carbon::yesterday()) //test
+            ->whereNotIn('status_id', [4, 5]);
+    }
 
     public function scopeApplySorting($query)
     {
@@ -64,7 +78,14 @@ class Queue extends Model
         return $query->where('status_id', 2);
     }
 
+    public function queueSteps() : HasMany
+    {
+        return $this->hasMany(QueueStep::class, 'queue_id');
+    }
 
-
+    public function scopeGetCurrentLine($query)
+    {
+        return $query->queueSteps()->where('queue_step_status_id', 2)->first();
+    }
 
 }

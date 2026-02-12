@@ -52,6 +52,11 @@ class Transaction extends Model
 		return $this->hasMany(TransactionStep::class)->orderBy('sort_order');
 	}
 
+    public function firstStep()
+    {
+        return $this->transaction_steps()->orderBy('sort_order')->first();
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class);
