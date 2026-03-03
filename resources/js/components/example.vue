@@ -105,7 +105,6 @@ export default {
                 .join('') + 'Icon';
 
             const abc =  Icons[pascalCase] || Icons['QuestionMarkCircleIcon'];
-            console.log(abc)
             return abc
         }
     },

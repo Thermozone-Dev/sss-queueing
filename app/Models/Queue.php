@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\BranchScoped;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Queue extends Model
 {
     protected $table = 'queues';
+
+    use BranchScoped;
 
 	protected $fillable = [
         'queue_number',
@@ -18,8 +21,20 @@ class Queue extends Model
         'transaction_id',
         'priority_type',
         'status_id',
-        'transaction_step_id'
+        'transaction_step_id',
+        'branch_id',
+        'external_appointments'
 	];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    public function appointment()
+    {
+        return $this->belongsTo(ExternalAppointments::class, 'external_appointments');
+    }
 
     public function transaction()
     {

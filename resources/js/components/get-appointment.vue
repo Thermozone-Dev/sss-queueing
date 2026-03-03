@@ -280,7 +280,6 @@
         computed: {
             statusColor() {
                 if (!this.appointment) return '';
-                console.log(this.appointment.status)
                 switch (this.appointment.status) {
                     case 'waiting':
                         return 'bg-yellow-500';
@@ -328,16 +327,14 @@
                         } else {
                             this.message = "Appointment not found.";
                         }
-
                     })
                     .catch(error => {
-
+                        console.log(error.response)
                         if (error.response && error.response.status === 404) {
-                            this.message = "Appointment not found.";
+                            this.message = error.response.data.message;
                         } else {
                             this.message = "Something went wrong. Please try again.";
                         }
-
                     })
                     .finally(() => {
                         this.loading = false;
@@ -391,7 +388,6 @@
 
 
             fetchTransactions(station_id) {
-                console.log(station_id)
                 this.loading = true;
                 this.message = null;
                 this.transactions = [];
@@ -405,6 +401,38 @@
                 });
             },
 
+            submit_appointment_queue() {
+                let payload = {
+                    transaction_id: this.selectedTransactionId,
+                    name: this.appointment.name,
+                    appointment_id: this.appointment.code,
+                };
+                this.validate();
+                console.log("Submitting queue with payload:", payload);
+
+                axios.post(route('queue.post'), payload)
+                .then(
+                    response => {
+                        this.$router.push({ name: 'complete-queue', params: { transaction_name: response.data.data.transaction_name, queue_number: response.data.data.queue_number } });
+                    }
+                )
+                .catch( error => {
+                    if (error.response && error.response.status === 422) {
+                        // this.$router.push({
+                        //     name: 'get-queue',
+                        //     query: {
+                        //         form: JSON.stringify(this.form),
+                        //         errors: JSON.stringify(error.response.data.errors)
+                        //     },
+                        //     params: { id: this.id },
+
+                        // });
+                    } else {
+                        console.error("Unexpected error:", error);
+                    }
+                });
+
+            },
             openConfirmModal() {
                 this.showConfirmModal = true;
             },
@@ -414,12 +442,7 @@
             },
 
             confirmQueue() {
-                // Here you will call your queue API
-                // Example:
-                // this.createQueue(this.selectedTransactionId);
-
-                console.log("Confirmed transaction:", this.selectedTransactionId);
-
+                this.submit_appointment_queue();
                 this.closeConfirmModal();
             }
         },

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ExternalAppointments;
 use Illuminate\Http\Request;
 use App\Models\Station;
 use App\Models\Priority;
@@ -10,6 +11,7 @@ use Carbon\Carbon;
 use App\Models\Queue;
 use Illuminate\Support\Facades\Http;
 use App\Models\QueueStep;
+use Illuminate\Support\Facades\DB;
 
 class CreateQueue extends Controller
 {
@@ -110,19 +112,40 @@ class CreateQueue extends Controller
 
     public function store(Request $request){
         try {
+
             // dd($request);
             $validated = $request->validate([
                 'name' => ['required', 'string', 'max:8'],
                 'mobile' => ['nullable', 'regex:/^09\d{9}$/'],
-                // 'transaction_id ' => ['required', 'exists:transactions,id'],
                 'priority_type' => ['nullable', 'in:1,2,3'],
+                'appointment_id' => ['nullable'],
             ]);
-
+            $appointment = null;
+            if(request()->has('appointment_id') && !empty(request('appointment_id'))){
+                $appointmentVerification = $this->verify_appointment(request('appointment_id'));
+                if($appointmentVerification->getData()->success === false){
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => $appointmentVerification->getData()->message
+                    ], 400);
+                }else{
+                    $appointment = $appointmentVerification->getData()->data;
+                }
+            }
+            $external_appointment = null;
+            if($appointment){
+                $external_appointment = ExternalAppointments::create([
+                    'appointment_code' => $appointment?->code ?? null,
+                    'date' => $appointment?->date ?? null,
+                    'time' => $appointment?->time ?? null,
+                    'branch_id' => $appointment?->branch_id ?? null,
+                    'raw_response' => json_encode($appointment),
+                ]);
+            }
             $today = Carbon::today();
 
             // Get the transaction (must have a 'code' column like 'BP', 'C', etc.)
             $transaction = Transaction::findOrFail($request->transaction_id);
-            // dd($transaction);
 
             $stationCode = $transaction->station->code;
 
@@ -147,7 +170,9 @@ class CreateQueue extends Controller
                 // 'transaction_step_id' => optional($transaction->firstStep())->id,
                 'name' => $request->name,
                 'mobile_num' => $request->mobile,
-                'priority_type' => $request->priority_type ?? null
+                'priority_type' => $request->priority_type ?? null,
+                'external_appointments' => $external_appointment?->id ?? null
+
             ]);
 
             foreach($transaction->transaction_steps as $step)
@@ -166,12 +191,15 @@ class CreateQueue extends Controller
                 'queue_number' => $queue_details->getQueueNumber(),
             ];
 
+            DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'data' => $data
             ], 200);
 
         } catch (\Exception $e) {
+            DB::rollBack();
             return $e;
         }
     }
@@ -200,14 +228,32 @@ class CreateQueue extends Controller
 
     public function search_appointment($appointmentID)
     {
+
         return $this->fetch_appointments()
             ->firstWhere('code', $appointmentID);
     }
 
+    public function has_already_transacted(){
+        $appointmentID = request('appointment_id');
+        if(!$appointmentID){
+            return false;
+        }
+        $appointment = ExternalAppointments::where('appointment_code', $appointmentID)->first();
+        return $appointment ? true : false;
+
+    }
 
     public function verify_appointment($appointment_id)
     {
         $appointment = $this->search_appointment($appointment_id);
+
+        if($this->has_already_transacted($appointment_id)){
+            return response()->json([
+                'success' => false,
+                'message' => 'Appointment has already been transacted'
+            ], 404);
+        }
+
 
         if (!$appointment) {
             return response()->json([

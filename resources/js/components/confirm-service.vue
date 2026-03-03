@@ -61,7 +61,6 @@
                 axios.post(route('queue.post'), payload)
                 .then(
                     response => {
-                        console.log(response.data.data);
                         this.$router.push({ name: 'complete-queue', params: { transaction_name: response.data.data.transaction_name, queue_number: response.data.data.queue_number } });
                     }
                 )
