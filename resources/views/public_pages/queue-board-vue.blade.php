@@ -24,34 +24,47 @@
         $theme  = $settings->site_theme;
 
     ?>
-    <section id="app2" class="min-h-screen max-h-screen grid grid-cols-[1fr_33%] gap-0" style="background: {{$settings->site_theme['primary']}}">
-        <div class="grid gap-0 grid-rows-[20%_1fr_2%]">
-            <div class="bg-transparent flex items-center justify-between text-white px-5">
-                <div class="py-8 w-auto h-48">
-                    <img src="{{ $logo ?? asset('images/default_front_end/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
-                </div>
-                <div class="text-right" style="color: {{$settings->site_theme['secondary']}}">
-                    <p class="font-extrabold" id="clock" style="font-size: 2rem"></p>
-                    <p class="font-bold" id="date" style="font-size: 1rem"></p>
-                </div>
+    <section id="app2" class="h-screen flex flex-col" style="background: {{$settings->site_theme['primary']}}">
+
+        <div class="h-[10%] flex items-center justify-between text-white px-5">
+            <!-- Logo -->
+            <div class="h-full flex items-center">
+                <img
+                    src="{{ $logo ?? asset('images/default_front_end/logo.png') }}"
+                    alt="Logo"
+                    class="h-full w-auto object-contain"
+                >
             </div>
-            <div class="flex items-center justify-center overflow-hidden relative " style="background-color:green;">
-                <iframe
-                    class="absolute  w-full h-full rounded-t-md p-0 m-0 object-cover"
-                    src="{{ $url }}?autoplay=1&loop=1&playlist={{ $videoId }}"
-                    frameborder="0"
-                    allow="autoplay; encrypted-media"
-                    allowfullscreen>
-                </iframe>
+            <!-- Clock -->
+            <div class="text-right" style="color: {{$settings->site_theme['secondary']}}">
+                <p class="font-extrabold text-2xl" id="clock"></p>
+                <p class="font-bold text-sm" id="date"></p>
             </div>
-            <div class="flex items-center justify-center text-white text-xs" style="background-color: {{$settings->site_theme['primary']}}">
-                This office follows the Anti-Red Tape Authority (ARTA) law. All services are free of fixers. Standard processing times and requirements are posted for your reference.
-            </div>
+
         </div>
-        <div class="min-h-full min-w-full max-h-full bg-gray-200 rounded-lg grid" >
+
+        <!-- Video -->
+        <div class="flex-1  relative overflow-hidden">
+            <iframe
+                class="absolute w-full h-full object-cover"
+                src="{{ $url }}?autoplay=1&loop=1&playlist={{ $videoId }}"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-gray-200 overflow-hidden">
             <next-in-line></next-in-line>
+            <queue-call />
         </div>
-        <queue-call />
+
+        <!-- Footer -->
+        <div class="h-[2%] flex items-center justify-center text-white text-xs">
+            This office follows the Anti-Red Tape Authority (ARTA) law. All services are free of fixers. Standard processing times and requirements are posted for your reference.
+        </div>
+
     </section>
 
 

@@ -115,7 +115,7 @@ class CreateQueue extends Controller
 
             // dd($request);
             $validated = $request->validate([
-                'name' => ['required', 'string', 'max:8'],
+                'name' => ['required', 'string'],
                 'mobile' => ['nullable', 'regex:/^09\d{9}$/'],
                 'priority_type' => ['nullable', 'in:1,2,3'],
                 'appointment_id' => ['nullable'],
@@ -168,7 +168,7 @@ class CreateQueue extends Controller
                 'queue_number' => $queueNumber,
                 'transaction_id' => $transaction->id,
                 // 'transaction_step_id' => optional($transaction->firstStep())->id,
-                'name' => $request->name,
+                'name' => substr(str_replace(' ', '', $request->name), 0, 8),
                 'mobile_num' => $request->mobile,
                 'priority_type' => $request->priority_type ?? null,
                 'external_appointments' => $external_appointment?->id ?? null

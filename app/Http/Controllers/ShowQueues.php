@@ -56,37 +56,24 @@ class ShowQueues extends Controller
     public function nextInline(){
         try {
 
-            $stations = Station::orderBy('status','desc')->get();
-            $queues = [];
+            $queues = Queue::applySorting()->get();
 
-            foreach ($stations as $station){
-                $processing = $station->processingQueues->first();
-                $activeQueues = $station->pendingQueues->take(5);
-                $q = [];
-                $q = $activeQueues->map(function ($map){
-                    return [
-                        'name' => $map->name,
-                        'transaction_name' => $map->transaction->name,
-                        'queue_number' => $map->getQueueNumber(),
-                    ];
-                });
-                $queues[] = [
-                    'id' => $station->id,
-                    'status' => $station->status,
-
-                    'processing' => $processing ? [
-                        'name' => $processing->name,
-                        'transaction_name' => $processing->transaction->name,
-                        'queue_number' => $processing->getQueueNumber(),
-                    ] : null,
-                    'station' => $station->name ?? $station->code,
-                    'queues' => array_chunk($q->toArray(),3),
+            $currentLine = $queues->map(function ($q){
+                $current = $q->getCurrentLine();
+                if(!$current){
+                    return;
+                }
+                return [
+                    'lane' => $q->lane_type,
+                    'name' => $q->name,
+                    // 'transaction_name' => $current->transaction_step->title,
+                    'station' => $current->station->code,
+                    'queueNumber' => $q->getQueueNumber(),
                 ];
-            }
-            dd($queues);
+            });
             return response()->json([
                 'status' => 'success',
-                'data' => $queues
+                'data' => $currentLine
             ], 200);
 
         } catch (\Exception $e) {

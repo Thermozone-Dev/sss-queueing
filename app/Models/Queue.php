@@ -78,11 +78,17 @@ class Queue extends Model
 
     public function scopeApplySorting($query)
     {
-        return $query->orderByRaw('CASE WHEN priority_type IS NOT NULL THEN 0 ELSE 1 END')
-                ->whereDate('queues.created_at', Carbon::today())
-                ->orderBy('queues.created_at', 'asc');
+        return $query
+            ->whereDate('queues.created_at', Carbon::today())
+            ->orderByRaw("
+                CASE
+                    WHEN external_appointments IS NOT NULL THEN 0
+                    WHEN priority_type IS NOT NULL THEN 1
+                    ELSE 2
+                END
+            ")
+            ->orderBy('queues.created_at', 'asc');
     }
-
     public function scopePending($query)
     {
         return $query->where('status_id', 1);
@@ -93,14 +99,45 @@ class Queue extends Model
         return $query->where('status_id', 2);
     }
 
+
+    public function scopePriority($query){
+        return $query->whereNotNull('priority_type');
+    }
+
+    public function scopeAppointment($query){
+        return $query->whereNotNull('external_appointments');
+    }
+
     public function queueSteps() : HasMany
     {
         return $this->hasMany(QueueStep::class, 'queue_id');
     }
 
-    public function scopeGetCurrentLine($query)
+    public function getCurrentLine()
     {
-        return $query->queueSteps()->where('queue_step_status_id', 2)->first();
+        return $this->queueSteps()->where('queue_step_status_id', 1)->first();
     }
+
+    public function updateStatusIfCompleted()
+    {
+        $hasRemaining = $this->queueSteps()
+            ->whereHas('step', fn($q) => $q->where('is_required', true))
+            ->whereNotIn('queue_step_status_id', [4,3,5]) //complete, remove, paused
+            ->exists();
+
+        if (! $hasRemaining) {
+            $this->update(['status_id' => 4]);
+        }
+    }
+    public function getLaneTypeAttribute(){
+        if($this->external_appointments){
+            return 'Appointment';
+        }
+        if($this->priority){
+            return 'Priority';
+        }
+        return 'Regular';
+    }
+
 
 }

@@ -109,6 +109,7 @@ class TransactionResource extends Resource
                                             ->hint('Select the station associated with this step.')
                                             ->hintColor('primary')
                                             ->columnSpan(2)
+                                            ->required(fn ($get) => $get('is_required'))
                                             ->relationship(name: 'linked_station', titleAttribute: 'name'),
                                         Toggle::make('is_required')
                                             ->label('Station Lined up?')
@@ -116,14 +117,23 @@ class TransactionResource extends Resource
                                             ->hintIcon('heroicon-o-information-circle', tooltip: 'Use this if the customer should be lined up on assign station.')
                                             ->default(true),
                                     ]),
-
                                 Textarea::make('description')->rows(3),
-
                             ])
                             ->orderable('sort_order')
                             ->defaultItems(0)
                             ->addActionLabel('Add Step')
-                            ->columns(1),
+                            ->columns(1)
+                            ->rule(function () {
+                                return function ($attribute, $value, $fail) {
+                                    $hasRequired = collect($value)->contains(function ($item) {
+                                        return isset($item['is_required']) && $item['is_required'];
+                                    });
+
+                                    if (! $hasRequired) {
+                                        $fail('At least one transaction step should be lined up by customer.');
+                                    }
+                                };
+                            }),
                     ])
             ]);
     }
