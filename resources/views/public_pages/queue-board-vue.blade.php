@@ -47,7 +47,7 @@
         <div class="flex-1  relative overflow-hidden">
             <iframe
                 class="absolute w-full h-full object-cover"
-                src="{{ $url }}?autoplay=1&loop=1&playlist={{ $videoId }}"
+                src="{{ $url }}?autoplay=1&loop=1&mute=1&playlist={{ $videoId }}"
                 frameborder="0"
                 allow="autoplay; encrypted-media"
                 allowfullscreen>

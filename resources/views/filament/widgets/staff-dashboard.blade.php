@@ -3,12 +3,12 @@
 
         @foreach ($assigned_station as $ass_station )
             <x-filament::tabs.item
-                :active="$station->id === $ass_station->id"
-                wire:click="updateStation({{ $ass_station }})"
+                :active="$station->id === $ass_station['id']"
+                wire:click="updateStation({{ $ass_station['station'] }})"
                 >
-                {{$ass_station->name}}
+                {{$ass_station['name']}}
                 <x-slot name="badge">
-                    {{$ass_station->activeQueues()->count()}}
+                    {{$ass_station['active']}}
                 </x-slot>
             </x-filament::tabs.item>
 
@@ -32,32 +32,110 @@
                             Now Serving
                         </h1>
                     </div>
-
-                    <div class="px-2">
-                        <div class="items-center justify-center">
-                            <div class="text-center px-4 py-6">
-                                <p class="font-bold text-1xl">Queue Number:</p>
-                                <span class="text-black font-black" style="font-size: 3rem">{{$currentQueue['queue_number']}}</span>
-                                <p class="font-bold text-1xl captitalize">Name: {{$currentQueue['client_name']}}</p>
-                            </div>
-
-                        <div class="py-3 px-2 my-2 text-sm bg-gray-100 rounded-lg">
-                            <div class="py-2 font-medium text-gray-600 dark:text-gray-300">Required Documents</div>
-                            <div class="required-documents p-2 text-gray-900 dark:text-white">{!! $currentQueue['required_documents'] !!}</div>
-                        </div>
-                        @if ($currentQueue['id'])
-                            <div class="flex justify-center m-2">
-                                <x-filament::button wire:click="view_queue({{$currentQueue['id']}})" color="primary">
-                                    <div class="flex items-center">
-                                        <x-fas-eye class="mr-2 w-4 h-4"></x-fas-eye> View
+                        <div class="px-2">
+                            @if ($currentQueue)
+                                <div class="items-center justify-center">
+                                    <div class="text-center px-4 py-6">
+                                        <p class="font-bold text-1xl">Queue Number:</p>
+                                        <span class="text-black font-black" style="font-size: 3rem">{{$currentQueue['queue_number']}}</span>
+                                        <p class="font-bold text-1xl captitalize">Name: {{$currentQueue['client_name']}}</p>
                                     </div>
-                                </x-filament::button>
-                            </div>
-                        @endif
 
+                                    <div class="py-3 px-2 my-2 text-sm bg-gray-100 rounded-lg">
+                                        <div class="py-2 font-medium text-gray-600 dark:text-gray-300">Required Documents</div>
+                                        <div class="required-documents p-2 text-gray-900 dark:text-white">{!! $currentQueue['required_documents'] !!}</div>
+                                    </div>
+                                    @if ($currentQueue['id'])
+                                        <div class="flex justify-center m-2">
+                                            <x-filament::button wire:click="view_queue({{$currentQueue['id']}})" color="primary">
+                                                <div class="flex items-center">
+                                                    <x-fas-eye class="mr-2 w-4 h-4"></x-fas-eye> View
+                                                </div>
+                                            </x-filament::button>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endif
+                        </div>
 
-{{--
-                        <!-- Transaction Details -->
+                    </div>
+                <!-- Column 2 (Next + Done) -->
+                </div>
+            <!-- Column 2 (Next + Done) -->
+            <div class="order-2 lg:order-2 lg:col-span-1 space-y-6">
+                <!-- Next in Queue -->
+                <div class="rounded-lg shadow overflow-hidden">
+                    <div style="background-color:rgb(236, 140, 29) !important; color:white !important" class="py-3 px-2">
+                        <h1 class="text-base font-semibold text-white dark:text-white">
+                            Next in Queue
+                        </h1>
+                    </div>
+                    <div class="px-2 py-3">
+                            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                            {{-- @dd($station->activeQueues) --}}
+                            @if ($active_queues->isEmpty())
+                                <li class="text-gray-500">No active queues</li>
+                            @endif
+                            @foreach($active_queues as $item)
+                                @if ($item->queue)
+                                    <li class="flex items-center justify-between">
+                                        <span>{{$item->queue->name}}</span>
+                                        @if ($item->queue->external_appointments || $item->queue->priority)
+                                            <x-filament::badge color="danger" size="xs">
+                                                {{$item->queue->lane_type}}
+                                            </x-filament::badge>
+                                        @endif
+                                        <span class="text-xs text-gray-500">{{$item->queue->getQueueNumber()}}</span>
+
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Done with Transaction -->
+                <div class="rounded-lg shadow overflow-hidden">
+                    <div style="background-color:rgb(112, 236, 29) !important; color:white !important" class="py-3 px-2">
+                        <h1 class="text-base font-semibold text-white dark:text-white">
+                            Completed Transactions
+                        </h1>
+                    </div>
+                    <div class="px-2 py-3">
+                        <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                            @if ($done_queues->isEmpty())
+                                <li class="text-gray-500">No active queues</li>
+                            @endif
+                            @foreach($done_queues as $item)
+                                @if ($item->queue)
+                                    <li class="flex items-center justify-between">
+                                        <span>{{$item->queue->name}}</span>
+                                        <span class="text-xs text-gray-500">{{$item->queue->getQueueNumber()}} </span>
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="rounded-lg shadow overflow-hidden">
+                    <div style="!important; color:white !important" class="py-2 px-2 bg-gray-300">
+                        <h1 class="text-base font-semibold text-white dark:text-white">
+                            Skipped
+                        </h1>
+                    </div>
+                    <div class="px-2 py-3">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </x-filament::section>
+
+    @livewire('queue-modal')
+</x-filament::widget>
+{{--   <!-- Transaction Details -->
                         @if ($currentQueue['id'])
                             <x-filament::section class="mb-2">
                                 <x-slot name="heading">
@@ -101,130 +179,3 @@
                                 </dl>
                             </x-filament::section>
                         @endif --}}
-
-                        </div>
-                    </div>
-                </div>
-                <!-- Column 2 (Next + Done) -->
-                <div class="order-2 lg:order-2 lg:col-span-1 space-y-6">
-                    <!-- Next in Queue -->
-                    <div class="rounded-lg shadow overflow-hidden">
-                        <div style="background-color:rgb(236, 140, 29) !important; color:white !important" class="py-3 px-2">
-                            <h1 class="text-base font-semibold text-white dark:text-white">
-                                Next in Queue
-                            </h1>
-                        </div>
-                        <div class="px-2 py-3">
-                            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                {{-- @dd($station->activeQueues) --}}
-                                @if ($station->activeQueues->isEmpty())
-                                    <li class="text-gray-500">No active queues</li>
-
-                                @endif
-                                @foreach($station->activeQueues as $item)
-                                    <li class="flex items-center justify-between">
-                                        <span>{{$item->name}}</span><span class="text-xs text-gray-500">{{$item->getQueueNumber()}}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Done with Transaction -->
-                    <div class="rounded-lg shadow overflow-hidden">
-                        <div style="background-color:rgb(112, 236, 29) !important; color:white !important" class="py-3 px-2">
-                            <h1 class="text-base font-semibold text-white dark:text-white">
-                                Completed Transactions
-                            </h1>
-                        </div>
-                        <div class="px-2 py-3">
-                            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                                @if ($station->doneQueues->isEmpty())
-                                    <li class="text-gray-500">No active queues</li>
-                                @endif
-                                @foreach($station->doneQueues as $item)
-                                    <li class="flex items-center justify-between">
-                                        <span>{{$item->name}}</span><span class="text-xs text-gray-500">{{$item->getQueueNumber()}}</span>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-
-
-                    <div class="rounded-lg shadow overflow-hidden">
-                        <div style="!important; color:white !important" class="py-2 px-2 bg-gray-300">
-                            <h1 class="text-base font-semibold text-white dark:text-white">
-                                Skipped
-                            </h1>
-                        </div>
-                        <div class="px-2 py-3">
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <!-- Column 2 (Next + Done) -->
-            <div class="order-2 lg:order-2 lg:col-span-1 space-y-6">
-                <!-- Next in Queue -->
-                <div class="rounded-lg shadow overflow-hidden">
-                    <div style="background-color:rgb(236, 140, 29) !important; color:white !important" class="py-3 px-2">
-                        <h1 class="text-base font-semibold text-white dark:text-white">
-                            Next in Queue
-                        </h1>
-                    </div>
-                    <div class="px-2 py-3">
-                            <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                            {{-- @dd($station->activeQueues) --}}
-                            @if ($station->activeQueues->isEmpty())
-                                <li class="text-gray-500">No active queues</li>
-
-                            @endif
-                            @foreach($station->activeQueues as $item)
-                                <li class="flex items-center justify-between">
-                                    <span>{{$item->name}}</span><span class="text-xs text-gray-500">{{$item->getQueueNumber()}}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Done with Transaction -->
-                <div class="rounded-lg shadow overflow-hidden">
-                    <div style="background-color:rgb(112, 236, 29) !important; color:white !important" class="py-3 px-2">
-                        <h1 class="text-base font-semibold text-white dark:text-white">
-                            Completed Transactions
-                        </h1>
-                    </div>
-                    <div class="px-2 py-3">
-                        <ul class="space-y-2 text-sm text-gray-700 dark:text-gray-300">
-                            @if ($station->doneQueues->isEmpty())
-                                <li class="text-gray-500">No active queues</li>
-                            @endif
-                            @foreach($station->doneQueues as $item)
-                                <li class="flex items-center justify-between">
-                                    <span>{{$item->name}}</span><span class="text-xs text-gray-500">{{$item->getQueueNumber()}}</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="rounded-lg shadow overflow-hidden">
-                    <div style="!important; color:white !important" class="py-2 px-2 bg-gray-300">
-                        <h1 class="text-base font-semibold text-white dark:text-white">
-                            Skipped
-                        </h1>
-                    </div>
-                    <div class="px-2 py-3">
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </x-filament::section>
-
-    @livewire('queue-modal')
-</x-filament::widget>

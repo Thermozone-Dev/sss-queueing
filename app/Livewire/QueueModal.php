@@ -2,9 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Priority;
 use App\Models\Queue;
 use App\Models\QueueCall;
 use App\Models\QueueStepsTimestamp;
+use App\Models\Station;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -15,10 +17,11 @@ class QueueModal extends Component
 
     public $queue;
     public $showCompleteConfirmationModal;
-
-
     public $modal_data;
-
+    public $station;
+    public $activeStep;
+    public $prioritization_status;
+    public $priorities;
 
 
     public $listeners = [
@@ -27,15 +30,16 @@ class QueueModal extends Component
 
     public function mount(): void
     {
-        // if($this->queueID){
-        //     dd($this->getQueue());
-        // }
+        $this->priorities = Priority::orderBy('name','asc')->get();
 
     }
-    public function getQueue(Queue $queueDetails){
+    public function getQueue(Queue $queueDetails, Station $station){
         // $this->queue = Queue::find($this->queueID);
         // dd($queueDetails);
         $this->queue = $queueDetails;
+        $this->station = $station;
+        $this->activeStep = $queueDetails->queueSteps()->where('station_id',$station->id)->pendingSteps()->first();
+        // dd($this->activeStep);
         $this->dispatch('open-modal', id: 'queue-modal-view');
     }
 
@@ -83,13 +87,53 @@ class QueueModal extends Component
 
     }
 
+    public function update_prioritization($condition, $value = null){
+        $queue = $this->queue;
+        if(!$condition){
+            $queue->update([
+                'priority_type' => null
+            ]);
+        }else{
+            $this->validate([
+                'prioritization_status' => ['required'],
+            ]);
+
+
+            $value = $this->prioritization_status;
+
+            $queue->update([
+                'priority_type' => $value
+            ]);
+
+
+        }
+
+        $this->dispatch('close-modal', id: 'show-priority-option-modal');
+
+
+        Notification::make()
+            ->title('Prioritization updated')
+            ->color('success')
+            ->send();
+
+
+
+        return;
+
+    }
+
+
     public function update_queue($status){
         $queue_id = $this->queue->id;
+        $station = $this->station;
+        $step = $this->activeStep;
 
         $column = null;
         $shouldRemove = false;
 
         $queue = Queue::findOrFail($queue_id);
+        // dd($queue,$station);
+
 
         if ($status == 2) {
             $column = 'processed_at';
@@ -112,17 +156,18 @@ class QueueModal extends Component
             $shouldRemove = true;
         }
 
-        DB::transaction(function () use ($queue, $status, $column) {
+        DB::transaction(function () use ($step, $queue, $status, $column) {
 
             $this->updateTimeStamps($queue->id, $column);
 
-            $queue->update([
-                'status_id' => $status,
+            $step->update([
+                'queue_step_status_id' => $status,
             ]);
 
             if ($status == 4) {
-                $queue->moveToNextStep();
+                $queue->updateStatusIfCompleted();
             }
+
         });
         // /Users/dennisenraca/Herd/sss-queueing/images/default_front_end/logo-light-text.png
         $queue_call = QueueCall::where('queue_id', $queue_id)->first();
@@ -142,6 +187,7 @@ class QueueModal extends Component
             ->color($color)
             ->send();
 
+        return;
         return $this->getCurrentQueue();
     }
 

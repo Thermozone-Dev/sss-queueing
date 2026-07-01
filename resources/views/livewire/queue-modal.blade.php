@@ -50,7 +50,8 @@
                         </thead>
                         <tbody>
                             @foreach ($queue->queueSteps as $step)
-                                <tr class="border-b  border-default">
+                            {{-- @dd($activeStep) --}}
+                                <tr class="border-b  border-default @if($activeStep->transaction_step_id == $step->transaction_step_id) bg-primary-300 @endif">
                                     <th scope="row" class="px-6 py-4 font-medium text-heading whitespace-nowrap bg-neutral-secondary-soft">
                                         {{$step->transaction_step->title}}
                                     </th>
@@ -81,9 +82,9 @@
                             Actions
                         </span>
                     </x-slot>
-                    <div class="grid grid-cols-4 gap-2">
+                    <div class="grid grid-cols-3 gap-2">
 
-                        @if ($queue->status_id == 1)
+                        @if ($activeStep->queue_step_status_id == 1)
                             <x-filament::button icon="fas-phone-alt" color="warning" wire:click="recall_queue">
                                 Call
                             </x-filament::button>
@@ -93,23 +94,23 @@
                             </x-filament::button>
                         @endif
 
-                        @if ($queue->status_id == 2)
+                        @if ($activeStep->queue_step_status_id == 2)
                             <x-filament::button  icon="fas-circle-check" color="primary" wire:click="update_queue(4)" >
                                 Complete
                             </x-filament::button>
                             @if ($queue->priority)
-                                <x-filament::button  icon="fas-arrow-circle-down" color="danger">
+                                <x-filament::button  icon="fas-arrow-circle-down" wire:click="update_prioritization(false)" color="danger">
                                     Deprioritize
                                 </x-filament::button>
                             @else
-                                <x-filament::button  icon="fas-arrow-circle-up" color="success">
+                                <x-filament::button  icon="fas-arrow-circle-up" wire:click="$dispatch('open-modal', { id: 'show-priority-option-modal' })" color="success">
                                     Prioritize
                                 </x-filament::button>
                             @endif
                         @endif
-                        <x-filament::button icon="fas-hand" color="warning">
+                        {{-- <x-filament::button icon="fas-hand" color="warning">
                             Skip
-                        </x-filament::button>
+                        </x-filament::button> --}}
 
                         <x-filament::button  icon="fas-trash" color="danger" wire:click="update_queue(5)">
                             Remove
@@ -146,5 +147,36 @@
             </x-slot>
         </x-filament::modal>
     @endif
+
+
+    <x-filament::modal
+        id="show-priority-option-modal"
+            :close-button="false">
+        <x-slot name="heading">
+            Prioritize this queue
+        </x-slot>
+
+        <x-filament::input.wrapper>
+            <x-filament::input.select wire:model.defer="prioritization_status">
+                <option value="">Select priority</option>
+                @foreach ($priorities as $priority)
+                    <option value="{{$priority->id}}">{{$priority->name}}</option>
+                @endforeach
+
+            </x-filament::input.select>
+        </x-filament::input.wrapper>
+        @error('prioritization_status')
+            <p class="text-danger-600 text-sm mt-1">{{ $message }}</p>
+        @enderror
+        <x-slot name="footerActions" class="flex justify-center">
+            <x-filament::button color="primary" wire:click="update_prioritization(true)">
+                OK
+            </x-filament::button>
+
+            <x-filament::button wire:click="$dispatch('close-modal', { id: 'show-priority-option-modal' })">
+                Cancel
+            </x-filament::button>
+        </x-slot>
+    </x-filament::modal>
 
 </div>

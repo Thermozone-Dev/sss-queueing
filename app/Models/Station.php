@@ -62,32 +62,51 @@ class Station extends Model
     {
         return $this->belongsToMany(User::class);
     }
-    public function queues()
+
+
+    public function queues($stationID)
     {
-        return $this->hasManyThrough(
-            Queue::class,
-            Transaction::class,
-                'station_id',    // Foreign key on transactions table
-                'transaction_id',// Foreign key on queues table
-                'id',            // Local key on stations table
-                'id'             // Local key on transactions table
-        );
+        // dd($this->id);
+        $steps = QueueStep::with('queue')
+            ->where('station_id', $stationID)
+            // ->where('station_id', 3)
+            ->join('queues', 'queues.id', '=', 'queue_steps.queue_id')
+            ->whereDate('queues.created_at', Carbon::today())
+            ->orderByRaw("
+                CASE
+                    WHEN queues.external_appointments IS NOT NULL THEN 0
+                    WHEN queues.priority_type IS NOT NULL THEN 1
+                    ELSE 2
+                END
+            ")
+            ->orderBy('queues.created_at', 'asc')
+            ->select('queue_steps.*');
+
+        $active = (clone $steps)->pendingSteps();
+        $done = (clone $steps)->completedSteps();
+        return[
+            'active' => $active,
+            'done' => $done,
+        ];
     }
 
     public function activeQueues()
     {
-        return $this->queues()->active();
+        $stationID = $this->id;
+        return $this->queues($stationID)['active'];
     }
 
     public function pendingQueues(){
-        return $this->activeQueues()->where('status_id', 1);
+        return $this->activeQueues()->where('queue_step_status_id', 1);
     }
 
     public function processingQueues(){
-        return $this->activeQueues()->where('status_id', 2);
+        // dd($this->activeQueues()->get());
+        return $this->activeQueues()->where('queue_step_status_id', 2);
     }
 
     public function doneQueues(){
-        return $this->queues()->applySorting()->whereIn('status_id', [4, 5]);
+        $stationID = $this->id;
+        return $this->queues($stationID)['active'];;
     }
 }

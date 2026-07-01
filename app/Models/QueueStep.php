@@ -36,4 +36,19 @@ class QueueStep extends Model
 	{
 		return $this->belongsTo(QueueStatus::class,'queue_step_status_id');
 	}
+
+
+    public function scopePendingSteps($query)
+    {
+        return $query->whereIn('queue_step_status_id', [1,2]);
+    }
+
+
+    public function scopeCompletedSteps($query)
+    {
+        return $query->where('queue_step_status_id', 4);
+    }
+
+
+
 }

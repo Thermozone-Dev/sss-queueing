@@ -56,24 +56,22 @@ class ShowQueues extends Controller
     public function nextInline(){
         try {
 
+
             $queues = Queue::applySorting()->get();
 
-            $currentLine = $queues->map(function ($q){
-                $current = $q->getCurrentLine();
-                if(!$current){
-                    return;
-                }
-                return [
+            $currentLine = $queues
+                ->filter(fn ($q) => $q->getCurrentLine())
+                ->map(fn ($q) => [
                     'lane' => $q->lane_type,
                     'name' => $q->name,
-                    // 'transaction_name' => $current->transaction_step->title,
-                    'station' => $current->station->code,
+                    'station' => $q->getCurrentLine()->station->code,
                     'queueNumber' => $q->getQueueNumber(),
-                ];
-            });
+                ])
+                ->values();
+
             return response()->json([
                 'status' => 'success',
-                'data' => $currentLine
+                'data' => collect($currentLine)
             ], 200);
 
         } catch (\Exception $e) {

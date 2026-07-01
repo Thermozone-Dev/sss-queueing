@@ -121,7 +121,7 @@ class Queue extends Model
     public function updateStatusIfCompleted()
     {
         $hasRemaining = $this->queueSteps()
-            ->whereHas('step', fn($q) => $q->where('is_required', true))
+            ->whereHas('transaction_step', fn($q) => $q->where('is_required', true))
             ->whereNotIn('queue_step_status_id', [4,3,5]) //complete, remove, paused
             ->exists();
 
@@ -129,6 +129,20 @@ class Queue extends Model
             $this->update(['status_id' => 4]);
         }
     }
+
+    public function scopeFilterByStation($query, $station)
+    {
+
+        if(!$station){
+            return $query;
+        }
+
+        $id = $station->id;
+        return $query->whereHas('queueSteps', function ($q) use ($id) {
+            $q->where('station_id', $id);
+        });
+    }
+
     public function getLaneTypeAttribute(){
         if($this->external_appointments){
             return 'Appointment';

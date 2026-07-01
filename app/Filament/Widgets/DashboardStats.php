@@ -22,37 +22,52 @@ class DashboardStats extends BaseWidget
     public $total;
 
     public function mount(){
-        if (auth()->user()->hasRole('staff')) {
-            $station = auth()->user()->stations()->first();
-            if(!$station){
-                return;
-            }
 
-            $this->activeCount = $station->activeQueues->count();
-            $this->pendingCount = $station->pendingQueues->count();
-            $this->processingCount = $station->processingQueues->count();
-            $this->completedCount = $station->doneQueues->count(); // Count completed queues
-            $this->activeCount =$this->activeCount + $this->completedCount;
+        $stations = Station::all();
 
-        } else{
-            $stations = Station::all();
+        $this->activeCount = $stations->sum(fn ($station) => $station->activeQueues()->count());
+        $this->pendingCount = $stations->sum(fn ($station) => $station->pendingQueues()->count());
+        $this->processingCount = $stations->sum(fn ($station) => $station->processingQueues()->count());
+        $this->completedCount = $stations->sum(fn ($station) => $station->doneQueues()->count());
+        $this->activeCount = $this->activeCount + $this->completedCount;
 
-            $this->activeCount = $stations->sum(fn ($station) => $station->activeQueues->count());
-            $this->pendingCount = $stations->sum(fn ($station) => $station->pendingQueues->count());
-            $this->processingCount = $stations->sum(fn ($station) => $station->processingQueues->count());
-            $this->completedCount = $stations->sum(fn ($station) => $station->doneQueues->count());
-            $this->activeCount = $this->activeCount + $this->completedCount;
-        }
+
+
+        // if (auth()->user()->hasRole('staff')) {
+        //     $station = auth()->user()->stations()->first();
+        //     if(!$station){
+        //         return;
+        //     }
+
+        //     $this->activeCount = $station->activeQueues()->count();
+        //     $this->pendingCount = $station->pendingQueues()->count();
+        //     $this->processingCount = $station->processingQueues()->count();
+        //     $this->completedCount = $station->doneQueues()->count(); // Count completed queues
+        //     $this->activeCount =$this->activeCount + $this->completedCount;
+
+        // } else{
+        //     $stations = Station::all();
+
+        //     $this->activeCount = $stations->sum(fn ($station) => $station->activeQueues()->count());
+        //     $this->pendingCount = $stations->sum(fn ($station) => $station->pendingQueues()->count());
+        //     $this->processingCount = $stations->sum(fn ($station) => $station->processingQueues()->count());
+        //     $this->completedCount = $stations->sum(fn ($station) => $station->doneQueues()->count());
+        //     $this->activeCount = $this->activeCount + $this->completedCount;
+        // }
         // dd($this->activeCount, $this->pendingCount, $this->processingCount);
-        $this->total = $this->activeCount;
+        // $this->total = $this->activeCount;
+    }
+
+    public function getWidgetStats(){
+
     }
     protected function getStats(): array
     {
         return [
-            Stat::make('', $this->total)
-                ->color('warning')
-                ->icon('heroicon-o-users')
-                ->description('Total Clients Today'),
+            // Stat::make('', $this->total)
+            //     ->color('warning')
+            //     ->icon('heroicon-o-users')
+            //     ->description('Total Clients Today'),
             Stat::make('', $this->completedCount)
                 ->color('success')
                 ->icon('heroicon-o-play')

@@ -4,12 +4,14 @@ namespace App\Filament\Widgets;
 
 use App\Models\Queue;
 use App\Models\QueueCall;
+use App\Models\QueueStep;
 use App\Models\Station;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Filament\Widgets\Widget;
 use App\Models\QueueStepsTimestamp;
+use Carbon\Carbon;
 use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\DB;
 
@@ -30,34 +32,96 @@ class StaffDashboard extends Widget implements HasForms
     public $nextQueues;
 
 
+    public $active_queues;
+    public $done_queues;
+
+
+
     public function mount(){
         // dd(auth()->user()->stations);
         // $this->transaction = auth()->user()->transactions()->first();
 
-        if(!$this->station){
-            return;
-        }
         //Station::where('assigned_to', auth()->user()->id)->first();
-        $assigned_station = auth()->user()->stations;
-        // dd($assigned_station);
-        $this->assigned_station = $assigned_station;
+        $test = auth()->user()->stations;
+        $assigned_station = $test->map(function ($station){
+            $test1 = $this->getQueuePerStation($station);
+            return [
+                'active' => isset($test1['active']) ? $test1['active']->count() : 0,
+                'id' => $station->id,
+                'name' => $station->name,
+                'station' => $station,
+            ];
+        });
 
         $this->station = auth()->user()->stations()->first();
+        $this->assigned_station = $assigned_station;
+        $this->refreshQueue();
+
         $this->status =  $this->station->status;
-        $this->currentQueue = $this->getCurrentQueue();
     }
+
+
 
     public function updateStation($station){
         $station = Station::find($station['id']);
         $this->station = $station;
         $this->status =  $station->status;
-        $this->currentQueue = $this->getCurrentQueue();
+        $this->refreshQueue();
     }
 
+    public function getQueuePerStation($station){
 
-    public function getCurrentQueue()
+        $steps = QueueStep::with('queue')
+            ->where('station_id', $station->id)
+            // ->where('station_id', 3)
+            ->join('queues', 'queues.id', '=', 'queue_steps.queue_id')
+            ->whereDate('queues.created_at', Carbon::today())
+            ->orderByRaw("
+                CASE
+                    WHEN queues.external_appointments IS NOT NULL THEN 0
+                    WHEN queues.priority_type IS NOT NULL THEN 1
+                    ELSE 2
+                END
+            ")
+            ->orderBy('queues.created_at', 'asc')
+            ->select('queue_steps.*');
+
+        $active = (clone $steps)->pendingSteps();
+        $done = (clone $steps)->completedSteps();
+        return[
+            'active' => $active,
+            'done' => $done,
+        ];
+    }
+
+    public function refreshQueue(){
+        $station = $this->station;
+        $queues = $this->getQueuePerStation($station);
+        $active_queues = $queues['active'];
+        $done = $queues['done'];
+
+        // dd($active_queues->get(),$done->get());
+
+        $first_queue = (clone $active_queues)->first();
+        // dd($first_queue);
+        $this->active_queues = $active_queues->get();
+        $this->done_queues = $done->get();
+
+        if($first_queue){
+            $this->getCurrentQueue($first_queue);
+        }
+        else{
+            $this->currentQueue = null;
+        }
+
+    }
+    public function getCurrentQueue($first_queue)
     {
-        $currentQueue = $this->station->activeQueues()->first();
+        $currentQueue = $first_queue->queue;
+        if(!$currentQueue){
+            $this->currentQueue = null;
+            return;
+        }
         $this->currentQueue = [
             'id' => $currentQueue->id ?? null,
             'queue_number' => ($currentQueue) ? $currentQueue->getQueueNumber() : null,
@@ -72,7 +136,8 @@ class StaffDashboard extends Widget implements HasForms
     }
 
     public function view_queue($queue_id){
-        $this->dispatch('openQueueModal', $queue_id);
+        $station = $this->station;
+        $this->dispatch('openQueueModal', $queue_id, $station->id);
     }
 
 

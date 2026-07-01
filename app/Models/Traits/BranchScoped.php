@@ -12,7 +12,9 @@ trait BranchScoped
         // GLOBAL SCOPE (filters results)
         static::addGlobalScope('branch', function (Builder $query) {
             if (auth()->hasUser()) {
-                $query->where('branch_id', auth()->user()->branch_id);
+                $table = $query->getModel()->getTable();
+
+                $query->where($table . '.branch_id', auth()->user()->branch_id);
                 if(auth()->user()->branch){
                     $query->whereBelongsTo(auth()->user()->branch);
                 }

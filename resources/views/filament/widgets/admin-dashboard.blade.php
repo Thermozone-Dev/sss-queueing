@@ -23,24 +23,24 @@
                         <div class="p-2 text-sm text-center text-gray-700 dark:text-gray-300">
                             <div class="p-4 bg-gray-100 rounded-lg">
                                 <div class="text-sm">
-                                    <span class="text-3xl font-semibold text-gray-600">{{($station->processingQueues->first()) ? $station->processingQueues->first()->getQueueNumber() : null}}</span>
+                                    <span class="text-3xl font-semibold text-gray-600">{{($station->pendingQueues()->first()) ? $station->pendingQueues()->first()->queue->getQueueNumber() : null}}</span>
                                     <div class="text-sm text-gray-600">Currently Serving</div>
                                 </div>
                             </div>
                             <div class="mt-5 space-y-4 lg:space-y-0 lg:flex lg:space-x-4 lg:flex-row">
                                 <x-filament::button class="w-full !bg-warning-600 text-white">
-                                    <div class="mr-2">{{$station->activeQueues->count() + $station->doneQueues->count()}}</div> Total
+                                    <div class="mr-2">{{$station->activeQueues()?->count() ?? 0 + $station->doneQueues()->count()}}</div> Total
                                 </x-filament::button>
                                 <x-filament::button class="w-full !bg-indigo-600 text-white">
-                                    <div class="mr-2">{{$station->pendingQueues->count()}}</div> Pending
+                                    <div class="mr-2">{{$station->pendingQueues()->count()}}</div> Pending
                                 </x-filament::button>
 
                                 <x-filament::button class="w-full !bg-red-500 text-white">
-                                    <div class="mr-2">{{$station->processingQueues->count()}}</div> Processing
+                                    <div class="mr-2">{{$station->processingQueues()->count()}}</div> Processing
                                 </x-filament::button>
 
                                 <x-filament::button class="w-full !bg-gray-500 text-white">
-                                    <div class="mr-2">{{$station->doneQueues->count()}}</div> Completed
+                                    <div class="mr-2">{{$station->doneQueues()->count()}}</div> Completed
                                 </x-filament::button>
                             </div>
 
