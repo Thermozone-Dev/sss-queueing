@@ -22,11 +22,11 @@ class ListTransactions extends ListRecords
     {
         $query = parent::getTableQuery();
 
-        if (auth()->user()->hasRole('staff')) {
-            return $query->whereHas('users', function ($q) {
-                $q->where('users.id', auth()->id());
-            });
-        }
+        // if (auth()->user()->hasRole('staff')) {
+        //     return $query->whereHas('users', function ($q) {
+        //         $q->where('users.id', auth()->id());
+        //     });
+        // }
 
         return $query;
     }

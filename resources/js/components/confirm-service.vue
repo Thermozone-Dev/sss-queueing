@@ -88,8 +88,6 @@
                 .then(response => {
                     this.selected_transaction = response.data.data.name;
                     this.selected_station = response.data.data.station;
-
-                    console.log(response.data.name,response.data.station)
                 })
                 .catch(error => {
                     console.error("There was an error fetching the priority:", error.message);

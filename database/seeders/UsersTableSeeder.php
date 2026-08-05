@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -17,7 +18,9 @@ class UsersTableSeeder extends Seeder
 
         // Superadmin user
         $sid = Str::uuid();
-        DB::table('users')->insert([
+        User::updateOrCreate(
+            ['email' => 'superadmin@starter-kit.com'],
+        [
             'id' => $sid,
             'username' => 'superadmin',
             'firstname' => 'Super',

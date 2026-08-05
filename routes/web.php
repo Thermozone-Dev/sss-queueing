@@ -33,6 +33,8 @@ Route::get('/queue-kiosk/get-station/{id}', [CreateQueue::class,'getStationTrans
 Route::get('/queue-kiosk/get-transaction/{id}', [CreateQueue::class,'getTransaction'])->name('get-transaction');
 Route::get('/queue-kiosk/get-priority-type', [CreateQueue::class,'getPriorityType'])->name('get-priority');
 Route::post('/queue-kiosk/post-queue', [CreateQueue::class,'store'])->name('queue.post');
+Route::get('/queue-kiosk/verify-appointment/{appointment_id}', [CreateQueue::class,'verify_appointment'])->name('appointment.verify');
+// Route::post('/queue-kiosk/verify-appointment', [CreateQueue::class,'verify_appointment'])->name('appointment.verify');
 
 
 Route::get('/search-results', function () {

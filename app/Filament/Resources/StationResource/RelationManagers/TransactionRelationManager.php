@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\StationResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Section;
@@ -55,17 +56,42 @@ class TransactionRelationManager extends RelationManager
                 Section::make('Steps')
                     ->schema([
                         Repeater::make('transaction_steps')
-                            ->label('Transaction Steps')
-                            ->relationship('transaction_steps')
-                            ->schema([
-                                TextInput::make('title')->required(),
-                                Textarea::make('description')->rows(3),
-                                Toggle::make('is_required')->label('Required?')->default(false),
-                            ])
-                            ->orderable('sort_order')
-                            ->defaultItems(0)
-                            ->addActionLabel('Add Step')
-                            ->columns(1),
+                        ->label('Transaction Steps')
+                        ->relationship('transaction_steps')
+                        ->schema([
+                            TextInput::make('title')->required(),
+                            Grid::make(3)
+                                ->schema([
+                                    Select::make('linked_station_id')
+                                        ->label('Linked Station')
+                                        ->hint('Select the station associated with this step.')
+                                        ->hintColor('primary')
+                                        ->columnSpan(2)
+                                        ->required(fn ($get) => $get('is_required'))
+                                        ->relationship(name: 'linked_station', titleAttribute: 'name'),
+                                    Toggle::make('is_required')
+                                        ->label('Station Lined up?')
+                                        ->inline(false)
+                                        ->hintIcon('heroicon-o-information-circle', tooltip: 'Use this if the customer should be lined up on assign station.')
+                                        ->default(true),
+                                ]),
+                            Textarea::make('description')->rows(3),
+                        ])
+                        ->orderable('sort_order')
+                        ->defaultItems(0)
+                        ->addActionLabel('Add Step')
+                        ->columns(1)
+                        ->rule(function () {
+                            return function ($attribute, $value, $fail) {
+                                $hasRequired = collect($value)->contains(function ($item) {
+                                    return isset($item['is_required']) && $item['is_required'];
+                                });
+
+                                if (! $hasRequired) {
+                                    $fail('At least one transaction step should be lined up by customer.');
+                                }
+                            };
+                        }),
                     ])
             ]);
     }

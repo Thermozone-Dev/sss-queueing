@@ -6,7 +6,7 @@
             <p class="font-bold captitalize text-white" style="font-size: 4rem">{{queue_details.name}}</p>
             <p class="font-bold text-4xl captitalize">{{queue_details.transaction}}</p>
 
-        </div>
+        </div> 
     </div>
 </template>
 <script>

@@ -56,6 +56,38 @@ class ShowQueues extends Controller
     public function nextInline(){
         try {
 
+
+            $queues = Queue::applySorting()->get();
+
+            $currentLine = $queues
+                ->filter(fn ($q) => $q->getCurrentLine())
+                ->map(fn ($q) => [
+                    'lane' => $q->lane_type,
+                    'name' => $q->name,
+                    'station' => $q->getCurrentLine()->station->code,
+                    'queueNumber' => $q->getQueueNumber(),
+                ])
+                ->values();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => collect($currentLine)
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch stations',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+
+    }
+
+    public function getNextinlinePerStation(){ //gettting queues for each station
+
+        try {
+
             $stations = Station::orderBy('status','desc')->get();
             $queues = [];
 
@@ -83,7 +115,7 @@ class ShowQueues extends Controller
                     'queues' => array_chunk($q->toArray(),3),
                 ];
             }
-            // dd($queues);
+            dd($queues);
             return response()->json([
                 'status' => 'success',
                 'data' => $queues
