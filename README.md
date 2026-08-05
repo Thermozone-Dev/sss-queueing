@@ -12,7 +12,9 @@ Node
 3. go to .env and change APP_URL, DB_USERNAME, DB_PASSWORD and DB_DATABASE
 4. Generate App key  $ php artisan key:generate
 5. Run Database Migration $ php artisan migrate
-6. Run Filament Shield $ php artisan shield:install --fresh
+6. Run Filament Shield $ php artisan shield:setup
+6. Run Filament Shield policies generation $ php artisan shield:generate --all
+
 7. Create a symlink to the storage $ php artisan storage:link
 8. Install Node modules $ npm install
 9. Run Seeders $ php artisan db:seed
