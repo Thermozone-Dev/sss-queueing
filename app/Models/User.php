@@ -18,6 +18,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\Traits\BranchScoped;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail, HasAvatar, HasName, HasMedia
 {
@@ -105,11 +106,16 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail, Has
 
     public function getFullNameAttribute()
     {
-        return $this->firstname.' '.$this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     public function stations()
     {
         return $this->belongsToMany(Station::class);
+    }
+
+    public function otps(): HasMany
+    {
+        return $this->hasMany(Otp::class);
     }
 }

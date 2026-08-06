@@ -35,7 +35,7 @@ class AdminPanelProvider extends PanelProvider
         Filament::serving(function () {
             Filament::registerRenderHook(
                 'panels::sidebar.header',
-                fn () => view('components.sidebar-logo')->render(),
+                fn() => view('components.sidebar-logo')->render(),
                 true
             );
         });
@@ -51,10 +51,10 @@ class AdminPanelProvider extends PanelProvider
             ->passwordReset(RequestPasswordReset::class)
             ->sidebarCollapsibleOnDesktop()
             ->emailVerification(EmailVerification::class)
-            ->favicon(fn (GeneralSettings $settings) => Storage::url($settings->site_favicon))
-            ->brandName(fn (GeneralSettings $settings) => $settings->brand_name)
-            ->brandLogo(fn (GeneralSettings $settings) => Storage::url($settings->brand_logo))
-            ->brandLogoHeight(fn (GeneralSettings $settings) => $settings->brand_logoHeight)
+            ->favicon(fn(GeneralSettings $settings) => Storage::url($settings->site_favicon))
+            ->brandName(fn(GeneralSettings $settings) => $settings->brand_name)
+            ->brandLogo(fn(GeneralSettings $settings) => Storage::url($settings->brand_logo))
+            ->brandLogoHeight(fn(GeneralSettings $settings) => $settings->brand_logoHeight)
             ->darkMode(true)
             ->navigationItems([
                 \Filament\Navigation\NavigationItem::make('kiosk')
@@ -69,7 +69,7 @@ class AdminPanelProvider extends PanelProvider
                     ->icon('heroicon-o-device-tablet')
                     ->group('Queues'),
             ])
-            ->colors(fn (GeneralSettings $settings) => $settings->site_theme)
+            ->colors(fn(GeneralSettings $settings) => $settings->site_theme)
             ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->viteTheme('resources/css/filament/admin/theme.css')
@@ -82,8 +82,7 @@ class AdminPanelProvider extends PanelProvider
                 Pages\Dashboard::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
-            ->widgets([
-            ])
+            ->widgets([])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -129,9 +128,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->renderHook(
                 'panels::sidebar.nav.start',
-                fn () => new HtmlString('
+                fn() => new HtmlString('
                     <h1 class="fi-header-heading text-3xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-3xl">
-                        '.auth()->user()->branch?->name.'
+                        ' . auth()->user()->branch?->name . '
                     </h1>
                 '),
             );
