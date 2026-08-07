@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Livewire\Queues;
 use App\Http\Controllers\CreateQueue;
 use App\Http\Controllers\ShowQueues;
-
+use App\Livewire\SssLanding;
+use Illuminate\Support\Facades\Http;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,19 +22,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/queue-board', [ShowQueues::class,'index']);
-Route::get('/queue-board/get-queues', [ShowQueues::class,'getQueues'])->name('queues-get');
-Route::get('/queue-board/next-inline', [ShowQueues::class,'nextInline'])->name('queues-next');
-Route::get('/queue-board/queue-call', [ShowQueues::class,'callNext'])->name('queues-call-next');
+Route::get('/queue-board', [ShowQueues::class, 'index']);
+Route::get('/queue-board/get-queues', [ShowQueues::class, 'getQueues'])->name('queues-get');
+Route::get('/queue-board/next-inline', [ShowQueues::class, 'nextInline'])->name('queues-next');
+Route::get('/queue-board/queue-call', [ShowQueues::class, 'callNext'])->name('queues-call-next');
 
 
-Route::get('/queue-kiosk', [CreateQueue::class,'index']);
-Route::get('/queue-kiosk/get-station', [CreateQueue::class,'getStations'])->name('get-stations');
-Route::get('/queue-kiosk/get-station/{id}', [CreateQueue::class,'getStationTransaction'])->name('get-stations-transaction');
-Route::get('/queue-kiosk/get-transaction/{id}', [CreateQueue::class,'getTransaction'])->name('get-transaction');
-Route::get('/queue-kiosk/get-priority-type', [CreateQueue::class,'getPriorityType'])->name('get-priority');
-Route::post('/queue-kiosk/post-queue', [CreateQueue::class,'store'])->name('queue.post');
-Route::get('/queue-kiosk/verify-appointment/{appointment_id}', [CreateQueue::class,'verify_appointment'])->name('appointment.verify');
+Route::get('/queue-kiosk', [CreateQueue::class, 'index']);
+Route::get('/queue-kiosk/get-station', [CreateQueue::class, 'getStations'])->name('get-stations');
+Route::get('/queue-kiosk/get-station/{id}', [CreateQueue::class, 'getStationTransaction'])->name('get-stations-transaction');
+Route::get('/queue-kiosk/get-transaction/{id}', [CreateQueue::class, 'getTransaction'])->name('get-transaction');
+Route::get('/queue-kiosk/get-priority-type', [CreateQueue::class, 'getPriorityType'])->name('get-priority');
+Route::post('/queue-kiosk/post-queue', [CreateQueue::class, 'store'])->name('queue.post');
+Route::get('/queue-kiosk/verify-appointment/{appointment_id}', [CreateQueue::class, 'verify_appointment'])->name('appointment.verify');
 // Route::post('/queue-kiosk/verify-appointment', [CreateQueue::class,'verify_appointment'])->name('appointment.verify');
 
 
@@ -43,5 +44,19 @@ Route::get('/search-results', function () {
 
 Route::get('/queues', Queues::class);
 
+Route::get('/', SssLanding::class);
 
+Route::get('/test-sss-api', function () {
 
+    $response = Http::post('https://cloudapi.philippine.accuauth.com/verify/umid_sss', [
+        'sss_number' => '1234567890',
+    ]);
+
+    dd([
+        'Status' => $response->status(),
+        'Successful' => $response->successful(),
+        'Headers' => $response->headers(),
+        'Body' => $response->body(),
+        'JSON' => $response->json(),
+    ]);
+});
