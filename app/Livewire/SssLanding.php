@@ -153,6 +153,6 @@ class SssLanding extends Component
 
     public function render()
     {
-        return view('livewire.sss-landing');
+        return view('livewire.register.registration');
     }
 }
