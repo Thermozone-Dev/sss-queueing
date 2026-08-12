@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\BranchResource\RelationManagers;
 
 use App\Filament\Resources\UserResource;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -10,6 +11,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use GuzzleHttp\Promise\Create;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UsersRelationManager extends RelationManager
@@ -23,6 +25,15 @@ class UsersRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
+        /** Pending Task
+         * On the user management the branch_head is not allowed to create and assign a head_office account and super_admin kindly apply also on user resource
+         * the head_office account cant assign and add super_admin role
+         * The created account on this relation manager automatically ties on parent branch record
+         */
+        $user = Auth::user();
+        $isBranchAdmin = $user->hasRole('branch_head');
+        $isHeadOffice = $user->hasRole('head_office');
+
         return $table
             ->modifyQueryUsing(fn ($query) => $query->withoutGlobalScopes())
             ->recordTitleAttribute('users')
@@ -58,6 +69,7 @@ class UsersRelationManager extends RelationManager
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make()
+                    ->visible(!$isBranchAdmin)
                     ->using(function (array $data, string $model): Model {
 
                         $branch = $this->getOwnerRecord();
@@ -66,15 +78,27 @@ class UsersRelationManager extends RelationManager
 
                         return $model::create($data);
                     })
+                    ->form(fn (Form $form) => $this->getRestrictedUserForm($form))
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->visible(!$isBranchAdmin)
+                    ->form(fn (Form $form) => $this->getRestrictedUserForm($form)),
+                Tables\Actions\DeleteAction::make()
+                    ->visible(!$isBranchAdmin),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->visible(!$isBranchAdmin),
                 ]),
             ]);
+
+        return $table;
+    }
+
+    private function getRestrictedUserForm(Form $form)
+    {
+        return UserResource::form($form);
     }
 }
