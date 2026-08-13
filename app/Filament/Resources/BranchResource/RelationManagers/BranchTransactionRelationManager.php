@@ -66,6 +66,12 @@ class BranchTransactionRelationManager extends RelationManager
                     ->label('Assign Transactions')
                     ->icon('heroicon-m-plus')
                     ->visible(fn () => auth()->user()->hasRole('head_office') || auth()->user()->hasRole('super_admin'))
+                    ->fillForm(function (): array  {
+                        $branch = $this->getOwnerRecord();
+                        return [
+                            'transaction_ids' => $branch->branchTransactions->pluck('transaction_id')->toArray(),
+                        ];
+                    })
                     ->form([
                         Select::make('transaction_ids')
                             ->label('Select Transactions')
