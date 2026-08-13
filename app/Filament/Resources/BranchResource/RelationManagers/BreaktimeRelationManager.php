@@ -20,11 +20,24 @@ class BreaktimeRelationManager extends RelationManager
             ->schema([
                 Forms\Components\TimePicker::make('from')
                     ->label('Break Start Time')
+                    ->format('H:i')
+                    ->displayFormat('H:i')
+                    ->seconds(false)
                     ->required(),
 
                 Forms\Components\TimePicker::make('to')
                     ->label('Break End Time')
+                    ->format('H:i')
+                    ->displayFormat('H:i')
+                    ->seconds(false)
+                    ->afterOrEqual('from')
                     ->required(),
+
+                Forms\Components\Textarea::make('notes')
+                    ->label('Break Description')
+                    ->placeholder('e.g., Lunch Break, Prayer Time, Staff Meeting')
+                    ->rows(3)
+                    ->nullable(),
             ]);
     }
 
@@ -33,7 +46,7 @@ class BreaktimeRelationManager extends RelationManager
 
         /** Pending Task
          * On here kindly check why the page is prompting a page expired even I am logged as super_admin
-         * 
+         *
         */
 
 
@@ -41,11 +54,17 @@ class BreaktimeRelationManager extends RelationManager
             ->columns([
                 Tables\Columns\TextColumn::make('from')
                     ->label('From')
-                    ->time('H:i'),
+                    ->formatStateUsing(fn ($state) => $this->convertTo12HourFormat($state)),
 
                 Tables\Columns\TextColumn::make('to')
                     ->label('To')
-                    ->time('H:i'),
+                    ->formatStateUsing(fn ($state) => $this->convertTo12HourFormat($state)),
+
+                Tables\Columns\TextColumn::make('notes')
+                    ->label('Description')
+                    ->limit(50)
+                    ->columnSpanFull()
+                    ->tooltip(fn ($state) => $state),
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
@@ -59,5 +78,21 @@ class BreaktimeRelationManager extends RelationManager
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    private function convertTo12HourFormat($time): string
+    {
+        if (!$time) return '';
+
+        try {
+            // dd($time);
+            $dateTime = \DateTime::createFromFormat('H:i:s', $time);
+            if ($dateTime === false) {
+                return $time;
+            }
+            return $dateTime->format('h:i A');
+        } catch (\Exception) {
+            return $time;
+        }
     }
 }

@@ -4,9 +4,11 @@ namespace App\Filament\Resources\BranchResource\RelationManagers;
 
 use App\Models\Transaction;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 
 class BranchTransactionRelationManager extends RelationManager
@@ -68,15 +70,16 @@ class BranchTransactionRelationManager extends RelationManager
                      * the branch_head role and  below hierarchy cant assign a transaction for their branch
                      */
 
-                Tables\Actions\Action::make('assignTransactions')
+                Action::make('assignTransactions')
                     ->label('Assign Transactions')
                     ->icon('heroicon-m-plus')
-                    ->visible(fn () => auth()->user()->hasRole('head_office'))
+                    ->visible(fn () => auth()->user()->hasRole('head_office') || auth()->user()->hasRole('super_admin'))
                     ->form([
-                        Forms\Components\MultiSelect::make('transaction_ids')
+                        Select::make('transaction_ids')
                             ->label('Select Transactions')
                             ->options(fn () => Transaction::pluck('name', 'id')->toArray())
                             ->searchable()
+                            ->multiple()
                             ->required(),
                     ])
                     ->action(function (array $data): void {
@@ -92,8 +95,8 @@ class BranchTransactionRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DetachAction::make(),
+                // Tables\Actions\EditAction::make(),
+                Tables\Actions\DetachAction::make()->label('Remove'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

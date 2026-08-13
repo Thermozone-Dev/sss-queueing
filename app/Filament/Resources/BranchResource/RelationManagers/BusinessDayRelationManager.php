@@ -65,22 +65,75 @@ class BusinessDayRelationManager extends RelationManager
 
         return $table
             ->columns([
-                Tables\Columns\ViewColumn::make('days')
-                    ->label('Operating Days')
-                    ->view('filament.tables.columns.business-days'),
+                Tables\Columns\IconColumn::make('monday')
+                    ->label('Monday')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('tuesday')
+                    ->label('Tuesday')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('wednesday')
+                    ->label('Wednesday')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('thursday')
+                    ->label('Thursday')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('friday')
+                    ->label('Friday')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('saturday')
+                    ->label('Saturday')
+                    ->boolean(),
+
+                Tables\Columns\IconColumn::make('sunday')
+                    ->label('Sunday')
+                    ->boolean(),
             ])
             ->headerActions([
-                Tables\Actions\EditAction::make()
-                    ->visible(fn () => auth()->user()->hasRole('head_office')),
+                Tables\Actions\Action::make('configureBusinessDays')
+                    ->label('Configure Business Days')
+                    ->icon('heroicon-m-cog-6-tooth')
+                    ->form([
+                        Forms\Components\Section::make('Select Operating Days')
+                            ->columns(2)
+                            ->schema([
+                                Forms\Components\Checkbox::make('monday')
+                                    ->label('Monday')->default(true),
+                                Forms\Components\Checkbox::make('tuesday')
+                                    ->label('Tuesday')->default(true),
+                                Forms\Components\Checkbox::make('wednesday')
+                                    ->label('Wednesday')->default(true),
+                                Forms\Components\Checkbox::make('thursday')
+                                    ->label('Thursday')->default(true),
+                                Forms\Components\Checkbox::make('friday')
+                                    ->label('Friday')->default(true),
+                                Forms\Components\Checkbox::make('saturday')
+                                    ->label('Saturday')->default(false),
+                                Forms\Components\Checkbox::make('sunday')
+                                    ->label('Sunday')->default(false),
+                            ]),
+                    ])
+                    ->action(function (array $data): void {
+                        $record = $this->getOwnerRecord();
+                        $businessDay = $record->businessDay ?? $record->businessDay()->create();
+
+                        $businessDay->update($data);
+
+                        \Filament\Notifications\Notification::make()
+                            ->success()
+                            ->title('Business Days Updated')
+                            ->body('Operating days have been configured successfully')
+                            ->send();
+                    }),
             ])
             ->actions([
-                Tables\Actions\EditAction::make()
-                    ->visible(fn () => auth()->user()->hasRole('head_office')),
+
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

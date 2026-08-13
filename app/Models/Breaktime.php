@@ -12,11 +12,13 @@ class Breaktime extends Model
         'branch_id',
         'from',
         'to',
+        'notes',
     ];
 
     protected $casts = [
         'from' => 'string',
         'to' => 'string',
+        'notes' => 'string',
     ];
 
     public function branch()

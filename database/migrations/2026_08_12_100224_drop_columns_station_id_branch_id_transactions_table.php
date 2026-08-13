@@ -18,6 +18,8 @@ return new class extends Migration
             $table->dropColumn('branch_id');
             $table->dropColumn('station_id');
             $table->string('category')->nullable()->after('code');
+            $table->boolean('is_active')->default(true);
+            $table->string('transaction_id_api')->unique()->after('code');
         });
 
         Schema::table('transaction_steps', function (Blueprint $table) {
@@ -38,8 +40,10 @@ return new class extends Migration
 
         Schema::table('transactions', function (Blueprint $table) {
             $table->dropColumn('category');
+            $table->dropColumn('is_active');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('station_id')->nullable();
+            $table->dropColumn('transaction_id_api');
             $table->foreign(['station_id'], 'transactions_ibfk_1')->references(['id'])->on('stations')->onUpdate('cascade')->onDelete('restrict');
             $table->foreign('branch_id')->references(['id'])->on('branches');
         });

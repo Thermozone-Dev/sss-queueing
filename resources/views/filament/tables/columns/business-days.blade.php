@@ -2,7 +2,7 @@
     $days = [];
     $dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     $dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
+    
     foreach ($dayNames as $index => $day) {
         if ($record->$day) {
             $days[] = $dayLabels[$index];

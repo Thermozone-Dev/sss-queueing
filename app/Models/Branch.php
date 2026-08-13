@@ -144,11 +144,12 @@ class Branch extends Model
         - transaction_id
 
     Transaction
-        - branch_id
         - code
         - name
         - description
         - category
+        - status
+        
 
     Station has Transaction
 

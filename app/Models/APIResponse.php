@@ -34,12 +34,12 @@ class APIResponse extends Model
         switch ($type) {
             case 1:
                 return static::fetchBranchesFromAPI();
-            case 'transaction':
-                // return $this->mapTransactionData($payload);
+            case 2:
+                return static::fetchTransactionFromAPI();
             case 'member':
-                // return $this->mapMemberData($payload);
+                return $payload;
             default:
-                return [];
+                throw new \Exception("Invalid API type: {$type}. Supported types are: 1 - branch, 2 - transaction, 3 - member");
         }
     }
 
@@ -82,9 +82,39 @@ class APIResponse extends Model
         }
     }
 
-    private function mapTransactionData($payload)
+
+    public static function fetchTransactionFromAPI()
     {
-        return $payload;
+        $apiUrl = config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/transaction.json');
+
+        try {
+            $response = Http::timeout(10)->get($apiUrl);
+            if (!$response->successful()) {
+                return collect();
+            }
+            return collect($response->json()['data'])->map(function ($item) {
+                $mapped_result = static::mapTransactionData($item);
+              
+                return $mapped_result;
+            });
+
+
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch branches from API: ' . $e->getMessage());
+            return collect();
+        }
+    }
+
+
+    public static function mapTransactionData($response)
+    {
+        return [
+            'transaction_id_api' => $response['transaction_id'] ?? null,
+            'code' => $response['code'] ?? null,
+            'name' => $response['name'] ?? null,
+            'description' => $response['description'] ?? null,
+            'category' => $response['category'] ?? null,
+        ];
     }
 
     private function mapMemberData($payload)
