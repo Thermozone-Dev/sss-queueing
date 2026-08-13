@@ -25,11 +25,6 @@ class UsersRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-        /** Pending Task
-         * On the user management the branch_head is not allowed to create and assign a head_office account and super_admin kindly apply also on user resource
-         * the head_office account cant assign and add super_admin role
-         * The created account on this relation manager automatically ties on parent branch record
-         */
         $user = Auth::user();
         $isBranchAdmin = $user->hasRole('branch_head');
         $isHeadOffice = $user->hasRole('head_office');

@@ -43,13 +43,6 @@ class BreaktimeRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-
-        /** Pending Task
-         * On here kindly check why the page is prompting a page expired even I am logged as super_admin
-         *
-        */
-
-
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('from')
@@ -85,7 +78,6 @@ class BreaktimeRelationManager extends RelationManager
         if (!$time) return '';
 
         try {
-            // dd($time);
             $dateTime = \DateTime::createFromFormat('H:i:s', $time);
             if ($dateTime === false) {
                 return $time;

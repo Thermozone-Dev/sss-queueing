@@ -40,15 +40,6 @@ class BranchResource extends Resource
 
         return $form
             ->schema([
-                    /*
-                        Pending Tasks
-                        Here you must add an select field for head_office
-                        If this user selected an option on the backend side it will get from API Response model type 1? to get the latest api response from fetchLatestAPIRecord method from API Response model
-                        It must be better If I add this method to createBranch class?
-                        And after the user selects the branch the match attribute will autofill the information below
-                        This select field will be visible only on creation of branch
-                    */
-
                 Forms\Components\Section::make('API Branch Selection')
                     ->visible(fn (string $operation) => $operation === 'create' && ($user->hasRole('head_office') || $user->hasRole('super_admin')))
                     ->columns(1)
@@ -117,12 +108,6 @@ class BranchResource extends Resource
                                 ->helperText('e.g., 08:00 AM')
                                 ->seconds(false)
                                 ->format('H:i'),
-
-                        /*
-                            Pending Tasks
-                            On this section kinly make sure to have a 15 min interval when selecting a minutes for better UX
-                            Just make sure that the validation works the opening hours must be not later than closing hours and when saved follows the 24hr format but in frontend it follows a 12hr with meridiem
-                        */
 
                         TimePicker::make('closing_hours')
                             ->label('Closing Time')

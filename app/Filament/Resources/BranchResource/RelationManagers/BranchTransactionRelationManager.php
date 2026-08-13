@@ -62,14 +62,6 @@ class BranchTransactionRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-
-                    /** Pending Task
-                     * The head office can assign a transaction to this branch
-                     * It must be a header action with a form of multiple select to save to branch has transaction table and get options from transaction model
-                     * So on transaction resource I w
-                     * the branch_head role and  below hierarchy cant assign a transaction for their branch
-                     */
-
                 Action::make('assignTransactions')
                     ->label('Assign Transactions')
                     ->icon('heroicon-m-plus')

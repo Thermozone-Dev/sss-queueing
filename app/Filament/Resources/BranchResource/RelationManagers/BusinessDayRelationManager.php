@@ -54,15 +54,6 @@ class BusinessDayRelationManager extends RelationManager
 
     public function table(Table $table): Table
     {
-
-        /** Pending Task
-         * The head office can assign a business days to this branch
-         * It must be a header action with a form of checkbox of each column to save to set to active or inactive each day
-         * the branch_head role and  below hierarchy cant assign a transaction for their branch
-         * the table must only have one conditional action if that days is active the action will set to set this day to Inactive? and vise versa
-         */
-
-
         return $table
             ->columns([
                 Tables\Columns\IconColumn::make('monday')
