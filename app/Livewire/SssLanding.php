@@ -7,10 +7,9 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendOtpMail;
-
-
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class SssLanding extends Component
 {
@@ -25,13 +24,15 @@ class SssLanding extends Component
     public $password = '';
     public $password_confirmation = '';
 
+    public $existingAccount = false;
+
     public function verify()
     {
         $this->resetErrorBag();
         $this->member = null;
 
         $this->validate([
-            'sssNumber' => 'required'
+            'sssNumber' => 'required',
         ]);
 
         $response = Http::withoutVerifying()->get(
@@ -39,7 +40,11 @@ class SssLanding extends Component
         );
 
         if (!$response->successful()) {
-            $this->addError('sssNumber', 'Unable to fetch member data.');
+            $this->addError(
+                'sssNumber',
+                'Unable to fetch member data.'
+            );
+
             return;
         }
 
@@ -52,57 +57,37 @@ class SssLanding extends Component
         });
 
         if (!$member) {
-            $this->addError('sssNumber', 'SSS number not found.');
+            $this->addError(
+                'sssNumber',
+                'SSS number not found.'
+            );
+
             return;
         }
-
 
         $this->member = $member;
 
-
         $this->email = $member['email'] ?? null;
 
-
         if (!$this->email) {
-            $this->addError('sssNumber', 'No email registered.');
+            $this->addError(
+                'sssNumber',
+                'No email registered.'
+            );
+
             return;
         }
 
 
-        // Send OTP
+        $this->existingAccount = User::where(
+            'email',
+            $this->email
+        )->exists();
+
+
         $this->sendOtp();
 
-
         $this->step = 2;
-    }
-
-    public function savePassword()
-    {
-        $this->validate([
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $user = User::where('email', $this->email)->first();
-
-        if ($user) {
-            $user->update([
-                'password' => Hash::make($this->password),
-            ]);
-        } else {
-            User::create([
-                'username'  => $this->member['sss_number'],
-                'firstname' => $this->member['first_name'],
-                'lastname'  => $this->member['last_name'],
-                'email'     => $this->member['email'],
-                'password'  => Hash::make($this->password),
-            ]);
-        }
-
-        Cache::forget('sss_otp_' . $this->email);
-
-        session()->flash('success', 'Account created successfully.');
-
-        $this->step = 4;
     }
 
     public function sendOtp()
@@ -125,31 +110,94 @@ class SssLanding extends Component
     {
         $this->resetErrorBag();
 
-
         $savedOtp = Cache::get(
             'sss_otp_' . $this->email
         );
-
 
         if (!$savedOtp) {
             $this->addError('otp', 'OTP expired.');
             return;
         }
 
-
         if ($this->otp != $savedOtp) {
+            $this->addError('otp', 'Invalid OTP.');
+            return;
+        }
 
+        Cache::forget('sss_otp_' . $this->email);
+
+        $this->existingAccount = User::where(
+            'email',
+            $this->email
+        )->exists();
+
+        $this->step = 3;
+    }
+
+
+    public function loginExistingAccount()
+    {
+        $this->resetErrorBag();
+
+        $this->validate([
+            'password' => 'required',
+        ]);
+
+        $user = User::where('email', $this->email)->first();
+
+        if (!$user) {
             $this->addError(
-                'otp',
-                'Invalid OTP.'
+                'password',
+                'Account not found.'
             );
 
             return;
         }
 
+        if (!Hash::check($this->password, $user->password)) {
+            $this->addError(
+                'password',
+                'Incorrect password.'
+            );
 
-        $this->step = 3;
+            return;
+        }
+
+        $this->step = 4;
     }
+
+    public function savePassword()
+    {
+        $this->validate([
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        // Extra protection
+        if (User::where('email', $this->email)->exists()) {
+            $this->addError(
+                'password',
+                'Account already exists. Please login instead.'
+            );
+
+            return;
+        }
+
+        User::create([
+            'username' => $this->member['sss_number'],
+            'firstname' => $this->member['first_name'],
+            'lastname' => $this->member['last_name'],
+            'email' => $this->member['email'],
+            'password' => Hash::make($this->password),
+        ]);
+
+        session()->flash(
+            'success',
+            'Account created successfully.'
+        );
+
+        $this->step = 4;
+    }
+
 
     public function render()
     {
