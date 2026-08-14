@@ -1,0 +1,69 @@
+{
+  "status": "success",
+  "message": "Branches retrieved successfully",
+  "data": [
+    {
+      "branch_id": "BR-001",
+      "name": "SSS Makati Branch",
+      "code": "MAKATI",
+      "address": {
+        "line1": "Ayala Avenue",
+        "city": "Makati",
+        "province": "Metro Manila",
+        "postal_code": "1200"
+      },
+      "contact_number": "0281234567",
+      "email": "makati@sss.gov.ph",
+      "operating_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "working_hours": {
+        "start": "08:00",
+        "end": "17:00"
+      },
+      "appointment_enabled": true,
+      "queue_types_supported": ["appointment", "priority", "walkin"],
+      "status": "active"
+    },
+    {
+      "branch_id": "BR-002",
+      "name": "SSS Quezon City Branch",
+      "code": "QC",
+      "address": {
+        "line1": "East Avenue",
+        "city": "Quezon City",
+        "province": "Metro Manila",
+        "postal_code": "1100"
+      },
+      "contact_number": "0287654321",
+      "email": "qc@sss.gov.ph",
+      "operating_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "working_hours": {
+        "start": "08:00",
+        "end": "17:00"
+      },
+      "appointment_enabled": true,
+      "queue_types_supported": ["appointment", "priority"],
+      "status": "active"
+    },
+    {
+      "branch_id": "BR-003",
+      "name": "SSS Cebu Branch",
+      "code": "CEBU",
+      "address": {
+        "line1": "Osmeña Boulevard",
+        "city": "Cebu City",
+        "province": "Cebu",
+        "postal_code": "6000"
+      },
+      "contact_number": "0321234567",
+      "email": "cebu@sss.gov.ph",
+      "operating_days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "working_hours": {
+        "start": "08:00",
+        "end": "17:00"
+      },
+      "appointment_enabled": false,
+      "queue_types_supported": ["walkin", "priority"],
+      "status": "active"
+    }
+  ]
+}
