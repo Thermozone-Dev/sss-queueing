@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'sss' => [
+        'base_url' => env('SSS_API_BASE_URL', ''),
+        'api_key'  => env('SSS_API_KEY', ''),
+    ],
+
 ];
