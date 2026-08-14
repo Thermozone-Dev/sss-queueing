@@ -1,0 +1,65 @@
+{
+  "status": "success",
+  "message": "Transactions retrieved successfully",
+  "data": [
+    {
+      "transaction_id": "TRX-001",
+      "code": "SAL_LOAN",
+      "name": "Salary Loan Application",
+      "description": "Application for salary loan",
+      "category": "Loans",
+      "estimated_duration_minutes": 20,
+      "requires_appointment": true,
+      "priority_supported": true,
+      "linked_stations": [
+        {
+          "station_id": "ST-01",
+          "station_name": "Evaluation"
+        },
+        {
+          "station_id": "ST-02",
+          "station_name": "Approval"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "transaction_id": "TRX-002",
+      "code": "UMID",
+      "name": "UMID Card Application",
+      "description": "Unified Multi-Purpose ID application",
+      "category": "ID Services",
+      "estimated_duration_minutes": 15,
+      "requires_appointment": true,
+      "priority_supported": true,
+      "linked_stations": [
+        {
+          "station_id": "ST-03",
+          "station_name": "Biometrics"
+        }
+      ],
+      "status": "active"
+    },
+    {
+      "transaction_id": "TRX-003",
+      "code": "BEN_CLAIM",
+      "name": "Benefit Claim Processing",
+      "description": "Processing of member benefit claims",
+      "category": "Benefits",
+      "estimated_duration_minutes": 30,
+      "requires_appointment": false,
+      "priority_supported": true,
+      "linked_stations": [
+        {
+          "station_id": "ST-04",
+          "station_name": "Verification"
+        },
+        {
+          "station_id": "ST-05",
+          "station_name": "Cashier"
+        }
+      ],
+      "status": "active"
+    }
+  ]
+}
