@@ -13,10 +13,10 @@ class APIResponse extends Model
     protected $fillable = [
         'type',
         'payload',
+        'url',
         'response',
         'is_latest',
         'method',
-        'status',
     ];
 
     protected $casts = [
