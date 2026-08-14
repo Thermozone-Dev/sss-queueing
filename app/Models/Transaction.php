@@ -77,4 +77,9 @@ class Transaction extends Model
             $q->where('status_id', 1);
         });
     }
+
+    public function transactionStepStations()
+    {
+        return $this->hasMany(TransactionStepStation::class);
+    }
 }

@@ -61,14 +61,14 @@ class StationResource extends Resource
                                             $initials = collect(explode(' ', $state))
                                                 ->filter()
                                                 ->map(fn ($word) => strtoupper(substr($word, 0, 1)))
-                                                ->take(3)
+                                                ->take(4)
                                                 ->implode('');
 
                                             $set('code', $initials);
                                         }),
 
                                     TextInput::make('code')
-                                        ->maxLength(3)
+                                        ->maxLength(4)
                                         ->required()
                                         ->unique(ignoreRecord: true),
 
@@ -107,6 +107,7 @@ class StationResource extends Resource
                                         ->label('Assigned Staff')
                                         ->relationship('users', 'firstname')
                                         ->preload()
+                                        ->multiple()
                                         ->getOptionLabelFromRecordUsing(fn (Model $record) => Str::headline($record->fullname)),
                                 ]),
 

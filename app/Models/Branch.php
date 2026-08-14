@@ -74,6 +74,11 @@ class Branch extends Model
             ->withPivot('is_active')
             ->withTimestamps();
     }
+
+    public function transactionStepStations()
+    {
+        return $this->hasMany(TransactionStepStation::class);
+    }
 }
 
 
@@ -149,9 +154,11 @@ class Branch extends Model
         - description
         - category
         - status
-        
+
 
     Station has Transaction
+        - station_id
+        - transaction_id
 
     Transaction Steps has Station
       // this is where we save the transaction steps and assigned station for that steps
