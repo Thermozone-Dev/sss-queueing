@@ -73,7 +73,7 @@ class TransactionSyncService
 
         APIResponse::create([
             'type' => 'transaction',
-            'url' => config('services.sss.transaction_url', 'sample/transaction.json'),
+            'url' => $this->api->getEndpoint(),
             'method' => 'GET',
             'payload' => [],
             'response' => json_encode($items),

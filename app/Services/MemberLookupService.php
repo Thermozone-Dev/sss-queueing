@@ -76,7 +76,7 @@ class MemberLookupService
 
         APIResponse::create([
             'type' => 'member',
-            'url' => config('services.sss.member_url', 'sample/member.json'),
+            'url' => $this->api->getEndpoint(),
             'method' => 'GET',
             'payload' => ['sss_number' => $sssNumber],
             'response' => json_encode($data),

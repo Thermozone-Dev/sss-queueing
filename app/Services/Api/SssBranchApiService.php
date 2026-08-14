@@ -23,4 +23,9 @@ class SssBranchApiService
 
         return null;
     }
+
+    public function getEndpoint(): string
+    {
+        return config('services.sss.base_url') . '/branches';
+    }
 }

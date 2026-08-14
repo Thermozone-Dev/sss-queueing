@@ -78,7 +78,7 @@ class BranchSyncService
 
         APIResponse::create([
             'type' => 'branch',
-            'url' => config('services.sss.branch_url', 'sample/branch.json'),
+            'url' => $this->api->getEndpoint(),
             'method' => 'GET',
             'payload' => [],
             'response' => json_encode($items),
