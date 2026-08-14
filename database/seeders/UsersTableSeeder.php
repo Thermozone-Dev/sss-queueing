@@ -36,26 +36,28 @@ class UsersTableSeeder extends Seeder
         Artisan::call('shield:super-admin', ['--user' => $sid]);
 
         $roles = DB::table('roles')->whereNot('name', 'super_admin')->get();
+
+
         foreach ($roles as $role) {
-            for ($i = 0; $i < 5; $i++) {
-                $userId = Str::uuid();
-                DB::table('users')->insert([
-                    'id' => $userId,
-                    'username' => $faker->unique()->userName,
-                    'firstname' => $faker->firstName,
-                    'lastname' => $faker->lastName,
-                    'email' => $faker->unique()->safeEmail,
-                    'email_verified_at' => now(),
-                    'password' => Hash::make('password'),
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-                DB::table('model_has_roles')->insert([
-                    'role_id' => $role->id,
-                    'model_type' => 'App\Models\User',
-                    'model_id' => $userId,
-                ]);
-            }
+            $email = $role->name.'_sample@swiftr.com';
+            $userId = Str::uuid();
+            DB::table('users')->insert([
+                'id' => $userId,
+                'username' => $faker->unique()->userName,
+                'firstname' => $faker->firstName,
+                'lastname' => $faker->lastName,
+                'branch_id' => 1,
+                'email' => $email,
+                'email_verified_at' => now(),
+                'password' => Hash::make('admin123'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+            DB::table('model_has_roles')->insert([
+                'role_id' => $role->id,
+                'model_type' => 'App\Models\User',
+                'model_id' => $userId,
+            ]);
         }
     }
 }
