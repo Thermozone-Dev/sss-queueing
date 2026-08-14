@@ -1,0 +1,20 @@
+{
+  "status": "success",
+  "message": "Member retrieved successfully",
+  "data": {
+    "member_id": "SSS-1000001234",
+    "sss_number": "12-3456789-0",
+    "first_name": "Juan",
+    "middle_name": "Santos",
+    "last_name": "Dela Cruz",
+    "full_name": "Juan Santos Dela Cruz",
+    "birth_date": "1990-05-15",
+    "gender": "male",
+    "email": "juan.delacruz@email.com",
+    "mobile_number": "09171234567",
+    "is_senior": false,
+    "is_pwd": false,
+    "status": "active",
+    "created_at": "2024-01-10T08:30:00Z"
+  }
+}
