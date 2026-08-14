@@ -19,7 +19,7 @@ class UserForm
     {
         $random = Str::random(4);
 
-        $default_password = 'branch_admin_'.$random;
+        $default_password = 'branch_head_'.$random;
         $default_username = 'admin_'.$random;
         $default_email = $default_username.'@gmail.com';
         $default_firstname = $random.' Branch';
