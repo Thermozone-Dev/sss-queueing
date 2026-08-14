@@ -50,9 +50,4 @@ class TransactionStep extends Model
 	}
 
 
-    public function linked_station()
-	{
-		return $this->belongsTo(Station::class,'linked_station_id');
-	}
-
 }

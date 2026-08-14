@@ -53,9 +53,19 @@ class Station extends Model
 		'max_concurrent_clients'
 	];
 
+	public function stationTransactions()
+	{
+		return $this->hasMany(StationTransaction::class);
+	}
+
 	public function transactions()
 	{
-		return $this->hasMany(Transaction::class);
+		return $this->belongsToMany(
+			Transaction::class,
+			'station_transactions',
+			'station_id',
+			'transaction_id'
+		)->withTimestamps();
 	}
 
     public function users()
@@ -108,5 +118,10 @@ class Station extends Model
     public function doneQueues(){
         $stationID = $this->id;
         return $this->queues($stationID)['active'];;
+    }
+
+    public function transactionStepStations()
+    {
+        return $this->hasMany(TransactionStepStation::class);
     }
 }
