@@ -214,3 +214,12 @@ Standardized response types:
 - API-driven data with local mapping
 - Scalable multi-station support
 - Strict enforcement of appointment policies
+
+
+## Role Hierarchy
+- Super Admin - 1
+- Head Office - 2
+- Branch Head - 3
+- Branch Staff - 4
+- Member - 5
+

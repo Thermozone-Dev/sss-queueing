@@ -62,30 +62,30 @@ class TransactionResource extends Resource
                                 ]),
                         Group::make()
                             ->schema([
-                                Select::make('station_id')
-                                    ->searchable()
-                                    ->preload()
-                                    ->default(function (){
-                                        if(auth()->user()->hasRole('staff')){
-                                            return auth()->user()->stations()->first()?->id;
-                                        }
-                                    })
-                                    ->disabled(function (){
-                                        if(auth()->user()->hasRole('staff')){
-                                            return true;
-                                        }
-                                    })
-                                    ->label('Assigned Station')
-                                    ->relationship('station', 'name'),
-                                Select::make('users')
-                                    ->label('Assigned Staff')
-                                    ->preload()
-                                    ->getOptionLabelFromRecordUsing(fn (Model $record) => $record->fullname)
-                                    ->relationship(
-                                        name: 'users',
-                                        modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) =>
-                                        $query->role('staff')
-                                    ),
+                                // Select::make('station_id')
+                                //     ->searchable()
+                                //     ->preload()
+                                //     ->default(function (){
+                                //         if(auth()->user()->hasRole('staff')){
+                                //             return auth()->user()->stations()->first()?->id;
+                                //         }
+                                //     })
+                                //     ->disabled(function (){
+                                //         if(auth()->user()->hasRole('staff')){
+                                //             return true;
+                                //         }
+                                //     })
+                                //     ->label('Assigned Station')
+                                //     ->relationship('station', 'name'),
+                                // Select::make('users')
+                                //     ->label('Assigned Staff')
+                                //     ->preload()
+                                //     ->getOptionLabelFromRecordUsing(fn (Model $record) => $record->fullname)
+                                //     ->relationship(
+                                //         name: 'users',
+                                //         modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) =>
+                                //         $query->role('staff')
+                                //     ),
                                 Forms\Components\RichEditor::make('required_documents')
                                     ->toolbarButtons([
                                         'bulletList',

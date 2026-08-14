@@ -3,10 +3,30 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Branch extends Model
 {
-    protected $fillable = ['name'];
+    use SoftDeletes;
+
+    protected $fillable = [
+        'name',
+        'code',
+        'opening_hours',
+        'closing_hours',
+        'address_line_1',
+        'address_line_2',
+        'city',
+        'province',
+        'postal_code',
+        'email',
+        'contact_number',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
 
     public function users()
     {
