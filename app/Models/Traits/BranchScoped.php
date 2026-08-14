@@ -12,11 +12,19 @@ trait BranchScoped
         // GLOBAL SCOPE (filters results)
         static::addGlobalScope('branch', function (Builder $query) {
             if (auth()->hasUser()) {
-                $table = $query->getModel()->getTable();
+                $user = auth()->user();
 
-                $query->where($table . '.branch_id', auth()->user()->branch_id);
-                if(auth()->user()->branch){
-                    $query->whereBelongsTo(auth()->user()->branch);
+                // Allow super_admin and head_office to view all branches data
+                if ($user->hasRole(['super_admin', 'head_office'])) {
+                    return;
+                }
+
+                // Filter by branch for other roles
+                $table = $query->getModel()->getTable();
+                $query->where($table . '.branch_id', $user->branch_id);
+
+                if ($user->branch) {
+                    $query->whereBelongsTo($user->branch);
                 }
             }
         });
@@ -38,5 +46,10 @@ trait BranchScoped
     public function branch()
     {
         return $this->belongsTo(Branch::class);
+    }
+
+    public function scopeWithoutBranchScope(Builder $query)
+    {
+        return $query->withoutGlobalScope('branch');
     }
 }

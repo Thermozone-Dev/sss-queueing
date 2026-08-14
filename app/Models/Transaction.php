@@ -6,7 +6,6 @@
 
 namespace App\Models;
 
-use App\Models\Traits\BranchScoped;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -30,25 +29,27 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
 	protected $table = 'transactions';
-    use BranchScoped;
 
-	protected $casts = [
-		'station_id' => 'int'
-	];
+	// protected $casts = [
+	// 	'station_id' => 'int'
+	// ];
 
 	protected $fillable = [
-		'branch_id',
-		'station_id',
+		// 'branch_id',
+		// 'station_id',
 		'name',
 		'code',
 		'description',
-        'required_documents'
+        'required_documents',
+        'category',
+        'is_active',
+        'transaction_id_api'
 	];
 
-	public function station()
-	{
-		return $this->belongsTo(Station::class);
-	}
+	// public function station()
+	// {
+	// 	return $this->belongsTo(Station::class);
+	// }
 
 	public function transaction_steps()
 	{
@@ -75,5 +76,10 @@ class Transaction extends Model
         return $query->whereHas('queues', function ($q) {
             $q->where('status_id', 1);
         });
+    }
+
+    public function transactionStepStations()
+    {
+        return $this->hasMany(TransactionStepStation::class);
     }
 }

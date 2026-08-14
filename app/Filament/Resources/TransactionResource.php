@@ -53,7 +53,7 @@ class TransactionResource extends Resource
 
                                     TextInput::make('code')
                                         ->required()
-                                        ->maxLength(3)
+                                        ->maxLength(10)
                                         ->unique(ignoreRecord: true),
 
                                     Textarea::make('description')
@@ -62,30 +62,30 @@ class TransactionResource extends Resource
                                 ]),
                         Group::make()
                             ->schema([
-                                Select::make('station_id')
-                                    ->searchable()
-                                    ->preload()
-                                    ->default(function (){
-                                        if(auth()->user()->hasRole('staff')){
-                                            return auth()->user()->stations()->first()?->id;
-                                        }
-                                    })
-                                    ->disabled(function (){
-                                        if(auth()->user()->hasRole('staff')){
-                                            return true;
-                                        }
-                                    })
-                                    ->label('Assigned Station')
-                                    ->relationship('station', 'name'),
-                                Select::make('users')
-                                    ->label('Assigned Staff')
-                                    ->preload()
-                                    ->getOptionLabelFromRecordUsing(fn (Model $record) => $record->fullname)
-                                    ->relationship(
-                                        name: 'users',
-                                        modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) =>
-                                        $query->role('staff')
-                                    ),
+                                // Select::make('station_id')
+                                //     ->searchable()
+                                //     ->preload()
+                                //     ->default(function (){
+                                //         if(auth()->user()->hasRole('staff')){
+                                //             return auth()->user()->stations()->first()?->id;
+                                //         }
+                                //     })
+                                //     ->disabled(function (){
+                                //         if(auth()->user()->hasRole('staff')){
+                                //             return true;
+                                //         }
+                                //     })
+                                //     ->label('Assigned Station')
+                                //     ->relationship('station', 'name'),
+                                // Select::make('users')
+                                //     ->label('Assigned Staff')
+                                //     ->preload()
+                                //     ->getOptionLabelFromRecordUsing(fn (Model $record) => $record->fullname)
+                                //     ->relationship(
+                                //         name: 'users',
+                                //         modifyQueryUsing: fn (\Illuminate\Database\Eloquent\Builder $query) =>
+                                //         $query->role('staff')
+                                //     ),
                                 Forms\Components\RichEditor::make('required_documents')
                                     ->toolbarButtons([
                                         'bulletList',
@@ -102,38 +102,23 @@ class TransactionResource extends Resource
                             ->relationship('transaction_steps')
                             ->schema([
                                 TextInput::make('title')->required(),
-                                Grid::make(3)
-                                    ->schema([
-                                        Select::make('linked_station_id')
-                                            ->label('Linked Station')
-                                            ->hint('Select the station associated with this step.')
-                                            ->hintColor('primary')
-                                            ->columnSpan(2)
-                                            ->required(fn ($get) => $get('is_required'))
-                                            ->relationship(name: 'linked_station', titleAttribute: 'name'),
-                                        Toggle::make('is_required')
-                                            ->label('Station Lined up?')
-                                            ->inline(false)
-                                            ->hintIcon('heroicon-o-information-circle', tooltip: 'Use this if the customer should be lined up on assign station.')
-                                            ->default(true),
-                                    ]),
                                 Textarea::make('description')->rows(3),
                             ])
                             ->orderable('sort_order')
-                            ->defaultItems(0)
+                            ->defaultItems(1)
                             ->addActionLabel('Add Step')
-                            ->columns(1)
-                            ->rule(function () {
-                                return function ($attribute, $value, $fail) {
-                                    $hasRequired = collect($value)->contains(function ($item) {
-                                        return isset($item['is_required']) && $item['is_required'];
-                                    });
+                            ->columns(1),
+                            // ->rule(function () {
+                            //     return function ($attribute, $value, $fail) {
+                            //         $hasRequired = collect($value)->contains(function ($item) {
+                            //             return isset($item['is_required']) && $item['is_required'];
+                            //         });
 
-                                    if (! $hasRequired) {
-                                        $fail('At least one transaction step should be lined up by customer.');
-                                    }
-                                };
-                            }),
+                            //         if (! $hasRequired) {
+                            //             $fail('At least one transaction step should be lined up by customer.');
+                            //         }
+                            //     };
+                            // }),
                     ])
             ]);
     }
@@ -145,7 +130,6 @@ class TransactionResource extends Resource
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('code')->sortable(),
                 TextColumn::make('description')->sortable(),
-                TextColumn::make('station.name')->label('Assigned Station')->sortable(),
                 TextColumn::make('created_at')->dateTime('M d, Y g:i A')->sortable(),
             ])
             ->filters([
