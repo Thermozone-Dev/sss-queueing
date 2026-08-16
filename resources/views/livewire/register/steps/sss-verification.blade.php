@@ -1,5 +1,5 @@
 <div class="w-full h-full flex items-start justify-center overflow-hidden pt-8 sm:items-center sm:pt-0">
-    <div class="relative w-full max-w-sm px-4 sm:px-0">
+    <div class="relative w-full max-w-sm h-screen flex items-center px-4 sm:px-0">
 
         {{-- SSS FORM --}}
         <div wire:loading.remove wire:target="verify" class="w-full space-y-4">

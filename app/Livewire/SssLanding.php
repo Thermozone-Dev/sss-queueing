@@ -2,202 +2,22 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\SendOtpMail;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class SssLanding extends Component
 {
+
     public $step = 1;
+    public $page = 'landing';
 
-    public $sssNumber = '';
-    public $member = null;
 
-    public $otp = '';
-    public $email = '';
-
-    public $password = '';
-    public $password_confirmation = '';
-
-    public $existingAccount = false;
-
-    public function verify()
+    public function mount(): void
     {
-        $this->resetErrorBag();
-        $this->member = null;
-
-        $this->validate([
-            'sssNumber' => 'required',
-        ]);
-
-        $response = Http::withoutVerifying()->get(
-            'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/main/sss/member.json'
-        );
-
-        if (!$response->successful()) {
-            $this->addError(
-                'sssNumber',
-                'Unable to fetch member data.'
-            );
-
-            return;
+        if (Auth::check()) {
+            $this->redirect('/admin', navigate: true);
         }
-
-        $json = $response->json();
-
-        $members = $json['data'] ?? [];
-
-        $member = collect($members)->first(function ($item) {
-            return $item['sss_number'] === trim($this->sssNumber);
-        });
-
-        if (!$member) {
-            $this->addError(
-                'sssNumber',
-                'SSS number not found.'
-            );
-
-            return;
-        }
-
-        $this->member = $member;
-
-        $this->email = $member['email'] ?? null;
-
-        if (!$this->email) {
-            $this->addError(
-                'sssNumber',
-                'No email registered.'
-            );
-
-            return;
-        }
-
-
-        $this->existingAccount = User::where(
-            'email',
-            $this->email
-        )->exists();
-
-
-        $this->sendOtp();
-
-        $this->step = 2;
     }
-
-    public function sendOtp()
-    {
-        $code = rand(100000, 999999);
-
-        Cache::put(
-            'sss_otp_' . $this->email,
-            $code,
-            now()->addMinutes(5)
-        );
-
-        sleep(2);
-
-        Mail::to($this->email)
-            ->send(new SendOtpMail($code));
-    }
-
-    public function verifyOtp()
-    {
-        $this->resetErrorBag();
-
-        $savedOtp = Cache::get(
-            'sss_otp_' . $this->email
-        );
-
-        if (!$savedOtp) {
-            $this->addError('otp', 'OTP expired.');
-            return;
-        }
-
-        if ($this->otp != $savedOtp) {
-            $this->addError('otp', 'Invalid OTP.');
-            return;
-        }
-
-        Cache::forget('sss_otp_' . $this->email);
-
-        $this->existingAccount = User::where(
-            'email',
-            $this->email
-        )->exists();
-
-        $this->step = 3;
-    }
-
-
-    public function loginExistingAccount()
-    {
-        $this->resetErrorBag();
-
-        $this->validate([
-            'password' => 'required',
-        ]);
-
-        $user = User::where('email', $this->email)->first();
-
-        if (!$user) {
-            $this->addError(
-                'password',
-                'Account not found.'
-            );
-
-            return;
-        }
-
-        if (!Hash::check($this->password, $user->password)) {
-            $this->addError(
-                'password',
-                'Incorrect password.'
-            );
-
-            return;
-        }
-
-        $this->step = 4;
-    }
-
-    public function savePassword()
-    {
-        $this->validate([
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        // Extra protection
-        if (User::where('email', $this->email)->exists()) {
-            $this->addError(
-                'password',
-                'Account already exists. Please login instead.'
-            );
-
-            return;
-        }
-
-        User::create([
-            'username' => $this->member['sss_number'],
-            'firstname' => $this->member['first_name'],
-            'lastname' => $this->member['last_name'],
-            'email' => $this->member['email'],
-            'password' => Hash::make($this->password),
-        ]);
-
-        session()->flash(
-            'success',
-            'Account created successfully.'
-        );
-
-        $this->step = 4;
-    }
-
 
     public function render()
     {

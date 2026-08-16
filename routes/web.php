@@ -6,7 +6,10 @@ use App\Livewire\Queues;
 use App\Http\Controllers\CreateQueue;
 use App\Http\Controllers\ShowQueues;
 use App\Livewire\SssLanding;
+use App\Livewire\SssLogin;
+use App\Livewire\SssRegister;
 use Illuminate\Support\Facades\Http;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,17 +49,10 @@ Route::get('/queues', Queues::class);
 
 Route::get('/', SssLanding::class);
 
-Route::get('/test-sss-api', function () {
+Route::get('/login', SssLogin::class)
+    ->middleware('guest')
+    ->name('login');
 
-    $response = Http::post('https://cloudapi.philippine.accuauth.com/verify/umid_sss', [
-        'sss_number' => '1234567890',
-    ]);
-
-    dd([
-        'Status' => $response->status(),
-        'Successful' => $response->successful(),
-        'Headers' => $response->headers(),
-        'Body' => $response->body(),
-        'JSON' => $response->json(),
-    ]);
-});
+Route::get('/register', SssRegister::class)
+    ->middleware('guest')
+    ->name('register');
