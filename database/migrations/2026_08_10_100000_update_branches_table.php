@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('contact_number')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->softDeletes();
         });
     }
 
@@ -40,7 +39,6 @@ return new class extends Migration
                 'contact_number',
                 'is_active',
             ]);
-            $table->dropSoftDeletes();
         });
     }
 };
