@@ -136,8 +136,9 @@ class SssLogin extends Component
 
         session()->regenerate();
 
-        return redirect()->route('admin');
+        return redirect('/admin');
     }
+
 
     private function otpKey(): string
     {

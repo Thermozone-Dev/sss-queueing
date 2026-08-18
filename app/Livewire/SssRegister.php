@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Mail\SendOtpMail;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -14,6 +15,8 @@ class SssRegister extends Component
 {
     public $step = 1;
     public $page = 'register';
+
+    public $existingAccount = false;
 
     public $sssNumber = '';
     public $member = null;
@@ -52,10 +55,10 @@ class SssRegister extends Component
         $this->member = $member;
         $this->email = $member['email'] ?? '';
 
-        if (!$this->email) {
+        if (User::where('email', $this->email)->exists()) {
             $this->addError(
                 'sssNumber',
-                'No email registered for this SSS number.'
+                'An account already exists for this SSS number. Please login instead.'
             );
 
             return;
@@ -222,7 +225,7 @@ class SssRegister extends Component
             return;
         }
 
-        User::create([
+        $user = User::create([
             'username' => $this->member['sss_number'],
             'firstname' => $this->member['first_name'],
             'lastname' => $this->member['last_name'],
@@ -231,12 +234,13 @@ class SssRegister extends Component
             'email_verified_at' => now(),
         ]);
 
-        session()->flash(
-            'success',
-            'Account created successfully.'
-        );
+        $user->assignRole('member');
 
-        return redirect()->route('login');
+        Auth::login($user, true);
+
+        session()->regenerate();
+
+        return redirect('/admin');
     }
 
     private function otpKey(): string
