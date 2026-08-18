@@ -12,6 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+
+        Schema::table('branches', function (Blueprint $table) {
+            $table->softDeletes();
+        });
+
         $default_branch = Branch::firstOrCreate(
             ['name' => 'Default Branch'],
         );
@@ -36,5 +42,9 @@ return new class extends Migration
     public function down(): void
     {
         //
+
+        Schema::table('branches', function (Blueprint $table) {
+            $table->dropSoftDeletes();
+        });
     }
 };
