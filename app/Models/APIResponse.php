@@ -17,6 +17,7 @@ class APIResponse extends Model
         'is_latest',
         'method',
         'status',
+        'url',
     ];
 
     protected $casts = [
@@ -26,6 +27,7 @@ class APIResponse extends Model
         'status' => 'string',
         'response' => 'string',
         'method' => 'string',
+        'url' => 'string',
     ];
 
     public static function fetchLatestAPIRecord($type)
@@ -94,7 +96,7 @@ class APIResponse extends Model
             }
             return collect($response->json()['data'])->map(function ($item) {
                 $mapped_result = static::mapTransactionData($item);
-              
+
                 return $mapped_result;
             });
 
