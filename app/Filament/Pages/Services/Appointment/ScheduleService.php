@@ -2,6 +2,7 @@
 
 namespace App\Services\Appointment;
 
+use App\Models\Branch;
 use Carbon\Carbon;
 
 class ScheduleService
@@ -11,23 +12,20 @@ class ScheduleService
      */
     public function isOperatingDay(
         string $date,
-        array $branch
+        Branch $branch
     ): bool {
         $day = Carbon::parse($date)->format('l');
 
-        return in_array(
-            $day,
-            $branch['operating_days'] ?? []
-        );
+        return (bool) optional($branch->businessDay)->{strtolower($day)};
     }
 
     /**
      * Generate available time slots.
      */
-    public function generateTimeSlots(array $branch): array
+    public function generateTimeSlots(Branch $branch): array
     {
-        $start = $branch['working_hours']['start'] ?? null;
-        $end = $branch['working_hours']['end'] ?? null;
+        $start = $branch->opening_hours;
+        $end = $branch->closing_hours;
 
         if (!$start || !$end) {
             return [];

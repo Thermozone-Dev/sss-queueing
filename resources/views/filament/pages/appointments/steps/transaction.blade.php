@@ -38,7 +38,7 @@
                 </p>
 
                 <p class="mt-1 font-semibold text-gray-900">
-                    {{ $selectedBranch['name'] }}
+                    {{ $selectedBranch->name }}
                 </p>
 
             </div>

@@ -32,7 +32,7 @@
             </p>
 
             <p class="mt-2 font-semibold text-gray-900">
-                {{ $selectedBranch['name'] }}
+                {{ $selectedBranch->name }}
             </p>
 
         </div>
@@ -80,7 +80,9 @@
 
             <div class="mt-2 flex flex-wrap gap-2">
 
-                @foreach ($selectedBranch['operating_days'] as $day)
+                @foreach (optional($selectedBranch->businessDay)->operating_days
+                    ? explode(', ', $selectedBranch->businessDay->operating_days)
+                    : [] as $day)
                     <span class="rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-700">
                         {{ $day }}
                     </span>

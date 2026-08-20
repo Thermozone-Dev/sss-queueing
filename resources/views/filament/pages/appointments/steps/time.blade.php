@@ -34,7 +34,7 @@
                 </p>
 
                 <p class="mt-1 font-semibold text-gray-900">
-                    {{ $selectedBranch['name'] }}
+                    {{ $selectedBranch->name }}
                 </p>
 
             </div>
@@ -87,11 +87,11 @@
 
                 <p class="mt-1 font-semibold text-gray-900">
 
-                    {{ \Carbon\Carbon::createFromFormat('H:i', $selectedBranch['working_hours']['start'])->format('h:i A') }}
+                    {{ \Carbon\Carbon::parse($selectedBranch->opening_hours)->format('h:i A') }}
 
                     –
 
-                    {{ \Carbon\Carbon::createFromFormat('H:i', $selectedBranch['working_hours']['end'])->format('h:i A') }}
+                    {{ \Carbon\Carbon::parse($selectedBranch->closing_hours)->format('h:i A') }}
 
                 </p>
 

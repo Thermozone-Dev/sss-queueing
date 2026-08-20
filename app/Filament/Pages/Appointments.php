@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\Branch;
 use App\Services\Appointment\AppointmentService;
 use App\Services\Appointment\BranchService;
 use App\Services\Appointment\ScheduleService;
@@ -12,15 +13,13 @@ class Appointments extends Page
 {
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static string $view =
-    'filament.pages.appointments';
-
+    protected static string $view = 'filament.pages.appointments';
 
     public int $step = 1;
 
-    public array $branches = [];
+    public $branches = [];
 
-    public ?array $selectedBranch = null;
+    public ?Branch $selectedBranch = null;
 
     public ?string $selectedTransaction = null;
 
@@ -30,11 +29,7 @@ class Appointments extends Page
 
     public array $timeSlots = [];
 
-
-
-    public array $transactions = [];
-
-
+    public $transactions = [];
 
     protected function branchService(): BranchService
     {
@@ -56,32 +51,23 @@ class Appointments extends Page
         return app(AppointmentService::class);
     }
 
-
-
     public function mount(): void
     {
         $this->branches =
             $this->branchService()->getBranches();
 
-        $this->transactions =
-            $this->transactionService()->getTransactions();
+        // No branch selected yet
+        $this->transactions = [];
     }
-
-
 
     public function getHeading(): string
     {
         return '';
     }
 
-
-
-    public function selectBranch(string $branchId): void
+    public function selectBranch(int $branchId): void
     {
-        $branch = $this->branchService()->find(
-            $branchId,
-            $this->branches
-        );
+        $branch = $this->branchService()->find($branchId);
 
         if (!$branch) {
             return;
@@ -93,6 +79,11 @@ class Appointments extends Page
 
         $this->selectedBranch = $branch;
 
+        // Get transactions available for this branch
+        $this->transactions =
+            $this->transactionService()
+                ->getTransactions();
+
         $this->selectedTransaction = null;
         $this->selectedDate = null;
         $this->selectedTime = null;
@@ -101,18 +92,20 @@ class Appointments extends Page
         $this->step = 2;
     }
 
-
-
-    public function selectTransaction(string $transaction): void
+    public function selectTransaction(string $transactionId): void
     {
+        if (!$this->selectedBranch) {
+            return;
+        }
+
         if (!$this->transactionService()->exists(
-            $transaction,
+            $transactionId,
             $this->transactions
         )) {
             return;
         }
 
-        $this->selectedTransaction = $transaction;
+        $this->selectedTransaction = $transactionId;
 
         $this->selectedDate = null;
         $this->selectedTime = null;
@@ -120,7 +113,6 @@ class Appointments extends Page
 
         $this->step = 3;
     }
-
 
     public function selectDate(string $date): void
     {
@@ -153,7 +145,6 @@ class Appointments extends Page
         $this->step = 4;
     }
 
-
     public function selectTime(string $time): void
     {
         $slot =
@@ -169,8 +160,6 @@ class Appointments extends Page
         $this->selectedTime = $time;
     }
 
-
-
     public function backToBranch(): void
     {
         $this->step = 1;
@@ -179,9 +168,10 @@ class Appointments extends Page
         $this->selectedTransaction = null;
         $this->selectedDate = null;
         $this->selectedTime = null;
+
+        $this->transactions = [];
         $this->timeSlots = [];
     }
-
 
     public function backToTransaction(): void
     {
@@ -192,7 +182,6 @@ class Appointments extends Page
         $this->selectedTime = null;
         $this->timeSlots = [];
     }
-
 
     public function backToDate(): void
     {
@@ -208,7 +197,6 @@ class Appointments extends Page
                 );
         }
     }
-
 
     public function confirmAppointment(): void
     {

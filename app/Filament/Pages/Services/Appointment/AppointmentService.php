@@ -2,6 +2,7 @@
 
 namespace App\Services\Appointment;
 
+use App\Models\Branch;
 use App\Mail\AppointmentConfirmationMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
@@ -24,7 +25,7 @@ class AppointmentService
      */
     public function buildAppointmentData(
         $user,
-        array $branch,
+        Branch $branch,
         array $transaction,
         string $date,
         string $time
@@ -39,9 +40,9 @@ class AppointmentService
 
             'email' => $user->email,
 
-            'branch' => $branch['name'],
+            'branch' => $branch->name,
 
-            'branch_id' => $branch['branch_id'],
+            'branch_id' => $branch->getKey(),
 
             'transaction' => $transaction['name'] ?? '',
 

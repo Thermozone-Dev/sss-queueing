@@ -27,7 +27,7 @@
                     </span>
 
                     <span class="font-medium text-gray-900">
-                        {{ $selectedBranch['name'] }}
+                        {{ $selectedBranch->name }}
                     </span>
 
                 </div>
