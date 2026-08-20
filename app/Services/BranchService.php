@@ -17,6 +17,7 @@ class BranchService
     {
         $created = 0;
         $updated = 0;
+        $failed = 0;
 
         $items = $this->api->fetchBranches();
 
