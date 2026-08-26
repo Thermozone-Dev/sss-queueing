@@ -64,7 +64,7 @@ class TransactionService
 
         APIResponse::create([
             'type' => 'transaction',
-            'url' => config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/transaction.json'),
+            'url' => config('services.sss_api.base_url') . '/transaction.json',
             'method' => 'GET',
             'payload' => [],
             'response' => json_encode($items),

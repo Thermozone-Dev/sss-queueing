@@ -8,8 +8,7 @@ class SssMemberApiService
 {
     public function fetchMemberBySssNumber(string $sssNumber): array
     {
-        // TODO: Replace with real api
-        $apiUrl = config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/member.json');
+        $apiUrl = config('services.sss_api.base_url') . '/member.json';
 
         $response = Http::timeout(10)->get($apiUrl);
 

@@ -68,7 +68,7 @@ class BranchService
 
         APIResponse::create([
             'type' => 'branch',
-            'url' => config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/branch.json'),
+            'url' => config('services.sss_api.base_url') . '/branch.json',
             'method' => 'GET',
             'payload' => [],
             'response' => json_encode($items),

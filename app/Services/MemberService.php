@@ -35,7 +35,7 @@ class MemberService
 
         APIResponse::create([
             'type' => 'member',
-            'url' => config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/member.json'),
+            'url' => config('services.sss_api.base_url') . '/member.json',
             'method' => 'GET',
             'payload' => ['sss_number' => $sssNumber],
             'response' => json_encode($data),

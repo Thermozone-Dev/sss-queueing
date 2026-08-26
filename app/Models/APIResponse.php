@@ -65,7 +65,8 @@ class APIResponse extends Model
 
     public static function fetchBranchesFromAPI()
     {
-        $apiUrl = config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/branch.json');
+        $apiUrl = config('services.sss_api.base_url') . '/branch.json';
+
         try {
             $response = Http::timeout(10)->get($apiUrl);
 
@@ -86,7 +87,7 @@ class APIResponse extends Model
 
     public static function fetchTransactionFromAPI()
     {
-        $apiUrl = config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/transaction.json');
+        $apiUrl = config('services.sss_api.base_url') . '/transaction.json';
 
         try {
             $response = Http::timeout(10)->get($apiUrl);
