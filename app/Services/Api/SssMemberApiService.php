@@ -18,6 +18,10 @@ class SssMemberApiService
 
         $data = $response->json('data');
 
+        if ($data === null) {
+            throw new \RuntimeException('Member API response missing "data" key');
+        }
+
         $member = collect($data)->first(function ($item) use ($sssNumber) {
             return $item['sss_number'] === trim($sssNumber);
         });
@@ -26,11 +30,7 @@ class SssMemberApiService
             return [];
         }
 
-        if ($data === null) {
-            throw new \RuntimeException('Member API response missing "data" key');
-        }
-
-        return $data;
+        return $member;
     }
 
 
