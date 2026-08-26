@@ -18,9 +18,7 @@ class BlogPostsTableSeeder extends Seeder
         $faker = Faker::create();
         $faker->addProvider(new HtmlProvider($faker));
 
-        $authorIds = User::whereHas('roles', function ($query) {
-            $query->where('name', '=', 'author');
-        })->pluck('id')->toArray();
+        $authorIds = User::pluck('id')->toArray();
 
         $categoryIds = Category::pluck('id')->toArray();
 
