@@ -13,6 +13,13 @@ class BranchService
         private SssBranchApiService $api
     ) {}
 
+    public function fetchBranchesFromApi(): \Illuminate\Support\Collection
+    {
+        $items = $this->api->fetchBranches();
+
+        return collect($items)->map(fn (array $item) => $this->mapFields($item));
+    }
+
     public function syncFromApi(): array
     {
         $created = 0;
