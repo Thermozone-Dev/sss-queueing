@@ -82,7 +82,7 @@ class Appointments extends Page
         // Get transactions available for this branch
         $this->transactions =
             $this->transactionService()
-                ->getTransactions();
+                ->getTransactions($this->selectedBranch);
 
         $this->selectedTransaction = null;
         $this->selectedDate = null;

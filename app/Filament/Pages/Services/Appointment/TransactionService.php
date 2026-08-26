@@ -2,39 +2,28 @@
 
 namespace App\Services\Appointment;
 
+use App\Models\Branch;
+
 class TransactionService
 {
     /**
      * Available transaction types.
      */
-    public function getTransactions(): array
+    public function getTransactions(Branch $branch): array
     {
-        return [
-            [
-                'id' => 'membership',
-                'name' => 'Membership',
-                'description' => 'Membership registration and account services.',
-                'icon' => 'heroicon-o-user',
-            ],
-            [
-                'id' => 'loans',
-                'name' => 'Loans',
-                'description' => 'Loan application and related services.',
-                'icon' => 'heroicon-o-banknotes',
-            ],
-            [
-                'id' => 'benefits',
-                'name' => 'Benefits',
-                'description' => 'Process your SSS benefits and claims.',
-                'icon' => 'heroicon-o-document-check',
-            ],
-            [
-                'id' => 'contribution',
-                'name' => 'Contribution',
-                'description' => 'Contribution and payment-related services.',
+        return $branch->branchTransactions()
+            ->where('is_active', true)
+            ->with('transaction')
+            ->get()
+            ->filter(fn ($branchTransaction) => $branchTransaction->transaction !== null)
+            ->map(fn ($branchTransaction) => [
+                'id' => $branchTransaction->transaction->id,
+                'name' => $branchTransaction->transaction->name,
+                'description' => $branchTransaction->transaction->description,
                 'icon' => 'heroicon-o-credit-card',
-            ],
-        ];
+            ])
+            ->values()
+            ->all();
     }
 
     /**

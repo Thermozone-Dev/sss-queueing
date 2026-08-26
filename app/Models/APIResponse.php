@@ -64,7 +64,6 @@ class APIResponse extends Model
     public static function fetchBranchesFromAPI()
     {
         $apiUrl = config('services.api.branch_url', 'https://raw.githubusercontent.com/Dennis-Enraca-School/WebSysAPI/refs/heads/main/sss/branch.json');
-
         try {
             $response = Http::timeout(10)->get($apiUrl);
 
