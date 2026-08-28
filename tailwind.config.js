@@ -1,16 +1,15 @@
-import preset from './vendor/filament/support/tailwind.config.preset'
+import preset from "./vendor/filament/support/tailwind.config.preset";
 
 export default {
-    presets: [preset],
-    content: [
-        './app/Filament/**/*.php',
-        './resources/views/filament/**/*.blade.php',
-        './resources/views/livewire/*.blade.php',
-        './resources/views/public/*.blade.php',
-        './resources/views/public_pages/*.blade.php',
-        './resources/views/public_pages/**/*.blade.php',
-        './vendor/filament/**/*.blade.php',
-        './resources/js/**/*.vue',
-        './resources/js/**/*.js',
-    ],
-}
+	presets: [preset],
+	content: [
+		"./app/**/*.php",
+		"./resources/views/**/*.blade.php",
+		"./resources/views/**/*.php",
+		"./resources/views/**/*.html",
+		"./resources/js/**/*.vue",
+		"./resources/js/**/*.js",
+		"./resources/js/**/*.ts",
+		"./vendor/filament/**/*.blade.php",
+	],
+};
