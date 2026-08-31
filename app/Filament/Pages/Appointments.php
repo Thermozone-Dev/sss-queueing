@@ -8,6 +8,7 @@ use App\Services\Appointment\BranchService;
 use App\Services\Appointment\ScheduleService;
 use App\Services\Appointment\TransactionService;
 use Filament\Pages\Page;
+use Illuminate\Support\Facades\Auth;
 
 class Appointments extends Page
 {
@@ -15,7 +16,20 @@ class Appointments extends Page
 
     protected static string $view = 'filament.pages.appointments';
 
+    /*
+    |--------------------------------------------------------------------------
+    | Appointment Steps
+    |--------------------------------------------------------------------------
+    |
+    | Step 1 = Branch + Transaction
+    | Step 2 = Date + Time
+    | Step 3 = Confirmation
+    |
+    */
+
     public int $step = 1;
+
+    public string $branchSearch = '';
 
     public $branches = [];
 
@@ -25,7 +39,11 @@ class Appointments extends Page
 
     public ?string $selectedDate = null;
 
+    public ?string $calendarMonth = null;
+
     public ?string $selectedTime = null;
+
+    public bool $agreedToPolicies = false;
 
     public array $timeSlots = [];
 
@@ -53,17 +71,83 @@ class Appointments extends Page
 
     public function mount(): void
     {
-        $this->branches =
-            $this->branchService()->getBranches();
+        $this->branches = $this->branchService()->getBranches();
 
-        // No branch selected yet
         $this->transactions = [];
+        $this->calendarMonth = now()->format('Y-m');
     }
 
     public function getHeading(): string
     {
         return '';
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reset Helpers
+    |--------------------------------------------------------------------------
+    */
+
+    private function clearAppointmentSelection(): void
+    {
+        $this->selectedTransaction = null;
+        $this->selectedDate = null;
+        $this->selectedTime = null;
+        $this->agreedToPolicies = false;
+        $this->timeSlots = [];
+    }
+
+    private function clearDateTimeSelection(): void
+    {
+        $this->selectedDate = null;
+        $this->selectedTime = null;
+        $this->agreedToPolicies = false;
+        $this->timeSlots = [];
+    }
+
+    private function clearBranchSelection(): void
+    {
+        $this->selectedBranch = null;
+        $this->transactions = [];
+
+        $this->clearAppointmentSelection();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Branch Search
+    |--------------------------------------------------------------------------
+    */
+
+    public function getFilteredBranchesProperty()
+    {
+        $search = strtolower(trim($this->branchSearch));
+
+        if ($search === '') {
+            return collect($this->branches);
+        }
+
+        return collect($this->branches)
+            ->filter(function ($branch) use ($search) {
+                $value = strtolower(
+                    ($branch->name ?? '') . ' ' .
+                    ($branch->city ?? '') . ' ' .
+                    ($branch->province ?? '') . ' ' .
+                    ($branch->address_line_1 ?? '') . ' ' .
+                    ($branch->address_line_2 ?? '')
+                );
+
+                return str_contains($value, $search);
+            })
+            ->values();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | STEP 1
+    | Branch + Transaction
+    |--------------------------------------------------------------------------
+    */
 
     public function selectBranch(int $branchId): void
     {
@@ -79,17 +163,14 @@ class Appointments extends Page
 
         $this->selectedBranch = $branch;
 
-        // Get transactions available for this branch
         $this->transactions =
-            $this->transactionService()
-                ->getTransactions($this->selectedBranch);
+            $this->transactionService()->getTransactions($branch);
 
-        $this->selectedTransaction = null;
-        $this->selectedDate = null;
-        $this->selectedTime = null;
-        $this->timeSlots = [];
+        // Reset transaction, date and time
+        $this->clearAppointmentSelection();
 
-        $this->step = 2;
+        // Stay on Step 1
+        $this->step = 1;
     }
 
     public function selectTransaction(string $transactionId): void
@@ -98,21 +179,42 @@ class Appointments extends Page
             return;
         }
 
-        if (!$this->transactionService()->exists(
-            $transactionId,
-            $this->transactions
-        )) {
+        if (
+            !$this->transactionService()->exists(
+                $transactionId,
+                $this->transactions
+            )
+        ) {
             return;
         }
 
         $this->selectedTransaction = $transactionId;
 
-        $this->selectedDate = null;
-        $this->selectedTime = null;
-        $this->timeSlots = [];
+        // Reset date and time only
+        $this->clearDateTimeSelection();
 
-        $this->step = 3;
+        // Stay on Step 1
+        $this->step = 1;
     }
+
+    public function continueToDateTime(): void
+    {
+        if (
+            !$this->selectedBranch ||
+            !$this->selectedTransaction
+        ) {
+            return;
+        }
+
+        $this->step = 2;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | STEP 2
+    | Date + Time
+    |--------------------------------------------------------------------------
+    */
 
     public function selectDate(string $date): void
     {
@@ -135,6 +237,7 @@ class Appointments extends Page
         }
 
         $this->selectedDate = $date;
+        $this->calendarMonth = \Carbon\Carbon::parse($date)->format('Y-m');
         $this->selectedTime = null;
 
         $this->timeSlots =
@@ -142,7 +245,21 @@ class Appointments extends Page
                 $this->selectedBranch
             );
 
-        $this->step = 4;
+        $this->step = 2;
+    }
+
+    public function previousMonth(): void
+    {
+        $this->calendarMonth = \Carbon\Carbon::parse(
+            $this->calendarMonth ?? now()->format('Y-m')
+        )->subMonth()->format('Y-m');
+    }
+
+    public function nextMonth(): void
+    {
+        $this->calendarMonth = \Carbon\Carbon::parse(
+            $this->calendarMonth ?? now()->format('Y-m')
+        )->addMonth()->format('Y-m');
     }
 
     public function selectTime(string $time): void
@@ -160,45 +277,7 @@ class Appointments extends Page
         $this->selectedTime = $time;
     }
 
-    public function backToBranch(): void
-    {
-        $this->step = 1;
-
-        $this->selectedBranch = null;
-        $this->selectedTransaction = null;
-        $this->selectedDate = null;
-        $this->selectedTime = null;
-
-        $this->transactions = [];
-        $this->timeSlots = [];
-    }
-
-    public function backToTransaction(): void
-    {
-        $this->step = 2;
-
-        $this->selectedTransaction = null;
-        $this->selectedDate = null;
-        $this->selectedTime = null;
-        $this->timeSlots = [];
-    }
-
-    public function backToDate(): void
-    {
-        $this->step = 3;
-
-        $this->selectedTime = null;
-        $this->timeSlots = [];
-
-        if ($this->selectedBranch && $this->selectedDate) {
-            $this->timeSlots =
-                $this->scheduleService()->generateTimeSlots(
-                    $this->selectedBranch
-                );
-        }
-    }
-
-    public function confirmAppointment(): void
+    public function continueToConfirmation(): void
     {
         if (
             !$this->selectedBranch ||
@@ -209,7 +288,64 @@ class Appointments extends Page
             return;
         }
 
-        $user = auth()->user();
+        $this->step = 3;
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Navigation
+    |--------------------------------------------------------------------------
+    */
+
+    public function backToBranch(): void
+    {
+        $this->step = 1;
+
+        $this->clearBranchSelection();
+    }
+
+    public function backToDateTime(): void
+    {
+        $this->step = 2;
+
+        $this->selectedTime = null;
+        $this->timeSlots = [];
+
+        if (
+            $this->selectedBranch &&
+            $this->selectedDate
+        ) {
+            $this->timeSlots =
+                $this->scheduleService()->generateTimeSlots(
+                    $this->selectedBranch
+                );
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | STEP 3
+    | Confirm Appointment
+    |--------------------------------------------------------------------------
+    */
+
+    public function confirmAppointment(): void
+    {
+        if (
+            !$this->selectedBranch ||
+            !$this->selectedTransaction ||
+            !$this->selectedDate ||
+            !$this->selectedTime ||
+            !$this->agreedToPolicies
+        ) {
+            if (!$this->agreedToPolicies) {
+                $this->addError('policies', 'You must agree to the appointment policies before submitting.');
+            }
+
+            return;
+        }
+
+        $user = Auth::user();
 
         if (!$user || !$user->email) {
             $this->addError(
@@ -255,6 +391,7 @@ class Appointments extends Page
             return;
         }
 
-        $this->step = 5;
+        // Appointment successfully confirmed
+        $this->step = 4;
     }
 }
