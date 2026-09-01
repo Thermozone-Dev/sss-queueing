@@ -104,3 +104,24 @@
 .fi-dropdown-trigger button.fi-btn {
 	@apply !p-1;
 }
+
+.scrollbar-fade {
+    overflow-y: auto;
+}
+
+.scrollbar-fade::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-fade::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scrollbar-fade::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 9999px;
+}
+
+.scrollbar-fade:hover::-webkit-scrollbar-thumb {
+    background: #9ca3af;
+}
