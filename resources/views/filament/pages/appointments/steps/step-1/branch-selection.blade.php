@@ -1,13 +1,13 @@
-<div class="h-full xl:col-span-3 xl:row-span-5 font-['Inter',sans-serif] p-6 text-gray-800 space-y-2.5">
-    <div class="pr-1.5 space-y-1">
-        <div class="flex justify-between items-center ">
-                <h5 class="text-sm font-medium">SSS Branches</h5>
-                <p class="text-xs font-light">
+<div class="h-full space-y-2.5 p-3 text-gray-800 xl:col-span-3 xl:row-span-5 xl:p-6">
+    <div class="space-y-1 pr-1.5">
+        <div class="flex items-center justify-between gap-2">
+                <h5 class="text-xs font-medium sm:text-sm">SSS Branches</h5>
+                <p class="text-[10px] font-light sm:text-xs">
                     {{ $this->filteredBranches->count() }}  branches found
                 </p>
         </div>
 
-            <div class="flex w-full gap-3 border border-gray-200 p-2 text-sm rounded-md" >
+            <div class="flex w-full gap-3 rounded-md border border-gray-200 p-2 text-sm" >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
@@ -23,9 +23,7 @@
                 <circle cx="11" cy="11" r="8"/>
             </svg>
             <input wire:model.live.debounce.300ms="branchSearch"
-                    class="w-full border-0 bg-transparent p-0 text-sm outline-none
-                    placeholder:text-gray-400
-                    focus:border-0 focus:outline-none focus:ring-0"
+                    class="w-full border-0 bg-transparent p-0 text-xs outline-none placeholder:text-gray-400 focus:border-0 focus:outline-none focus:ring-0 sm:text-sm"
                     type="search" 
                     placeholder="Search branch, city or address" />
             </div>
@@ -67,15 +65,15 @@
                 </div>
                 <div class="flex flex-col gap-3 py-1.5">
                     <div class="flex flex-col justify-start text-start capitalize">
-                        <h3 class="text-sm font-medium ">
+                        <h3 class="text-xs font-medium sm:text-sm">
                         {{$branch->name}}
                         </h3>
-                        <h4 class="text-xs font-light">
+                        <h4 class="text-[10px] font-light sm:text-xs">
                             {{$branch->city}}, {{$branch->province}}
                         </h4>
                     </div>
                 
-                    <p class="text-xs font-light ">
+                    <p class="text-[10px] font-light sm:text-xs">
                     @if ($branch->opening_hours && $branch->closing_hours)
                         ◷
                         {{ \Carbon\Carbon::parse($branch->opening_hours)->format('h:i A') }}
@@ -89,10 +87,10 @@
                 </div>
             </div>
           <div class="flex flex-col justify-between items-end self-stretch">
-                    <p class="text-xs px-5 py-0.5 rounded-lg
+                    <p class="rounded-lg px-2 py-0.5 text-[10px] sm:px-5 sm:text-xs
                         {{ $branch->is_active
-                            ? 'bg-green-100 border border-green-400 text-green-600'
-                            : 'bg-gray-100 border border-gray-400 text-gray-500'
+                            ? 'border border-green-400 bg-green-100 text-green-600'
+                            : 'border border-gray-400 bg-gray-100 text-gray-500'
                         }}">
                         {{ $branch->is_active ? 'available' : 'Unavailable' }}
                     </p>
@@ -117,7 +115,7 @@
                 </div>
           </button>
             @empty
-                    <div class="text-sm text-gray-500 p-4 text-center">
+                    <div class="p-4 text-center text-xs text-gray-500 sm:text-sm">
                         No branches found for "{{ $branchSearch }}"
                     </div>
          @endforelse

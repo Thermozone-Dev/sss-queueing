@@ -1,10 +1,10 @@
 <div class="space-y-2">
-    <div class="">
-        <h1 class="text-2xl font-semibold text-gray-800">
+    <div class="px-3 sm:px-0">
+        <h1 class="text-xl font-semibold text-gray-800 sm:text-2xl">
             Review Appointment
         </h1>
 
-        <h5 class="mt-1 font-light text-gray-600">
+        <h5 class="mt-1 text-sm font-light text-gray-600 sm:text-base">
             Double check before submitting. Full booked verification active.
         </h5>
     </div>

@@ -1,10 +1,10 @@
 <div class="space-y-2">
-    <div class="px-6">
-        <h1 class="text-2xl font-semibold text-gray-800">
+    <div class="px-3 sm:px-6">
+        <h1 class="text-xl font-semibold text-gray-800 sm:text-2xl">
             Select Branch and Transaction
         </h1>
 
-        <h5 class="mt-1 font-light text-gray-700">
+        <h5 class="mt-1 text-sm font-light text-gray-700 sm:text-base">
             Choose your preferred SSS branch and the services you need to transact.
         </h5>
     </div>

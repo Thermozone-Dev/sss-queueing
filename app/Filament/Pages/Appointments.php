@@ -105,7 +105,7 @@ class Appointments extends Page
         $this->timeSlots = [];
     }
 
-    private function clearBranchSelection(): void
+    public function clearBranchSelection(): void
     {
         $this->selectedBranch = null;
         $this->transactions = [];
@@ -329,69 +329,71 @@ class Appointments extends Page
     |--------------------------------------------------------------------------
     */
 
-    public function confirmAppointment(): void
-    {
-        if (
-            !$this->selectedBranch ||
-            !$this->selectedTransaction ||
-            !$this->selectedDate ||
-            !$this->selectedTime ||
-            !$this->agreedToPolicies
-        ) {
-            if (!$this->agreedToPolicies) {
-                $this->addError('policies', 'You must agree to the appointment policies before submitting.');
+        public function confirmAppointment(): void
+        {
+            if (
+                !$this->selectedBranch ||
+                !$this->selectedTransaction ||
+                !$this->selectedDate ||
+                !$this->selectedTime ||
+                !$this->agreedToPolicies
+            ) {
+                if (!$this->agreedToPolicies) {
+                    $this->addError('policies', 'You must agree to the appointment policies before submitting.');
+                }
+
+                return;
             }
 
-            return;
+            $user = Auth::user();
+
+            if (!$user || !$user->email) {
+                $this->addError(
+                    'appointment',
+                    'No email address is associated with your account.'
+                );
+
+                return;
+            }
+
+            $transaction =
+                $this->transactionService()->find(
+                    $this->selectedTransaction,
+                    $this->transactions
+                );
+
+            if (!$transaction) {
+                return;
+            }
+
+            $appointment =
+                $this->appointmentService()->buildAppointmentData(
+                    $user,
+                    $this->selectedBranch,
+                    $transaction,
+                    $this->selectedDate,
+                    $this->selectedTime
+                );
+
+            try {
+                $this->appointmentService()->sendConfirmation(
+                    $user->email,
+                    $appointment
+                );
+            } catch (\Throwable $e) {
+                report($e);
+
+                $this->addError(
+                    'appointment',
+                    'The appointment was not completed because the confirmation email could not be sent.'
+                );
+
+                return;
+            }
+
+            $this->dispatch('appointmentConfirmed');
+
+           
         }
 
-        $user = Auth::user();
-
-        if (!$user || !$user->email) {
-            $this->addError(
-                'appointment',
-                'No email address is associated with your account.'
-            );
-
-            return;
-        }
-
-        $transaction =
-            $this->transactionService()->find(
-                $this->selectedTransaction,
-                $this->transactions
-            );
-
-        if (!$transaction) {
-            return;
-        }
-
-        $appointment =
-            $this->appointmentService()->buildAppointmentData(
-                $user,
-                $this->selectedBranch,
-                $transaction,
-                $this->selectedDate,
-                $this->selectedTime
-            );
-
-        try {
-            $this->appointmentService()->sendConfirmation(
-                $user->email,
-                $appointment
-            );
-        } catch (\Throwable $e) {
-            report($e);
-
-            $this->addError(
-                'appointment',
-                'The appointment was not completed because the confirmation email could not be sent.'
-            );
-
-            return;
-        }
-
-        // Appointment successfully confirmed
-        $this->step = 4;
-    }
 }

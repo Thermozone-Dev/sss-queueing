@@ -1,4 +1,4 @@
-<div class="w-full h-full rounded-lg border border-gray-200 py-6 px-12 font-[Inter,sans-serif]">
+<div class="h-full w-full rounded-lg border border-gray-200 px-3 py-4 font-[Inter,sans-serif] sm:px-6 sm:py-6 lg:px-12">
     @php
         $referenceDate = $calendarMonth
             ? \Carbon\Carbon::parse($calendarMonth . '-01')->startOfMonth()
@@ -28,8 +28,8 @@
 
     @endphp
 
-    <div class="mb-5 flex items-center justify-between">
-        <h1 class="text-[22px] font-semibold tracking-[-0.02em] text-[#111827]">
+    <div class="mb-5 flex items-center justify-between gap-3">
+        <h1 class="text-lg font-semibold tracking-[-0.02em] text-[#111827] sm:text-[22px]">
             {{ $referenceDate->translatedFormat('F Y') }}
         </h1>
 
@@ -58,18 +58,18 @@
         </div>
     </div>
 
-    <div class="mb-3 grid grid-cols-7 gap-2">
+    <div class="mb-3 grid grid-cols-7 gap-1 sm:gap-2">
         @foreach(['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as $day)
-            <div class="flex h-8 items-center justify-center text-xs font-medium text-[#9DA0A8]">
+            <div class="flex h-7 items-center justify-center text-[10px] font-medium text-[#9DA0A8] sm:h-8 sm:text-xs">
                 {{ $day }}
             </div>
         @endforeach
     </div>
 
-    <div class="grid grid-cols-7 gap-2">
+    <div class="grid grid-cols-7 gap-1 sm:gap-2">
         @foreach ($calendarGrid as $date)
             @if (is_null($date))
-                <div class="h-12 rounded-xl bg-transparent"></div>
+                <div class="h-10 rounded-xl bg-transparent sm:h-12"></div>
             @else
                 @php
                     $dateString = $date->format('Y-m-d');
@@ -96,17 +96,17 @@
                 @endphp
 
                 @if ($isPast)
-                <div class="flex h-12 items-center justify-center rounded-xl bg-gray-100 text-sm font-medium text-gray-600 cursor-not-allowed">
+                <div class="flex h-10 cursor-not-allowed items-center justify-center rounded-xl bg-gray-100 text-xs font-medium text-gray-600 sm:h-12 sm:text-sm">
                     {{ $date->day }}
                 </div>
 
                 @elseif ($isDisabledDate)
-                    <div class="flex h-12 items-center justify-center rounded-xl border border-red-400 bg-red-100 text-sm font-medium text-gray-600 cursor-not-allowed">
+                    <div class="flex h-10 cursor-not-allowed items-center justify-center rounded-xl border border-red-400 bg-red-100 text-xs font-medium text-gray-600 sm:h-12 sm:text-sm">
                         {{ $date->day }}
                     </div>
 
                 @elseif (!$isOperatingDay)
-                    <div class="flex h-12 items-center justify-center rounded-xl border border-dashed border-gray-800 text-sm font-medium text-gray-600 cursor-not-allowed">
+                    <div class="flex h-10 cursor-not-allowed items-center justify-center rounded-xl border border-dashed border-gray-800 text-xs font-medium text-gray-600 sm:h-12 sm:text-sm">
                         {{ $date->day }}
                     </div>
 
@@ -114,7 +114,7 @@
                     <button
                         type="button"
                         wire:click="selectDate('{{ $date->format('Y-m-d') }}')"
-                        class="h-12 rounded-xl border text-sm font-medium transition {{ $isSelected
+                        class="h-10 rounded-xl border text-xs font-medium transition sm:h-12 sm:text-sm {{ $isSelected
                             ? 'border-[#234EB9] bg-[#234EB9] text-white shadow-[0_1px_2px_rgba(35,78,185,0.25)]'
                             : 'border-[#E8EAED] bg-white text-[#1F232E] hover:border-[#D1D5DB]' }}"
                     >
