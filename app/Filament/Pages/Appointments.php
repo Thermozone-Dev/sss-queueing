@@ -402,8 +402,7 @@ class Appointments extends Page
 
       public function rebookAppointment(): void
     {
-            $this->step = 2;
-
+            $this->step = 1;
             $this->selectedDate = null;
             $this->selectedTime = null;
             $this->timeSlots = [];
@@ -443,7 +442,6 @@ class Appointments extends Page
         public function goToStepOne(): void
         {
             $this->step = 1;
-
             $this->selectedBranch = null;
             $this->selectedTransaction = null;
             $this->selectedDate = null;
