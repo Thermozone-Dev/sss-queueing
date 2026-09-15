@@ -19,7 +19,7 @@ class CancellationCutoffResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-x-circle';
 
-    protected static ?string $navigationGroup = 'Appointment Options';
+    protected static ?string $navigationGroup = 'Administration';
 
     protected static ?string $navigationLabel = 'Cancellation Cutoffs';
 

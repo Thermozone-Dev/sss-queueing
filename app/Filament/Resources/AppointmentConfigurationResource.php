@@ -21,9 +21,9 @@ class AppointmentConfigurationResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static ?string $navigationLabel = 'Appointment Settings';
+    protected static ?string $navigationLabel = 'Appointment Configuration';
 
-    protected static ?string $modelLabel = 'Appointment Setting';
+    protected static ?string $navigationGroup = 'Administration';
 
     public static function form(Form $form): Form
     {
