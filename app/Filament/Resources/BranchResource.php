@@ -10,8 +10,8 @@ use App\Filament\Resources\BranchResource\RelationManagers\BranchTransactionRela
 use App\Filament\Resources\BranchResource\RelationManagers\BreaktimeRelationManager;
 use App\Filament\Resources\BranchResource\RelationManagers\BusinessDayRelationManager;
 use App\Filament\Resources\BranchResource\RelationManagers\UsersRelationManager;
-use App\Models\APIResponse;
 use App\Models\Branch;
+use App\Services\BranchService;
 use Filament\Forms;
 use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Form;
@@ -47,7 +47,7 @@ class BranchResource extends Resource
                         Forms\Components\Select::make('api_branch')
                             ->label('Select Branch from API')
                             ->helperText('Choose a branch to auto-fill information from API')
-                            ->options(fn () => APIResponse::fetchLatestAPIRecord(1)->pluck('name','code'))
+                            ->options(fn () => app(BranchService::class)->fetchBranchesFromApi()->pluck('name', 'code'))
                             ->searchable()
                             ->reactive()
                             ->afterStateUpdated(fn ($state, Forms\Set $set) =>  self::autofillBranchData($state, $set)),
@@ -218,7 +218,7 @@ class BranchResource extends Resource
             return;
         }
 
-        $apiResponse = APIResponse::fetchLatestAPIRecord(1)->where('code', $branchCode)->first();
+        $apiResponse = app(BranchService::class)->fetchBranchesFromApi()->where('code', $branchCode)->first();
 
         if (!$apiResponse) {
             return;
