@@ -304,9 +304,9 @@
             </p> -->
 
             <span class="my-4 flex">
-
+            
                 <span
-                    class="mx-auto flex items-center gap-6 rounded-lg text-paragraph font-semibold text-sm"
+                    class="mx-auto flex items-center gap-2 rounded-lg text-paragraph font-semibold text-sm"
                 >
                 <span class="flex justify-center items-center bg-black text-white p-1 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -319,8 +319,10 @@
                   
                         Operating Hours: 8:00 AM - 5:00 PM • Monday to Friday 
 
-                     <span class="border border-[#1E50A1] px-2 p-0.5 rounded-2xl text-sm text-[#1E50A1]">• OPEN NOW</span>
+                     <span class="border border-[#1E50A1] px-2 p-0.5 rounded-2xl text-sm text-[#1E50A1] mx-4">• OPEN NOW</span>
+
                 </span>
+
             </span>
 
         </div>
