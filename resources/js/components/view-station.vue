@@ -1,5 +1,5 @@
 <template>
-    <kiosk-header :header="header" :description="description" />
+    <KioskHeader :header="header" :description="description" />
     <go-back/>
     <div class="grid grid-cols-1 gap-6 mt-6 text-white items-center">
         <div v-for="transaction in transactions" :key="transaction.id"  class="cursor-pointer px-8 py-5 rounded-xl" :style="{backgroundColor: theme.primary}">
@@ -23,7 +23,7 @@
 
 <script>
     import {route} from 'ziggy-js';
-    import KioskHeader from './header.vue';
+    import KioskHeader from './kioskHeader.vue';
     import axios from 'axios';
     export default {
         components: {

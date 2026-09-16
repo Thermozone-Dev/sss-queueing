@@ -10,7 +10,7 @@ import axios from "axios";
 
 import Welcome from './components/example.vue';
 import GoBack from './components/backButton.vue';
-import Header from './components/header.vue';
+import HeaderInfo from './components/header-info.vue';
 import ViewStation from './components/view-station.vue';
 import ViewTransaction from './components/view-transaction.vue';
 import GetInput from './components/get-input.vue';
@@ -22,6 +22,7 @@ import QueueCall from './components/queue-call.vue';
 import ProgressOverlay from './components/ProgressOverlay.vue';
 import GetAppointment from './components/get-appointment.vue';
 import QueueSection from './components/QueueSection.vue'
+import KioskHeader from './components/kioskHeader.vue';
 
 library.add(faClock, faCircleCheck,faChevronRight,faChevronLeft, faUserClock);
 
@@ -56,7 +57,7 @@ if (document.querySelector('#app')) {
 
     app.component('font-awesome-icon', FontAwesomeIcon);
     app.component('welcome-component', Welcome)
-    app.component('kiosk-header', Header)
+    app.component('header-info', HeaderInfo)
     app.component('view-station', ViewStation)
     app.component('view-transaction', ViewTransaction)
     app.component('go-back', GoBack)
@@ -66,6 +67,7 @@ if (document.querySelector('#app')) {
     app.component('progress-overlay', ProgressOverlay);
     app.component('get-appointment', GetAppointment);
     app.component('queue-section', QueueSection)
+    app.component('kiosk-header', KioskHeader);
 
     app.use(router);
     app.mount('#app');

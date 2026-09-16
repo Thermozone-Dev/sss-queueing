@@ -12,4 +12,13 @@ export default {
 		"./resources/js/**/*.ts",
 		"./vendor/filament/**/*.blade.php",
 	],
+
+	  theme: {
+        extend: {
+            colors: {
+				header: "#505050", 
+				paragraph: "#606060",
+            },
+        },
+    },
 };
