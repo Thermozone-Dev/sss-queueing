@@ -9,6 +9,7 @@ use App\Services\Appointment\ScheduleService;
 use App\Services\Appointment\TransactionService;
 use Filament\Pages\Page;
 use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Appointments extends Page
 {
@@ -321,53 +322,53 @@ class Appointments extends Page
                 );
         }
     }
-
+  
     /*
     |--------------------------------------------------------------------------
     | STEP 3
     | Confirm Appointment
     |--------------------------------------------------------------------------
     */
+   public function confirmAppointment(): void
+            {
+                if (
+                    !$this->selectedBranch ||
+                    !$this->selectedTransaction ||
+                    !$this->selectedDate ||
+                    !$this->selectedTime ||
+                    !$this->agreedToPolicies
+                ) {
+                    if (!$this->agreedToPolicies) {
+                        $this->addError(
+                            'policies',
+                            'You must agree to the appointment policies before submitting.'
+                        );
+                    }
 
-        public function confirmAppointment(): void
-        {
-            if (
-                !$this->selectedBranch ||
-                !$this->selectedTransaction ||
-                !$this->selectedDate ||
-                !$this->selectedTime ||
-                !$this->agreedToPolicies
-            ) {
-                if (!$this->agreedToPolicies) {
-                    $this->addError('policies', 'You must agree to the appointment policies before submitting.');
+                    return;
                 }
 
-                return;
-            }
+                $user = Auth::user();
 
-            $user = Auth::user();
+                if (!$user || !$user->email) {
+                    $this->addError(
+                        'appointment',
+                        'No email address is associated with your account.'
+                    );
 
-            if (!$user || !$user->email) {
-                $this->addError(
-                    'appointment',
-                    'No email address is associated with your account.'
-                );
+                    return;
+                }
 
-                return;
-            }
-
-            $transaction =
-                $this->transactionService()->find(
+                $transaction = $this->transactionService()->find(
                     $this->selectedTransaction,
                     $this->transactions
                 );
 
-            if (!$transaction) {
-                return;
-            }
+                if (!$transaction) {
+                    return;
+                }
 
-            $appointment =
-                $this->appointmentService()->buildAppointmentData(
+                $appointment = $this->appointmentService()->buildAppointmentData(
                     $user,
                     $this->selectedBranch,
                     $transaction,
@@ -375,25 +376,82 @@ class Appointments extends Page
                     $this->selectedTime
                 );
 
-            try {
-                $this->appointmentService()->sendConfirmation(
-                    $user->email,
-                    $appointment
-                );
-            } catch (\Throwable $e) {
-                report($e);
+                try {
+                    $this->appointmentService()->sendConfirmation(
+                        $user->email,
+                        $appointment
+                    );
+                } catch (\Throwable $e) {
+                    report($e);
 
-                $this->addError(
-                    'appointment',
-                    'The appointment was not completed because the confirmation email could not be sent.'
-                );
+                    $this->addError(
+                        'appointment',
+                        'The appointment was not completed because the confirmation email could not be sent.'
+                    );
 
-                return;
+                    return;
+                }
+
+                // Appointment successfully confirmed
+                $this->step = 4;
             }
 
-            $this->dispatch('appointmentConfirmed');
+    /*
+        Button functions  for step 4
+    */
 
-           
+      public function rebookAppointment(): void
+    {
+            $this->step = 2;
+
+            $this->selectedDate = null;
+            $this->selectedTime = null;
+            $this->timeSlots = [];
+            $this->agreedToPolicies = false;
+            $this->calendarMonth = now()->format('Y-m');
+    }
+
+
+    public function downloadAppointmentSlip()
+    {
+        $user = auth()->user();
+
+        $selectedTransactionData = collect($this->transactions)
+            ->firstWhere('id', $this->selectedTransaction);
+
+        $data = [
+            'user' => $user,
+            'branch' => $this->selectedBranch,
+            'transaction' => $selectedTransactionData,
+            'date' => $this->selectedDate,
+            'time' => $this->selectedTime,
+        ];
+
+        $pdf = Pdf::loadView(
+            'filament.pages.pdf.appointment-slip',
+            $data
+        );
+
+        return response()->streamDownload(
+            function () use ($pdf) {
+                echo $pdf->output();
+            },
+            'sss-appointment-slip.pdf'
+        );
+    }
+
+        public function goToStepOne(): void
+        {
+            $this->step = 1;
+
+            $this->selectedBranch = null;
+            $this->selectedTransaction = null;
+            $this->selectedDate = null;
+            $this->selectedTime = null;
+            $this->timeSlots = [];
+            $this->agreedToPolicies = false;
+
+            $this->calendarMonth = now()->format('Y-m');
         }
 
 }
