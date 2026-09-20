@@ -4,7 +4,7 @@
     "src": "public/images/sss/sss-logo.png"
   },
   "resources/css/app.css": {
-    "file": "assets/app-lYyT6ldm.css",
+    "file": "assets/app-CPvjbQaK.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
@@ -14,12 +14,12 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-C-i4lbqE.js",
+    "file": "assets/app-BHs_y_tS.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CxSVuxco.css"
+      "assets/app-Do7DOinl.css"
     ],
     "assets": [
       "assets/sss-logo-Bi6rN0vK.png"
