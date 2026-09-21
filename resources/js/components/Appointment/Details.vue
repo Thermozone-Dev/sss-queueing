@@ -1,6 +1,6 @@
 <template>
     <section
-        class="flex min-h-[440px] flex-col rounded-2xl border border-[#D6E4FF] bg-white px-5 py-5 md:px-6 xl:col-span-2"
+        class="flex min-h-[440px] flex-col space-y-12 rounded-2xl border border-[#D6E4FF] bg-white px-5 py-5 md:px-6 xl:col-span-2"
     >
         <!-- Header -->
         <div class="flex items-center justify-between">
@@ -11,7 +11,7 @@
             </h2>
 
             <div
-                class="rounded-full border border-[#D6E4FF] bg-[#D6E4FF]/60 p-2 text-[#1E50A1]"
+                class="rounded-full border border-[#D6E4FF]/60 bg-[#D6E4FF]/20 p-2 text-[#1E50A1]"
             >
                 <UserRound
                     :size="18"
@@ -25,62 +25,95 @@
             v-if="appointment"
             class="mt-6 flex-1 space-y-4"
         >
-            <div class="space-y-3 rounded-xl bg-[#F8FAFF] p-4">
-                <div>
-                    <p class="text-xs text-[#99A1AF]">
-                        APPOINTMENT ID
-                    </p>
-
-                    <p class="break-all font-bold text-[#1E50A1]">
+            <div class="space-y-5 rounded-xl p-4">
+                <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                        <div class="rounded-full bg-[#C0BBBB]/10  border border-[#C0BBBB]/20 p-1">
+                            <Ticket class="text-header w-5 h-5"/>
+                        </div>
+                            <p class="text-paragraph font-semibold">
+                                CODE : 
+                            </p>
+                    </div>
+                    <p class="uppercase">
                         {{ appointment.code }}
                     </p>
                 </div>
 
-                <div>
-                    <p class="text-xs text-[#99A1AF]">
-                        FULL NAME
-                    </p>
+                <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                        <div class="rounded-full bg-[#C0BBBB]/10  border border-[#C0BBBB]/20 p-1">
+                            <User class="text-header w-5 h-5"/>
+                        </div>
+                        <p class="text-paragraph font-semibold">
+                            Name :
+                        </p>
 
-                    <p class="font-semibold text-[#505050]">
+                    </div>
+                    
+                    <p class="capitalize font-semibold">
                         {{ appointment.name }}
                     </p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <p class="text-xs text-[#99A1AF]">
-                            DATE
+                <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                        <div class="rounded-full bg-[#C0BBBB]/10  border border-[#C0BBBB]/20 p-1">
+                            <CalendarDays class="text-header w-5 h-5"/>
+                        </div>
+                        <p class="text-paragraph font-semibold">
+                            Date :
                         </p>
 
-                        <p class="text-sm font-semibold text-[#505050]">
-                            {{ appointment.date }}
-                        </p>
                     </div>
+                    
+                    <p class="capitalize font-semibold">
+                        {{ appointment.date }}
+                    </p>
+                </div>
 
-                    <div>
-                        <p class="text-xs text-[#99A1AF]">
-                            TIME
+                <div class="flex items-center justify-between text-xs">
+                    <div class="flex items-center gap-2">
+                        <div class="rounded-full bg-[#C0BBBB]/10  border border-[#C0BBBB]/20 p-1">
+                            <Clock2 class="text-header w-5 h-5"/>
+                        </div>
+                        <p class="text-paragraph font-semibold">
+                            Time :
                         </p>
 
-                        <p class="text-sm font-semibold text-[#505050]">
+                    </div>
+                    
+                    <p class="capitalize font-semibold">
                             {{ formatTime(appointment.time) }}
-                        </p>
-                    </div>
+                    </p>
                 </div>
             </div>
 
             <!-- Status -->
-            <div
-                class="flex items-center justify-between gap-2 rounded-lg border border-[#D6E4FF] px-3 py-3"
-            >
-                <span class="text-sm font-semibold text-[#606060]">
-                    Appointment Status
+           <div  class="flex items-center justify-between gap-2 
+                        mx-auto w-[90%] rounded-xl border border-[#D6E4FF] px-3 py-3 bg-[#C0BBBB]/5">
+            <!-- Status Label -->
+            <span class="flex items-center gap-2">
+                    <span
+                        class="flex justify-center items-center inline-block h-5 w-5 rounded-full border border-[#C0BBBB]/60 bg-white"
+                    >
+                     <span class=" h-3 w-3 rounded-full "
+                        :class="statusClass"></span>
                 </span>
 
-                <span
-                    class="rounded-full px-3 py-1 text-xs font-bold capitalize"
+                    <span class="text-sm font-semibold text-[#606060]">
+                        Status
+                    </span>
+                </span>
+
+                <!-- Status Badge -->
+               <span
+                    class="inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-bold capitalize "
                     :class="statusClass"
                 >
+                    <span class="h-2 w-2 shrink-0 rounded-full "
+                    :class="statusDotClass"></span>
+
                     {{ appointment.status.toUpperCase() }}
                 </span>
             </div>
@@ -122,12 +155,20 @@
 import {
     UserRound,
     FileSearch,
+    Ticket,
+    User,
+    CalendarDays,
+    Clock2
 } from 'lucide-vue-next';
 
 export default {
     components: {
         UserRound,
         FileSearch,
+        Ticket, 
+        User,
+        CalendarDays,
+        Clock2
     },
 
     props: {
@@ -137,28 +178,42 @@ export default {
         },
     },
 
-    computed: {
-        statusClass() {
-            if (!this.appointment) return '';
+        computed: {
+            statusStyles() {
+                const status = this.appointment?.status;
 
-            const status = this.appointment.status;
+                return {
+                    waiting: {
+                        badge: 'bg-[#FABC00] text-header',
+                        dot: 'bg-header',
+                    },
+                    completed: {
+                        badge: 'bg-green-700 text-white',
+                        dot: 'bg-white',
+                    },
+                    serving: {
+                        badge: 'bg-green-700 text-white',
+                        dot: 'bg-white',
+                    },
+                    cancelled: {
+                        badge: 'bg-red-700 text-white',
+                        dot: 'bg-white',
+                    },
+                }[status] ?? {
+                    badge: 'bg-gray-700 text-white',
+                    dot: 'bg-gray-500',
+                };
+            },
 
-            if (status === 'waiting') {
-                return 'bg-yellow-100 text-yellow-700';
-            }
+            statusClass() {
+                return this.statusStyles.badge;
+            },
 
-            if (['completed', 'done'].includes(status)) {
-                return 'bg-green-100 text-green-700';
-            }
-
-            if (status === 'cancelled') {
-                return 'bg-red-100 text-red-700';
-            }
-
-            return 'bg-gray-100 text-gray-600';
+            statusDotClass() {
+                return this.statusStyles.dot;
+            },
         },
-    },
-
+        
     methods: {
         formatTime(time) {
             if (!time) return '';

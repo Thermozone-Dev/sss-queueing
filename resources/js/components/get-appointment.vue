@@ -57,6 +57,7 @@
 
                     <StationList
                         :stations="stations"
+                        :appointment-found="Boolean(appointment)"
                         :selected-station="selectedStation"
                         @select="selectStation"
                     />
@@ -79,7 +80,8 @@
                         type="button"
                         @click="openConfirmModal"
                         :disabled="!selectedTransactionId"
-                        class="w-full rounded-lg px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 md:w-auto"
+                        class="w-full rounded-lg px-5 py-3 text-sm font-bold text-white transition 
+                        disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 md:w-auto"
                         :class="
                             selectedTransactionId
                                 ? 'bg-[#3350E8] hover:bg-[#2842C7]'
@@ -131,7 +133,7 @@ export default {
 
         description: {
             type: String,
-            default: 'Search your appointment',
+            default: 'Enter your appointment ID to retrieve your queue details and service information.',
         },
 
         type: String,
