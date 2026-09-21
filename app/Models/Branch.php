@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use App\Observers\BranchObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy(BranchObserver::class)]
 class Branch extends Model
 {
     use SoftDeletes;
@@ -78,6 +81,11 @@ class Branch extends Model
     public function transactionStepStations()
     {
         return $this->hasMany(TransactionStepStation::class);
+    }
+
+    public function appointmentConfiguration()
+    {
+        return $this->hasOne(AppointmentConfiguration::class);
     }
 }
 
