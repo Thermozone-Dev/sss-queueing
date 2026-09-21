@@ -1,5 +1,4 @@
   <div class="h-full w-full rounded-lg border border-gray-200 font-[Inter,sans-serif] text-gray-800">
-
     @php
             $user = auth()->user();
             $selectedTransactionData = collect($transactions)->firstWhere('id', $selectedTransaction);

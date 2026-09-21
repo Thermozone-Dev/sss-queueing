@@ -1,21 +1,28 @@
 {
+  "public/images/sss/sss-logo.png": {
+    "file": "assets/sss-logo-Bi6rN0vK.png",
+    "src": "public/images/sss/sss-logo.png"
+  },
   "resources/css/app.css": {
-    "file": "assets/app-BRZGQtIB.css",
+    "file": "assets/app-lYyT6ldm.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
   "resources/css/filament/admin/theme.css": {
-    "file": "assets/theme-Cutulx49.css",
+    "file": "assets/theme-B1kGLi3q.css",
     "src": "resources/css/filament/admin/theme.css",
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-Bb6uGLIP.js",
+    "file": "assets/app-C-i4lbqE.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
       "assets/app-CxSVuxco.css"
+    ],
+    "assets": [
+      "assets/sss-logo-Bi6rN0vK.png"
     ]
   }
 }
